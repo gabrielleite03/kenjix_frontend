@@ -1,0 +1,167 @@
+[
+  {
+    "id": 1,
+    "sku": "KEN-RAC-001",
+    "name": "Ração Seca Premium para Cães Adultos - Salmão e Arroz Integral",
+    "category": "Alimentação",
+    "price": 54.99,
+    "rating": 4.5,
+    "reviews": 42,
+    "images": [
+      "https://lh3.googleusercontent.com/aida-public/AB6AXuCf58RuZA5Tj09kgu7TzbwUilu7wm3Z2rPwjyUS0FfNlYtpy3nog0fRnxK7esbfO16bO9j7ULZw2Y1e0aZmfQplXTTsWG_ViQJuAzqTGWftVJ-jOkf6Xml8e1ykrPZdhEjduZ_8lLz0e_FP7NfBhrh5Y0tr0e570GWlZEgE9ykzqQESaSivbSgDOLCKKm3XYgcNzR2A5PQEfUUsUKQUsD0XTbfb0w0w-ws4veGXDziu8NJY90e3iTjnzHCdhKXfxqw6jskvOA6ytw",
+      "https://picsum.photos/seed/dogfood1/600/600",
+      "https://picsum.photos/seed/dogfood2/600/600"
+    ],
+    "currentIndex": 0
+  },
+  {
+    "id": 2,
+    "sku": "KEN-BRI-002",
+    "name": "Osso de Borracha Indestrutível para Mastigadores Pesados",
+    "category": "Brinquedos",
+    "price": 12.49,
+    "rating": 5,
+    "reviews": 128,
+    "images": [
+      "https://picsum.photos/seed/dogtoy1/600/600",
+      "https://picsum.photos/seed/dogtoy2/600/600"
+    ],
+    "currentIndex": 0
+  },
+  {
+    "id": 3,
+    "sku": "KEN-ACE-003",
+    "name": "Arranhador de Gato em Torre com 3 Níveis e Brinquedos Suspensos",
+    "category": "Acessórios",
+    "price": 89.90,
+    "oldPrice": 115.00,
+    "rating": 4.8,
+    "reviews": 85,
+    "images": [
+      "https://picsum.photos/seed/catscratch1/600/600",
+      "https://picsum.photos/seed/catscratch2/600/600"
+    ],
+    "currentIndex": 0
+  },
+  {
+    "id": 4,
+    "sku": "KEN-DOR-004",
+    "name": "Cama Ortopédica para Pets com Espuma de Memória - Tamanho G",
+    "category": "Dormitório",
+    "price": 145.00,
+    "rating": 4.9,
+    "reviews": 210,
+    "images": [
+      "https://picsum.photos/seed/petbed1/600/600",
+      "https://picsum.photos/seed/petbed2/600/600"
+    ],
+    "currentIndex": 0
+  },
+  {
+    "id": 5,
+    "sku": "KEN-PAS-005",
+    "name": "Coleira de Couro Legítimo com Placa de Identificação Personalizável",
+    "category": "Passeio",
+    "price": 24.99,
+    "rating": 4.2,
+    "reviews": 56,
+    "images": [
+      "https://picsum.photos/seed/collar1/600/600"
+    ],
+    "currentIndex": 0
+  },
+  {
+    "id": 6,
+    "sku": "KEN-ACE-006",
+    "name": "Fonte de Água Automática para Gatos com Filtro de Carvão Ativado",
+    "category": "Acessórios",
+    "price": 67.50,
+    "oldPrice": 79.99,
+    "rating": 4.7,
+    "reviews": 112,
+    "images": [
+      "https://picsum.photos/seed/waterfountain1/600/600",
+      "https://picsum.photos/seed/waterfountain2/600/600"
+    ],
+    "currentIndex": 0
+  },
+  {
+    "id": 7,
+    "sku": "KEN-HIG-007",
+    "name": "Shampoo Hipoalergênico para Cães e Gatos - Fragrância de Lavanda",
+    "category": "Higiene",
+    "price": 18.90,
+    "rating": 4.4,
+    "reviews": 38,
+    "images": [
+      "https://picsum.photos/seed/shampoo1/600/600"
+    ],
+    "currentIndex": 0
+  },
+  {
+    "id": 8,
+    "sku": "KEN-ALI-008",
+    "name": "Petisco Natural de Frango Desidratado para Treinamento - 100g",
+    "category": "Alimentação",
+    "price": 9.99,
+    "rating": 5,
+    "reviews": 156,
+    "images": [
+      "https://picsum.photos/seed/treats1/600/600"
+    ],
+    "currentIndex": 0
+  },
+  {
+    "id": 9,
+    "sku": "KEN-VIA-009",
+    "name": "Caixa de Transporte Aérea Aprovada pela IATA - Tamanho M",
+    "category": "Viagem",
+    "price": 199.00,
+    "rating": 4.6,
+    "reviews": 24,
+    "images": [
+      "https://picsum.photos/seed/carrier1/600/600"
+    ],
+    "currentIndex": 0
+  },
+  {
+    "id": 10,
+    "sku": "KEN-HIG-010",
+    "name": "Escova de Limpeza de Dentes para Cães - Sabor Menta",
+    "category": "Higiene",
+    "price": 14.50,
+    "rating": 4.1,
+    "reviews": 67,
+    "images": [
+      "https://picsum.photos/seed/toothbrush1/600/600"
+    ],
+    "currentIndex": 0
+  },
+  {
+    "id": 11,
+    "sku": "KEN-DOR-011",
+    "name": "Tapete Gelado Refrescante para Pets - Alívio no Verão",
+    "category": "Dormitório",
+    "price": 45.00,
+    "oldPrice": 59.90,
+    "rating": 4.8,
+    "reviews": 92,
+    "images": [
+      "https://picsum.photos/seed/coolingmat1/600/600"
+    ],
+    "currentIndex": 0
+  },
+  {
+    "id": 12,
+    "sku": "KEN-ALI-012",
+    "name": "Comedouro Lento Interativo para Cães Ansiosos",
+    "category": "Alimentação",
+    "price": 29.90,
+    "rating": 4.5,
+    "reviews": 48,
+    "images": [
+      "https://picsum.photos/seed/slowfeeder1/600/600"
+    ],
+    "currentIndex": 0
+  }
+]

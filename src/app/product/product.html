@@ -1,0 +1,198 @@
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+  <!-- Header -->
+  <app-header></app-header>
+
+  <div class="flex flex-1 max-w-[1440px] mx-auto w-full px-8 py-8 gap-8">
+    <!-- Sidebar -->
+    <aside class="w-64 flex-shrink-0 flex flex-col gap-8">
+      <section>
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Categorias</h3>
+        <div class="flex flex-col gap-2">
+          @for (cat of categories; track cat) {
+            <label class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer py-1">
+              <input class="rounded border-slate-300 text-accent focus:ring-accent size-4" type="checkbox" [checked]="cat === 'Alimentação'"/>
+              <span>{{cat}}</span>
+            </label>
+          }
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Faixa de Preço</h3>
+        <div class="px-2">
+          <input class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-accent" max="500" min="0" step="10" type="range"/>
+          <div class="flex justify-between mt-3 text-xs font-medium text-slate-500">
+            <span>$0</span>
+            <span>$500+</span>
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Marca</h3>
+        <div class="flex flex-col gap-2">
+          @for (brand of brands; track brand) {
+            <label class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer py-1">
+              <input class="rounded border-slate-300 text-accent focus:ring-accent size-4" type="checkbox"/>
+              <span>{{brand}}</span>
+            </label>
+          }
+        </div>
+      </section>
+
+      <button class="mt-4 text-accent text-sm font-bold border border-accent/30 py-2 rounded hover:bg-accent/5">
+        Limpar Filtros
+      </button>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1">
+      <div class="flex items-center justify-between mb-8">
+        <div>
+          <h1 class="text-2xl font-bold text-slate-800">Produtos</h1>
+          <p class="text-sm text-slate-500">
+            Mostrando {{ (currentPage() - 1) * itemsPerPage + 1 }}-{{ Math.min(currentPage() * itemsPerPage, products().length) }} de {{ products().length }} produtos
+          </p>
+        </div>
+        <div class="flex items-center gap-4">
+          <label class="text-sm text-slate-500" for="sort-select">Ordenar por:</label>
+          <select id="sort-select" class="bg-white border border-slate-200 rounded-md text-sm px-3 py-1.5 focus:ring-accent focus:border-accent">
+            <option>Recomendados</option>
+            <option>Preço: Menor para Maior</option>
+            <option>Preço: Maior para Menor</option>
+            <option>Novidades</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+        @for (product of paginatedProducts(); track product.id) {
+          <div class="mat-card group">
+            <div class="relative w-full aspect-square overflow-hidden bg-slate-100">
+              <!-- Carousel Images -->
+              <div class="flex transition-transform duration-500 h-full" [style.transform]="'translateX(-' + (product.currentIndex * 100) + '%)'">
+                @for (img of product.images; track img) {
+                  <button 
+                    class="w-full h-full flex-shrink-0 cursor-pointer border-none p-0 block relative" 
+                    (click)="openImage(img)"
+                    aria-label="Ver imagem completa"
+                  >
+                    <img
+                      [src]="img"
+                      [alt]="product.name"
+                      referrerpolicy="no-referrer"
+                      class="w-full h-full object-cover"
+                    />
+                  </button>
+                }
+              </div>
+
+              <!-- Navigation Buttons -->
+              @if (product.images.length > 1) {
+                <button 
+                  class="absolute left-2 top-1/2 -translate-y-1/2 p-1 bg-white/50 hover:bg-white/80 rounded-full text-slate-800 transition-all opacity-0 group-hover:opacity-100 z-10"
+                  (click)="prevImage(product.id, $event)"
+                  aria-label="Imagem anterior"
+                >
+                  <mat-icon>chevron_left</mat-icon>
+                </button>
+                <button 
+                  class="absolute right-2 top-1/2 -translate-y-1/2 p-1 bg-white/50 hover:bg-white/80 rounded-full text-slate-800 transition-all opacity-0 group-hover:opacity-100 z-10"
+                  (click)="nextImage(product.id, $event)"
+                  aria-label="Próxima imagem"
+                >
+                  <mat-icon>chevron_right</mat-icon>
+                </button>
+
+                <!-- Indicators -->
+                <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10">
+                  @for (img of product.images; track $index) {
+                    <div 
+                      class="size-1.5 rounded-full transition-all"
+                      [class.bg-accent]="product.currentIndex === $index"
+                      [class.bg-white/50]="product.currentIndex !== $index"
+                    ></div>
+                  }
+                </div>
+              }
+
+              <!-- Overlay Icon -->
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center pointer-events-none">
+                <mat-icon class="text-white opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</mat-icon>
+              </div>
+            </div>
+            <div class="p-4 flex flex-col h-[200px]">
+              <div class="flex-1">
+                <div class="flex justify-between items-center mb-2">
+                  <p class="text-[10px] uppercase font-bold text-accent tracking-widest">{{product.category}}</p>
+                  <span class="text-[10px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200 font-medium shadow-sm">
+                    {{product.sku}}
+                  </span>
+                </div>
+                <h3 class="font-semibold text-slate-800 line-clamp-2 mb-2">{{product.name}}</h3>
+                <div class="flex items-center gap-1 mb-2">
+                  <div class="flex text-amber-400">
+                    @for (star of [1,2,3,4,5]; track star) {
+                      <mat-icon class="text-[16px] h-[16px] w-[16px]">
+                        {{ star <= product.rating ? 'star' : (star - 0.5 <= product.rating ? 'star_half' : 'star_outline') }}
+                      </mat-icon>
+                    }
+                  </div>
+                  <span class="text-xs text-slate-400">({{product.reviews}})</span>
+                </div>
+              </div>
+              <div class="flex items-center mt-4">
+                <div class="flex flex-col">
+                  @if (product.oldPrice) {
+                    <span class="text-[10px] text-red-500 line-through">${{product.oldPrice}}</span>
+                  }
+                  <span class="text-xl font-bold text-slate-900">${{product.price}}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+
+      <!-- Pagination -->
+      @if (totalPages() > 1) {
+        <div class="flex justify-center mt-12 gap-2">
+          <button 
+            class="size-10 flex items-center justify-center rounded border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            (click)="prevPage()"
+            [disabled]="currentPage() === 1"
+          >
+            <mat-icon>chevron_left</mat-icon>
+          </button>
+          
+          @for (page of [].constructor(totalPages()); track $index) {
+            <button 
+              class="size-10 flex items-center justify-center rounded font-bold transition-colors"
+              [class.bg-accent]="currentPage() === $index + 1"
+              [class.text-white]="currentPage() === $index + 1"
+              [class.border]="currentPage() !== $index + 1"
+              [class.border-slate-200]="currentPage() !== $index + 1"
+              [class.hover:bg-slate-50]="currentPage() !== $index + 1"
+              (click)="setPage($index + 1)"
+            >
+              {{ $index + 1 }}
+            </button>
+          }
+
+          <button 
+            class="size-10 flex items-center justify-center rounded border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            (click)="nextPage()"
+            [disabled]="currentPage() === totalPages()"
+          >
+            <mat-icon>chevron_right</mat-icon>
+          </button>
+        </div>
+      }
+    </main>
+  </div>
+
+  <!-- Footer -->
+  <app-footer></app-footer>
+
+  <app-whatsapp-button></app-whatsapp-button>
+</div>
