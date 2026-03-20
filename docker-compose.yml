@@ -1,0 +1,11 @@
+version: '3.8'
+
+services:
+  kenjix-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: kenjix-frontend
+    ports:
+      - "80:80" # Mapeia a porta 80 do contêiner para a porta 80 do host
+    restart: always

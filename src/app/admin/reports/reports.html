@@ -1,0 +1,92 @@
+<div class="p-6 lg:p-8 max-w-7xl mx-auto">
+  <header class="admin-header flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="admin-title">Relatórios e Análises</h1>
+      <p class="admin-subtitle">Acompanhe o desempenho do seu pet shop em tempo real.</p>
+    </div>
+    <div class="flex gap-2">
+      <button class="flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
+        <mat-icon class="text-lg">calendar_today</mat-icon>
+        Últimos 30 dias
+      </button>
+      <button class="admin-button-primary">
+        <mat-icon>download</mat-icon>
+        Exportar PDF
+      </button>
+    </div>
+  </header>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    @for (card of reportCards; track card.title) {
+      <div class="admin-card p-6 flex items-start justify-between">
+        <div>
+          <p class="text-xs font-bold text-slate-500 uppercase tracking-wider mb-1">{{ card.title }}</p>
+          <h3 class="text-2xl font-bold text-slate-800">{{ card.value }}</h3>
+          <span class="text-xs font-medium flex items-center gap-1 mt-2" [ngClass]="card.trend.startsWith('+') ? 'text-emerald-500' : 'text-rose-500'">
+            <mat-icon class="text-sm">{{ card.trend.startsWith('+') ? 'arrow_upward' : 'arrow_downward' }}</mat-icon>
+            {{ card.trend }} vs mês anterior
+          </span>
+        </div>
+        <div class="p-3 rounded-lg bg-slate-50" [ngClass]="card.color">
+          <mat-icon>{{ card.icon }}</mat-icon>
+        </div>
+      </div>
+    }
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Main Chart -->
+    <div class="lg:col-span-2 admin-card p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h3 class="font-bold text-slate-800">Evolução de Vendas</h3>
+        <select class="text-xs border-none bg-slate-50 rounded px-2 py-1 outline-none text-slate-500 font-medium">
+          <option>Semanal</option>
+          <option selected>Mensal</option>
+          <option>Anual</option>
+        </select>
+      </div>
+      <div #chartContainer class="w-full h-[300px]"></div>
+    </div>
+
+    <!-- Top Products -->
+    <div class="admin-card p-6">
+      <h3 class="font-bold text-slate-800 mb-6">Produtos Mais Vendidos</h3>
+      <div class="space-y-6">
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded bg-blue-50 flex items-center justify-center text-blue-600 font-bold text-xs">01</div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-slate-800">Ração Premium Gatos</p>
+            <div class="w-full bg-slate-100 h-1.5 rounded-full mt-1.5">
+              <div class="bg-blue-500 h-full rounded-full" style="width: 85%"></div>
+            </div>
+          </div>
+          <span class="text-xs font-bold text-slate-500">85%</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded bg-emerald-50 flex items-center justify-center text-emerald-600 font-bold text-xs">02</div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-slate-800">Shampoo Antipulgas</p>
+            <div class="w-full bg-slate-100 h-1.5 rounded-full mt-1.5">
+              <div class="bg-emerald-500 h-full rounded-full" style="width: 62%"></div>
+            </div>
+          </div>
+          <span class="text-xs font-bold text-slate-500">62%</span>
+        </div>
+        <div class="flex items-center gap-4">
+          <div class="w-10 h-10 rounded bg-amber-50 flex items-center justify-center text-amber-600 font-bold text-xs">03</div>
+          <div class="flex-1">
+            <p class="text-sm font-semibold text-slate-800">Brinquedo Mordedor</p>
+            <div class="w-full bg-slate-100 h-1.5 rounded-full mt-1.5">
+              <div class="bg-amber-500 h-full rounded-full" style="width: 45%"></div>
+            </div>
+          </div>
+          <span class="text-xs font-bold text-slate-500">45%</span>
+        </div>
+      </div>
+      <button class="w-full mt-8 py-2 text-xs font-bold text-primary hover:bg-primary/5 rounded-lg transition-colors">
+        Ver Relatório Completo
+      </button>
+    </div>
+  </div>
+</div>

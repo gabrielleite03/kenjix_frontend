@@ -1,0 +1,22 @@
+@reference "../../../styles.css";
+
+/* Invoices Styles */
+.sidebar-active {
+  @apply bg-primary/10 text-primary border-r-4 border-primary;
+}
+
+.admin-input {
+  @apply w-full px-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-700 font-medium focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-slate-400;
+}
+
+.admin-button-primary {
+  @apply bg-primary text-white font-bold rounded-xl shadow-lg shadow-primary/20 hover:bg-primary/90 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed;
+}
+
+.admin-card {
+  @apply bg-white rounded-2xl border border-slate-100 shadow-sm;
+}
+
+.admin-label {
+  @apply text-xs font-bold text-slate-500 uppercase tracking-wider;
+}

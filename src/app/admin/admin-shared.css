@@ -1,0 +1,35 @@
+@reference "../../styles.css";
+
+/* Shared Admin Styles */
+
+.admin-card {
+  @apply bg-white rounded-xl shadow-md border border-slate-100;
+}
+
+.admin-header {
+  @apply mb-8;
+}
+
+.admin-title {
+  @apply text-2xl font-bold text-slate-800;
+}
+
+.admin-subtitle {
+  @apply text-slate-500 text-sm;
+}
+
+.admin-button-primary {
+  @apply flex items-center justify-center gap-2 px-6 py-2.5 bg-primary text-white font-semibold rounded-lg shadow-md hover:brightness-105 active:scale-95 transition-all;
+}
+
+.admin-input {
+  @apply w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary transition-colors leading-normal;
+}
+
+.admin-label {
+  @apply block text-xs font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1;
+}
+
+.text-primary {
+    color: var(--color-primary);
+}
