@@ -18,3 +18,10 @@ View your app in AI Studio: https://ai.studio/apps/5452af9d-8e5a-4854-a47d-f1253
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+
+**Docker:** 
+1. Generate image:
+   `docker build -t kenjix_fronted . `
+2. Run app:
+   `docker run -d -p 80:80 kenjix_fronted`

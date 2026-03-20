@@ -30,7 +30,7 @@ import { MatIconModule } from '@angular/material/icon';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WhatsAppButton {
-  phoneNumber = input<string>('5511999999999');
+  phoneNumber = input<string>('5511939523257');
   message = input<string>('Olá! Gostaria de saber mais sobre os produtos da Kenji Pet Shop.');
 
   whatsappUrl() {

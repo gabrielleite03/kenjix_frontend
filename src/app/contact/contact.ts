@@ -34,7 +34,7 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators, AbstractContro
                     </div>
                     <div>
                       <p class="text-sm font-bold text-slate-800">Telefone</p>
-                      <p class="text-sm text-slate-500">(11) 99999-9999</p>
+                      <p class="text-sm text-slate-500">(11) 93952-3257</p>
                     </div>
                   </div>
                   <div class="flex items-start gap-4">
@@ -43,7 +43,7 @@ import { ReactiveFormsModule, FormGroup, FormControl, Validators, AbstractContro
                     </div>
                     <div>
                       <p class="text-sm font-bold text-slate-800">WhatsApp</p>
-                      <p class="text-sm text-slate-500">(11) 98888-8888</p>
+                      <p class="text-sm text-slate-500">(11) 93952-3257</p>
                     </div>
                   </div>
                   <div class="flex items-start gap-4">

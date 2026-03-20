@@ -52,11 +52,11 @@ import { RouterLink } from '@angular/router';
           </div>
         </div>
       </div>
-      <div class="max-w-[1440px] mx-auto mt-12 pt-8 border-t border-slate-100 flex justify-between items-center text-xs text-slate-400">
+      <div class="max-w-[1440px] mx-auto mt-12 pt-8 border-t border-slate-100 flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-slate-400 text-center sm:text-left">
         <p>© 2024 Kenji Pet Shop. Todos os direitos reservados.</p>
         <div class="flex gap-6">
-          <a class="hover:text-accent" href="#">Política de Privacidade</a>
-          <a class="hover:text-accent" href="#">Termos de Serviço</a>
+          <a class="hover:text-accent transition-colors" href="#">Política de Privacidade</a>
+          <a class="hover:text-accent transition-colors" href="#">Termos de Serviço</a>
         </div>
       </div>
     </footer>

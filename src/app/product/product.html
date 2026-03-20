@@ -2,14 +2,26 @@
   <!-- Header -->
   <app-header></app-header>
 
-  <div class="flex flex-1 max-w-[1440px] mx-auto w-full px-8 py-8 gap-8">
-    <!-- Sidebar -->
-    <aside class="w-64 flex-shrink-0 flex flex-col gap-8">
+  <app-hero-slider class="mt-4 lg:mt-8"></app-hero-slider>
+
+  <div class="flex flex-1 max-w-[1440px] mx-auto w-full px-4 lg:px-8 py-4 lg:py-8 gap-8 relative">
+    <!-- Sidebar (Desktop) / Drawer (Mobile) -->
+    <aside 
+      class="fixed inset-y-0 left-0 z-40 w-72 bg-white shadow-2xl transform transition-transform duration-300 lg:relative lg:translate-x-0 lg:shadow-none lg:z-0 lg:w-64 flex-shrink-0 flex flex-col gap-8 p-6 lg:p-0"
+      [class.-translate-x-full]="!isSidebarOpen()"
+    >
+      <div class="flex items-center justify-between lg:hidden mb-4">
+        <h2 class="text-lg font-bold text-slate-800">Filtros</h2>
+        <button (click)="isSidebarOpen.set(false)" class="p-2 text-slate-400 hover:text-slate-600">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
       <section>
-        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Categorias</h3>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Categorias</h3>
         <div class="flex flex-col gap-2">
           @for (cat of categories; track cat) {
-            <label class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer py-1">
+            <label class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer py-1 hover:text-accent transition-colors">
               <input class="rounded border-slate-300 text-accent focus:ring-accent size-4" type="checkbox" [checked]="cat === 'Alimentação'"/>
               <span>{{cat}}</span>
             </label>
@@ -18,10 +30,10 @@
       </section>
 
       <section>
-        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Faixa de Preço</h3>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Faixa de Preço</h3>
         <div class="px-2">
           <input class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-accent" max="500" min="0" step="10" type="range"/>
-          <div class="flex justify-between mt-3 text-xs font-medium text-slate-500">
+          <div class="flex justify-between mt-3 text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
             <span>$0</span>
             <span>$500+</span>
           </div>
@@ -29,10 +41,10 @@
       </section>
 
       <section>
-        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-4">Marca</h3>
+        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Marca</h3>
         <div class="flex flex-col gap-2">
           @for (brand of brands; track brand) {
-            <label class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer py-1">
+            <label class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer py-1 hover:text-accent transition-colors">
               <input class="rounded border-slate-300 text-accent focus:ring-accent size-4" type="checkbox"/>
               <span>{{brand}}</span>
             </label>
@@ -40,84 +52,113 @@
         </div>
       </section>
 
-      <button class="mt-4 text-accent text-sm font-bold border border-accent/30 py-2 rounded hover:bg-accent/5">
+      <button class="mt-4 text-accent text-xs font-bold border border-accent/30 py-2.5 rounded-lg hover:bg-accent/5 transition-colors uppercase tracking-widest">
         Limpar Filtros
       </button>
     </aside>
 
+    <!-- Overlay for mobile sidebar -->
+    @if (isSidebarOpen()) {
+      <div 
+        (click)="isSidebarOpen.set(false)"
+        (keydown.escape)="isSidebarOpen.set(false)"
+        tabindex="0"
+        role="button"
+        aria-label="Fechar filtros"
+        class="fixed inset-0 bg-black/40 z-30 lg:hidden backdrop-blur-sm transition-opacity"
+      ></div>
+    }
+
     <!-- Main Content -->
-    <main class="flex-1">
-      <div class="flex items-center justify-between mb-8">
+    <main class="flex-1 min-w-0">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 lg:mb-8 gap-4">
         <div>
-          <h1 class="text-2xl font-bold text-slate-800">Produtos</h1>
-          <p class="text-sm text-slate-500">
-            Mostrando {{ (currentPage() - 1) * itemsPerPage + 1 }}-{{ Math.min(currentPage() * itemsPerPage, products().length) }} de {{ products().length }} produtos
+          <h1 class="text-xl lg:text-2xl font-bold text-slate-800">Produtos</h1>
+          <p class="text-xs lg:text-sm text-slate-500">
+            Mostrando {{ (currentPage() - 1) * itemsPerPage() + 1 }}-{{ Math.min(currentPage() * itemsPerPage(), products().length) }} de {{ products().length }} produtos
           </p>
         </div>
-        <div class="flex items-center gap-4">
-          <label class="text-sm text-slate-500" for="sort-select">Ordenar por:</label>
-          <select id="sort-select" class="bg-white border border-slate-200 rounded-md text-sm px-3 py-1.5 focus:ring-accent focus:border-accent">
-            <option>Recomendados</option>
-            <option>Preço: Menor para Maior</option>
-            <option>Preço: Maior para Menor</option>
-            <option>Novidades</option>
-          </select>
+        
+        <div class="flex items-center gap-2">
+          <!-- Mobile Filter Toggle -->
+          <button 
+            (click)="isSidebarOpen.set(true)"
+            class="lg:hidden flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+          >
+            <mat-icon class="text-[18px] h-[18px] w-[18px]">filter_list</mat-icon>
+            Filtros
+          </button>
+
+          <div class="flex items-center gap-2 ml-auto sm:ml-0">
+            <label class="hidden sm:block text-sm text-slate-500" for="items-per-page">Exibir:</label>
+            <select 
+              id="items-per-page" 
+              (change)="setItemsPerPage($event)"
+              class="bg-white border border-slate-200 rounded-lg text-xs lg:text-sm px-3 py-2 focus:ring-accent focus:border-accent transition-all"
+            >
+              <option value="6" [selected]="itemsPerPage() === 6">6</option>
+              <option value="12" [selected]="itemsPerPage() === 12">12</option>
+              <option value="24" [selected]="itemsPerPage() === 24">24</option>
+              <option value="48" [selected]="itemsPerPage() === 48">48</option>
+            </select>
+
+            <label class="hidden sm:block text-sm text-slate-500 ml-2" for="sort-select">Ordenar:</label>
+            <select id="sort-select" class="bg-white border border-slate-200 rounded-lg text-xs lg:text-sm px-3 py-2 focus:ring-accent focus:border-accent transition-all">
+              <option>Recomendados</option>
+              <option>Preço: Menor para Maior</option>
+              <option>Preço: Maior para Menor</option>
+              <option>Novidades</option>
+            </select>
+          </div>
         </div>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
         @for (product of paginatedProducts(); track product.id) {
           <div class="mat-card group">
             <div class="relative w-full aspect-square overflow-hidden bg-slate-100">
-              <!-- Carousel Images -->
-              <div class="flex transition-transform duration-500 h-full" [style.transform]="'translateX(-' + (product.currentIndex * 100) + '%)'">
+              <!-- Swiper Carousel -->
+              <swiper-container 
+                class="w-full h-full"
+                pagination="true"
+                navigation="true"
+                pagination-dynamic-bullets="true"
+                loop="true"
+                observer="true"
+                observe-parents="true"
+                style="--swiper-pagination-color: #0d9488; --swiper-pagination-bullet-size: 6px; --swiper-navigation-color: #0d9488; --swiper-navigation-size: 20px;"
+              >
                 @for (img of product.images; track img) {
-                  <button 
-                    class="w-full h-full flex-shrink-0 cursor-pointer border-none p-0 block relative" 
-                    (click)="openImage(img)"
-                    aria-label="Ver imagem completa"
-                  >
-                    <img
-                      [src]="img"
-                      [alt]="product.name"
-                      referrerpolicy="no-referrer"
-                      class="w-full h-full object-cover"
-                    />
-                  </button>
+                  <swiper-slide class="w-full h-full">
+                    @if (isYouTube(img)) {
+                      <div class="w-full h-full relative">
+                        <iframe 
+                          [src]="getYouTubeEmbedUrl(img)" 
+                          class="w-full h-full border-none"
+                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                          allowfullscreen
+                        ></iframe>
+                      </div>
+                    } @else {
+                      <button 
+                        class="w-full h-full flex-shrink-0 cursor-pointer border-none p-0 block relative" 
+                        (click)="openImage(img)"
+                        aria-label="Ver imagem completa"
+                      >
+                        <img
+                          [src]="img"
+                          [alt]="product.name"
+                          referrerpolicy="no-referrer"
+                          class="w-full h-full object-cover"
+                        />
+                      </button>
+                    }
+                  </swiper-slide>
                 }
-              </div>
-
-              <!-- Navigation Buttons -->
-              @if (product.images.length > 1) {
-                <button 
-                  class="absolute left-2 top-1/2 -translate-y-1/2 p-1 bg-white/50 hover:bg-white/80 rounded-full text-slate-800 transition-all opacity-0 group-hover:opacity-100 z-10"
-                  (click)="prevImage(product.id, $event)"
-                  aria-label="Imagem anterior"
-                >
-                  <mat-icon>chevron_left</mat-icon>
-                </button>
-                <button 
-                  class="absolute right-2 top-1/2 -translate-y-1/2 p-1 bg-white/50 hover:bg-white/80 rounded-full text-slate-800 transition-all opacity-0 group-hover:opacity-100 z-10"
-                  (click)="nextImage(product.id, $event)"
-                  aria-label="Próxima imagem"
-                >
-                  <mat-icon>chevron_right</mat-icon>
-                </button>
-
-                <!-- Indicators -->
-                <div class="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1 z-10">
-                  @for (img of product.images; track $index) {
-                    <div 
-                      class="size-1.5 rounded-full transition-all"
-                      [class.bg-accent]="product.currentIndex === $index"
-                      [class.bg-white/50]="product.currentIndex !== $index"
-                    ></div>
-                  }
-                </div>
-              }
+              </swiper-container>
 
               <!-- Overlay Icon -->
-              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center pointer-events-none">
+              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center pointer-events-none z-10">
                 <mat-icon class="text-white opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</mat-icon>
               </div>
             </div>
@@ -130,16 +171,9 @@
                   </span>
                 </div>
                 <h3 class="font-semibold text-slate-800 line-clamp-2 mb-2">{{product.name}}</h3>
-                <div class="flex items-center gap-1 mb-2">
-                  <div class="flex text-amber-400">
-                    @for (star of [1,2,3,4,5]; track star) {
-                      <mat-icon class="text-[16px] h-[16px] w-[16px]">
-                        {{ star <= product.rating ? 'star' : (star - 0.5 <= product.rating ? 'star_half' : 'star_outline') }}
-                      </mat-icon>
-                    }
-                  </div>
-                  <span class="text-xs text-slate-400">({{product.reviews}})</span>
-                </div>
+                <p class="text-xs text-slate-500 line-clamp-2 mb-2 h-8">
+                  {{product.description}}
+                </p>
               </div>
               <div class="flex items-center mt-4">
                 <div class="flex flex-col">
