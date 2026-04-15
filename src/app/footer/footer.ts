@@ -16,7 +16,8 @@ import { RouterLink } from '@angular/router';
             <h2 class="text-deep-teal text-lg font-bold tracking-tight uppercase">Kenji Pet</h2>
           </a>
           <p class="text-sm text-slate-500 leading-relaxed">
-            Suprimentos premium para pets e serviços de cuidados profissionais desde 2010. Tratamos seus pets como se fossem nossos.
+            A Kenji Pet oferece produtos de qualidade para o conforto, segurança e bem-estar do seu pet.
+Soluções práticas e duráveis para facilitar o dia a dia com confiança e cuidado.
           </p>
         </div>
         <div>
@@ -33,7 +34,6 @@ import { RouterLink } from '@angular/router';
           <ul class="flex flex-col gap-3 text-sm text-slate-500">
             <li><a class="hover:text-accent" routerLink="/sobre">Sobre Nós</a></li>
             <li><a class="hover:text-accent" href="#">Nossas Lojas</a></li>
-            <li><a class="hover:text-accent" href="#">Trabalhe Conosco</a></li>
             <li><a class="hover:text-accent" routerLink="/contato">Contato</a></li>
           </ul>
         </div>

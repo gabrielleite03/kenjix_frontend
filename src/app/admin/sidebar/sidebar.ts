@@ -1,8 +1,8 @@
-import {ChangeDetectionStrategy, Component, model, inject} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MatIconModule} from '@angular/material/icon';
-import {RouterLink, RouterLinkActive} from '@angular/router';
-import {AuthService} from '../../auth/auth.service';
+import { ChangeDetectionStrategy, Component, model, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { RouterLink, RouterLinkActive } from '@angular/router';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -24,5 +24,10 @@ export class Sidebar {
   logout() {
     this.authService.logout();
     this.close();
+  }
+
+  getStoredRoles(): string[] {
+    const roles = localStorage.getItem('kenji_roles');
+    return roles ? JSON.parse(roles) : [];
   }
 }

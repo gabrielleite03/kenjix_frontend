@@ -241,8 +241,6 @@ export class ContactPage implements OnInit {
       // Simulate API call
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      console.log('Form data:', this.contactForm.value);
-      
       this.isSubmitting.set(false);
       this.submitted.set(true);
       this.contactForm.reset({ subject: 'duvida' });

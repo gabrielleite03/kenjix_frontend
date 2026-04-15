@@ -6,6 +6,7 @@ import {MatIconModule} from '@angular/material/icon';
 import {ProductService, ProductItem} from '../product/product.service';
 import {SalesService, SaleItem} from './sales.service';
 import {toSignal} from '@angular/core/rxjs-interop';
+import { CategoryService,  Category } from '../../services/category.service';
 
 @Component({
   selector: 'app-pos',
@@ -32,11 +33,11 @@ import {toSignal} from '@angular/core/rxjs-interop';
             <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap mr-2 border-r border-slate-200 pr-4">Categorias</span>
             @for (cat of categories(); track cat) {
               <button 
-                (click)="selectedCategory.set(cat)"
-                [class.bg-primary]="selectedCategory() === cat"
-                [class.text-white]="selectedCategory() === cat"
-                [class.bg-white]="selectedCategory() !== cat"
-                [class.text-slate-600]="selectedCategory() !== cat"
+                (click)="selectedCategory.set(cat.id === '0' ? 'Todos' : cat.id.toString())"
+                [class.bg-primary]="selectedCategory() === cat.id.toString()"
+                [class.text-white]="selectedCategory() === cat.id.toString()"
+                [class.bg-white]="selectedCategory() !== cat.id.toString()"
+                [class.text-slate-600]="selectedCategory() !== cat.id.toString()"
                 class="px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap mat-shadow-sm border border-slate-100 transition-all"
               >
                 {{ cat }}
@@ -200,7 +201,9 @@ import {toSignal} from '@angular/core/rxjs-interop';
 export class Pos {
   private productService = inject(ProductService);
   private salesService = inject(SalesService);
+  private CategoryService = inject(CategoryService);
   private router = inject(Router);
+  categories = signal<Category[]>([]);
 
   searchControl = new FormControl('');
   discountControl = new FormControl(0);
@@ -223,16 +226,11 @@ export class Pos {
     });
   }
 
-  categories = computed(() => {
-    const cats = new Set(this.productService.products().filter(p => p.active).map(p => p.category));
-    return ['Todos', ...Array.from(cats).sort()];
-  });
-
   filteredProducts = computed(() => {
     let products = this.productService.products().filter(p => p.active);
     
     if (this.selectedCategory() !== 'Todos') {
-      products = products.filter(p => p.category === this.selectedCategory());
+      products = products.filter(p => p.category?.toString() === this.selectedCategory());
     }
     
     const query = this.searchQuery()?.toLowerCase();
@@ -310,5 +308,17 @@ export class Pos {
     this.cart.set([]);
     this.searchControl.setValue('');
     this.discountControl.setValue(0);
+  }
+
+    loadCategories() {
+    this.CategoryService.findAll()
+      .subscribe({
+        next: (data) => {
+          this.categories.set(data);
+        },
+        error: (err) => {
+          console.error('Erro ao carregar categorias', err);
+        }
+      });
   }
 }

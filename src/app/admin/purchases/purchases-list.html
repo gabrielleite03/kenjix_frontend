@@ -1,0 +1,76 @@
+<div class="purchase-container">
+  <div class="purchase-header">
+    <div>
+      <h1 class="purchase-title">Compras</h1>
+      <p class="purchase-subtitle">Gerencie a entrada de mercadorias e pedidos aos fornecedores.</p>
+    </div>
+    <a routerLink="new" class="purchase-btn-primary">
+      <mat-icon>add_circle</mat-icon>
+      Nova Compra
+    </a>
+  </div>
+
+  <div class="purchase-table-card">
+    <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+      <h3 class="font-bold text-slate-800">Histórico de Pedidos</h3>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="purchase-table">
+        <thead>
+          <tr class="bg-slate-50/50 border-b border-slate-100">
+            <th class="purchase-th">ID</th>
+            <th class="purchase-th">Data</th>
+            <th class="purchase-th">Fornecedor</th>
+            <th class="purchase-th">NF</th>
+            <th class="purchase-th">Tipo</th>
+            <th class="purchase-th">Status</th>
+            <th class="purchase-th">Total</th>
+            <th class="purchase-th text-right">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @for (purchase of purchases(); track purchase.id) {
+          <tr class="hover:bg-slate-50/50 transition-colors">
+            <td class="px-6 py-4 text-sm font-bold text-slate-700">{{ purchase.id }}</td>
+            <td class="purchase-td">{{ purchase.createdAt | date:'dd/MM/yyyy' }}</td>
+            <td class="px-6 py-4 text-sm text-slate-600 font-medium">{{ purchase.supplierName }}</td>
+            <td class="purchase-td">
+              {{ purchase.invoiceNumber || '-' }}
+            </td>
+            <td class="px-6 py-4 text-sm text-slate-500">
+              <span class="purchase-type-badge">
+                {{ purchase.invoiceType }}
+              </span>
+            </td>
+            <td class="px-6 py-4">
+              <span [class.bg-emerald-50]="purchase.status === 'Recebido'"
+                [class.text-emerald-600]="purchase.status === 'Recebido'"
+                [class.bg-amber-50]="purchase.status === 'Pendente'"
+                [class.text-amber-600]="purchase.status === 'Pendente'"
+                [class.bg-rose-50]="purchase.status === 'Cancelado'"
+                [class.text-rose-600]="purchase.status === 'Cancelado'" class="purchase-status-badge">
+                {{ purchase.status }}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-sm font-black text-slate-800">R$ {{ purchase.total | number:'1.2-2' }}</td>
+            <td class="px-6 py-4 text-right flex items-center justify-end gap-2">
+              <a [routerLink]="['/admin/purchases/edit', purchase.id]"
+                class="p-2 text-slate-400 hover:text-primary transition-colors">
+                <mat-icon>edit</mat-icon>
+              </a>
+              <a [routerLink]="['/admin/purchases/view', purchase.id]"
+                class="p-2 text-slate-400 hover:text-primary transition-colors">
+                <mat-icon>visibility</mat-icon>
+              </a>
+            </td>
+          </tr>
+          } @empty {
+          <tr>
+            <td colspan="8" class="purchase-empty-state-msg">Nenhuma compra registrada.</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

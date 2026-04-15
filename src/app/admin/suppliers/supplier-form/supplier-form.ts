@@ -1,8 +1,11 @@
-import {ChangeDetectionStrategy, Component, OnInit, inject, signal} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MatIconModule} from '@angular/material/icon';
-import {ReactiveFormsModule, FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {ActivatedRoute, Router, RouterModule} from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnInit, inject, signal } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { CategoryService, Category } from '../../../services/category.service';
+import { SupplierService, Supplier } from '../supplier.service';
+import { NotificationService } from '../../../shared/services/notification';
 
 @Component({
   selector: 'app-supplier-form',
@@ -16,6 +19,10 @@ export class SupplierForm implements OnInit {
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
   private router = inject(Router);
+  private CategoryService = inject(CategoryService);
+  private supplierService = inject(SupplierService);
+  categories = signal<Category[]>([]);
+  private notificationService = inject(NotificationService);
 
   isEditMode = signal(false);
   supplierForm: FormGroup;
@@ -28,62 +35,96 @@ export class SupplierForm implements OnInit {
       ie: ['', [Validators.required]],
       address: ['', [Validators.required]],
       salesperson: ['', [Validators.required]],
-      category: ['', [Validators.required]],
+      categoryId: [null as number | null],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required]],
-      status: ['Ativo', [Validators.required]]
+      active: [true, [Validators.required]]
     });
   }
 
   ngOnInit() {
     const id = this.route.snapshot.paramMap.get('id');
+    console.log('ID da rota:', id);
+
+    this.loadCategories();
+
     if (id) {
       this.isEditMode.set(true);
       this.loadSupplier(id);
     }
   }
 
+  loadCategories(callback?: () => void) {
+    this.CategoryService.findAll()
+      .subscribe({
+        next: (data) => {
+          this.categories.set(data);
+          callback?.(); // executa somente se existir
+        },
+        error: (err) => {
+          console.error('Erro ao carregar categorias', err);
+        }
+      });
+  }
+
   loadSupplier(id: string) {
-    // Mock loading data
-    const mockSuppliers = [
-      { 
-        id: '1', 
-        razaoSocial: 'PetFood Comercio de Alimentos LTDA',
-        nomeFantasia: 'PetFood Distribuidora',
-        cnpj: '12.345.678/0001-90',
-        ie: '123.456.789.110',
-        address: 'Rua das Rações, 123 - São Paulo, SP',
-        salesperson: 'Carlos Oliveira',
-        category: 'Alimentação', 
-        email: 'contato@petfood.com.br', 
-        phone: '(11) 98888-7777', 
-        status: 'Ativo' 
+    this.supplierService.findById(id).subscribe({
+      next: (supplier) => {
+
+        const categoryId = Number(supplier.categoryId);
+
+
+        this.supplierForm.patchValue({
+          razaoSocial: supplier.razaoSocial,
+          nomeFantasia: supplier.nomeFantasia,
+          cnpj: supplier.cnpj,
+          ie: supplier.ie,
+          address: supplier.address,
+          salesperson: supplier.salesperson,
+          categoryId: categoryId,
+          email: supplier.email,
+          phone: supplier.phone,
+          active: supplier.active
+        });
+
       },
-      { 
-        id: '2', 
-        razaoSocial: 'CleanPet Produtos de Higiene S.A.',
-        nomeFantasia: 'CleanPet Higiene',
-        cnpj: '98.765.432/0001-10',
-        ie: '987.654.321.000',
-        address: 'Av. da Limpeza, 456 - Guarulhos, SP',
-        salesperson: 'Ana Souza',
-        category: 'Higiene', 
-        email: 'vendas@cleanpet.com', 
-        phone: '(11) 97777-6666', 
-        status: 'Ativo' 
-      },
-    ];
-    const supplier = mockSuppliers.find(s => s.id === id);
-    if (supplier) {
-      this.supplierForm.patchValue(supplier);
-    }
+      error: (err) => {
+        console.error('Erro ao carregar fornecedor', err);
+      }
+    });
   }
 
   onSubmit() {
-    if (this.supplierForm.valid) {
-      console.log('Supplier data:', this.supplierForm.value);
-      // Logic to save or update
-      this.router.navigate(['/admin/suppliers']);
+    if (!this.supplierForm.valid) return;
+
+    if (this.isEditMode()) {
+      this.updateSupplier();
+    } else {
+      this.addSupplier();
     }
+  }
+
+  addSupplier() {
+    this.supplierService.addSupplier(this.supplierForm.value)
+      .subscribe({
+        next: () => {
+          this.notificationService.success('Fornecedor adicionado com sucesso!');
+          this.router.navigate(['/admin/suppliers']);
+        },
+        error: () => this.notificationService.success('Erro ao salvar fornecedor')
+      });
+  }
+
+  updateSupplier() {
+    const id = this.route.snapshot.paramMap.get('id');
+
+    this.supplierService.updateSupplier(id!, this.supplierForm.value)
+      .subscribe({
+        next: () => {
+          this.notificationService.success('Fornecedor atualizado com sucesso!');
+          this.router.navigate(['/admin/suppliers']);
+        },
+        error: () => this.notificationService.success('Erro ao atualizar fornecedor')
+      });
   }
 }

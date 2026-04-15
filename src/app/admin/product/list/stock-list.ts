@@ -1,9 +1,9 @@
-import {ChangeDetectionStrategy, Component, inject, computed} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {MatIconModule} from '@angular/material/icon';
-import {FormControl, ReactiveFormsModule} from '@angular/forms';
-import {ProductService} from '../product.service';
-import {toSignal} from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, inject, computed, signal, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
+import { ReactiveFormsModule } from '@angular/forms';
+import { StockService, Stock } from '../../../services/stock.service';
+import { NotificationService } from '../../../shared/services/notification';
 
 @Component({
   selector: 'app-stock-list',
@@ -13,46 +13,51 @@ import {toSignal} from '@angular/core/rxjs-interop';
   styleUrls: ['./stock-list.css', '../../admin-shared.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class StockList {
-  productService = inject(ProductService);
-  
-  searchControl = new FormControl('');
-  categoryControl = new FormControl('');
+export class StockList implements OnInit {
+  stockService = inject(StockService);
+  private notificationService = inject(NotificationService);
+  stocks = signal<Stock[]>([]);
+  isLoading = signal(true);
 
-  searchTerm = toSignal(this.searchControl.valueChanges, {initialValue: ''});
-  selectedCategory = toSignal(this.categoryControl.valueChanges, {initialValue: ''});
+ngOnInit() {
+  this.isLoading.set(true);
 
-  products = computed(() => {
-    const allProducts = this.productService.products();
-    const search = (this.searchTerm() || '').toLowerCase();
-    const category = this.selectedCategory() || '';
+  this.stockService.getStocks().subscribe({
+    next: (data) => {
+      setTimeout(() => {
+        this.stocks.set(data);
+        this.isLoading.set(false);
+      }, 500); // garante que o loading aparece
+    },
+    error: () => {
+      this.isLoading.set(false);
+      this.notificationService.error('Erro ao buscar stocks');
+    }
+  });
+}
 
-    return allProducts.filter(p => {
-      const matchesSearch = !search || 
-        p.name.toLowerCase().includes(search) || 
-        p.sku.toLowerCase().includes(search) || 
-        p.brand.toLowerCase().includes(search);
-      
-      const matchesCategory = !category || p.category === category;
 
-      return matchesSearch && matchesCategory;
-    });
+  // Pagination
+  currentPage = signal(1);
+  itemsPerPage = signal(12);
+
+  paginatedStocks = computed(() => {
+    const allFiltered = this.stocks(); // ✅ aqui funciona, pois é um signal
+    const page = this.currentPage();
+    const perPage = this.itemsPerPage();
+    const start = (page - 1) * perPage;
+    return allFiltered.slice(start, start + perPage);
   });
 
-  categories = computed(() => {
-    const allProducts = this.productService.products();
-    const cats = new Set(allProducts.map(p => p.category));
-    return Array.from(cats).sort();
+  totalPages = computed(() => {
+    return Math.ceil(this.stocks().length / this.itemsPerPage());
   });
 
-  clearFilters() {
-    this.searchControl.setValue('');
-    this.categoryControl.setValue('');
-  }
-
-  deleteProduct(id: string) {
-    if (confirm('Tem certeza que deseja excluir este produto?')) {
-      this.productService.deleteProduct(id);
+  setPage(page: number) {
+    if (page >= 1 && page <= this.totalPages()) {
+      this.currentPage.set(page);
     }
   }
+
+
 }

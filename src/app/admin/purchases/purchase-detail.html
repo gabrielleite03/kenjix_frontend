@@ -1,0 +1,134 @@
+<div class="purchase-form-container">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center gap-4">
+      <a routerLink="/admin/purchases" class="purchase-back-btn">
+        <mat-icon>arrow_back</mat-icon>
+      </a>
+      <div>
+        <h1 class="purchase-title">Detalhes da Compra</h1>
+        <p class="purchase-subtitle">Visualizando informações do pedido {{ purchase()?.id }}</p>
+      </div>
+    </div>
+    <div class="flex gap-3">
+      <a [routerLink]="['/admin/purchases/edit', purchase()?.id]"
+        class="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-all">
+        <mat-icon class="text-lg">edit</mat-icon>
+        Editar
+      </a>
+      <button (click)="print()" class="purchase-btn-primary">
+        <mat-icon>print</mat-icon>
+        Imprimir
+      </button>
+    </div>
+  </div>
+
+  @if (purchase(); as p) {
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Header Info -->
+      <section class="purchase-card">
+        <div class="purchase-section-header">
+          <mat-icon class="purchase-section-icon">info</mat-icon>
+          <h3 class="purchase-section-title">Informações Gerais</h3>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div>
+            <span class="purchase-item-label">Fornecedor</span>
+            <p class="font-bold text-slate-800">{{ p.supplierName }}</p>
+          </div>
+          <div>
+            <span class="purchase-item-label">Data</span>
+            <p class="font-bold text-slate-800">{{ p.createdAt | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+          <div>
+            <span class="purchase-item-label">Nota Fiscal</span>
+            <p class="font-bold text-slate-800">{{ p.invoiceNumber || 'Não informada' }}</p>
+          </div>
+          <div>
+            <span class="purchase-item-label">Status</span>
+            <div>
+              <span [class.bg-emerald-50]="p.status === 'Recebido'" [class.text-emerald-600]="p.status === 'Recebido'"
+                [class.bg-amber-50]="p.status === 'Pendente'" [class.text-amber-600]="p.status === 'Pendente'"
+                [class.bg-rose-50]="p.status === 'Cancelado'" [class.text-rose-600]="p.status === 'Cancelado'"
+                class="purchase-status-badge">
+                {{ p.status }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 mt-6">
+          <div>
+            <span class="purchase-item-label">Tipo de Nota</span>
+            <p class="text-sm font-medium text-slate-600">{{ p.invoiceType }}</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Items Table -->
+      <section class="purchase-card">
+        <div class="purchase-section-header">
+          <mat-icon class="purchase-section-icon">inventory_2</mat-icon>
+          <h3 class="purchase-section-title">Itens do Pedido</h3>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-100">
+                <th class="py-3 text-[10px] font-bold text-slate-400 uppercase">Produto</th>
+                <th class="py-3 text-[10px] font-bold text-slate-400 uppercase">C. Custo</th>
+                <th class="py-3 text-[10px] font-bold text-slate-400 uppercase text-center">Qtd</th>
+                <th class="py-3 text-[10px] font-bold text-slate-400 uppercase text-right">Custo Unit.</th>
+                <th class="py-3 text-[10px] font-bold text-slate-400 uppercase text-right">Total</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+              @for (item of p.items; track $index) {
+              <tr>
+                <td class="py-4">
+                  <p class="text-sm font-bold text-slate-700">{{ item.productName }}</p>
+                  <p class="text-[10px] text-slate-400">ID: {{ item.productId }}</p>
+                </td>
+                <td class="py-4">
+                  <span class="text-xs text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                    {{ item.costCenter || 'N/A' }}
+                  </span>
+                </td>
+                <td class="py-4 text-center text-sm text-slate-600 font-medium">{{ item.quantity }}</td>
+                <td class="py-4 text-right text-sm text-slate-600">R$ {{ item.costPrice | number:'1.2-2' }}</td>
+                <td class="py-4 text-right text-sm font-bold text-slate-800">R$ {{ item.total | number:'1.2-2' }}</td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <!-- Summary Sidebar -->
+    <div class="lg:col-span-1">
+      <div class="purchase-summary-card">
+        <h3 class="purchase-summary-title">Resumo Financeiro</h3>
+        <div class="space-y-4">
+          <div class="flex justify-between text-sm">
+            <span class="text-slate-500">Subtotal</span>
+            <span class="font-medium text-slate-700">R$ {{ p.total | number:'1.2-2' }}</span>
+          </div>
+          <div class="pt-4 border-t border-slate-100 flex justify-between items-center">
+            <span class="font-bold text-slate-800">Total Geral</span>
+            <span class="text-2xl font-black text-primary">R$ {{ p.total | number:'1.2-2' }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  } @else {
+  <div class="purchase-card flex flex-col items-center justify-center py-20">
+    <mat-icon class="text-6xl text-slate-200 mb-4">search_off</mat-icon>
+    <p class="text-slate-500 font-medium">Compra não encontrada.</p>
+    <a routerLink="/admin/purchases" class="mt-4 text-primary font-bold hover:underline">Voltar para a lista</a>
+  </div>
+  }
+</div>

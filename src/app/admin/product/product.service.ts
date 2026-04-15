@@ -1,118 +1,166 @@
-import {Injectable, signal} from '@angular/core';
+import { Injectable, signal, inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Category } from '../../services/category.service';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Observable, tap, of } from 'rxjs';
+import { environment } from '../../../../src/environment';
 
 export interface ProductProperty {
   name: string;
   value: string;
 }
 
+export interface Video {
+  id: number;
+  productId: number;
+  url: string;
+}
+
 export interface ProductItem {
   id: string;
   name: string;
   sku: string;
-  category: string;
+  category?: Category;
   brand: string;
   weight: string;
   animalType: string;
   lifeStage: string;
   description: string;
   sellingPrice: number;
-  costPrice: number;
+  price: number;
   stock: number;
   minStock: number;
   images: string[];
   active: boolean;
   createdAt: Date;
+  volume?: number;
   videoUrl?: string;
+  videos?: Video[];
   properties?: ProductProperty[];
+  available: boolean;
+}
+
+export interface Product {
+  id: number;
+  sku: string;
+  name: string;
+  description: string;
+  category: string;
+  brand: string;
+  price: number;
+  oldPrice?: number;
+  rating: number;
+  reviews: number;
+  images: string[];
+  currentIndex: number;
+  available: boolean;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ProductService {
-  private productsSignal = signal<ProductItem[]>([
-    {
-      id: '1',
-      name: 'Ração Premium Adulto Frango',
-      sku: 'KP-00001',
-      category: 'Food',
-      brand: 'Royal Canin',
-      weight: '15kg',
-      animalType: 'Dog',
-      lifeStage: 'Adult',
-      description: 'Ração de alta qualidade para cães adultos.',
-      sellingPrice: 189.90,
-      costPrice: 120.00,
-      stock: 25,
-      minStock: 5,
-      images: ['https://picsum.photos/seed/dogfood/400/400'],
-      active: true,
-      createdAt: new Date(),
-      properties: [
-        { name: 'Sabor', value: 'Frango' },
-        { name: 'Proteína', value: '25%' }
-      ]
-    },
-    {
-      id: '2',
-      name: 'Arranhador para Gatos Torre',
-      sku: 'KP-00002',
-      category: 'Accessories',
-      brand: 'Petz',
-      weight: '2kg',
-      animalType: 'Cat',
-      lifeStage: 'All',
-      description: 'Arranhador resistente com 3 níveis.',
-      sellingPrice: 129.00,
-      costPrice: 65.00,
-      stock: 8,
-      minStock: 3,
-      images: ['https://picsum.photos/seed/catscratch/400/400'],
-      active: true,
-      createdAt: new Date()
-    },
-    {
-      id: '3',
-      name: 'Shampoo Antipulgas 500ml',
-      sku: 'KP-00003',
-      category: 'Hygiene',
-      brand: 'Sanol',
-      weight: '500ml',
-      animalType: 'Dog',
-      lifeStage: 'All',
-      description: 'Shampoo eficaz contra pulgas e carrapatos.',
-      sellingPrice: 35.50,
-      costPrice: 18.00,
-      stock: 45,
-      minStock: 10,
-      images: ['https://picsum.photos/seed/shampoo/400/400'],
-      active: false,
-      createdAt: new Date()
-    }
-  ]);
 
-  products = this.productsSignal.asReadonly();
+  private http = inject(HttpClient);
+  private platformId = inject(PLATFORM_ID);
+  private isBrowser = isPlatformBrowser(this.platformId);
+
+  private API = environment.API_URL;
+
+  private productsSignal = signal<ProductItem[]>([]);
+  products = this.productsSignal;
+
+  private TTL = 5 * 60 * 1000; // 5 min
+  private CACHE_KEY = 'products_cache';
+
 
   getProductById(id: string) {
     return this.productsSignal().find(p => p.id === id);
   }
 
-  addProduct(product: Omit<ProductItem, 'id' | 'createdAt'>) {
-    const newProduct: ProductItem = {
-      ...product,
-      id: Math.random().toString(36).substring(2, 9),
-      createdAt: new Date()
-    };
-    this.productsSignal.update(products => [...products, newProduct]);
+  getProductToHomeById(id: string, marketplace?: string) {
+    let params = new HttpParams();
+
+    if (marketplace) {
+      params = params.set('marketplace', marketplace);
+    }
+    return this.http.get<ProductItem>(`${this.API}/products/${id}`, { params });
+  }
+
+  getProducts(): Observable<ProductItem[]> {
+    return this.http.get<ProductItem[]>(`${this.API}/products`);
+  }
+
+  getProductsByFilter(filters: {
+    marketplace?: string
+  }): Observable<Product[]> {
+
+    const key = JSON.stringify(filters);
+    const now = Date.now();
+
+    // ✅ só tenta cache no browser
+    if (this.isBrowser) {
+      const cache = this.getCache();
+      const cachedEntry = cache[key];
+
+      if (cachedEntry && (now - cachedEntry.timestamp) < this.TTL) {
+        return of(cachedEntry.data);
+      }
+    }
+
+    const params = new HttpParams()
+      .set('marketplace', filters.marketplace || '');
+
+    return this.http.get<Product[]>(`${this.API}/products`, { params })
+      .pipe(
+        tap(data => {
+          if (this.isBrowser) {
+            const cache = this.getCache();
+            cache[key] = {
+              data,
+              timestamp: now
+            };
+            localStorage.setItem(this.CACHE_KEY, JSON.stringify(cache));
+          }
+        })
+      );
+  }
+
+  private getCache(): any {
+    if (!this.isBrowser) return {};
+    const cache = localStorage.getItem(this.CACHE_KEY);
+    return cache ? JSON.parse(cache) : {};
+  }
+
+  clearProductsCache() {
+    if (this.isBrowser) {
+      localStorage.removeItem(this.CACHE_KEY);
+    }
+  }
+
+  addProduct(formData: FormData): Observable<ProductItem> {
+    return this.http.post<ProductItem>(`${this.API}/products`, formData);
   }
 
   updateProduct(id: string, product: Partial<ProductItem>) {
-    this.productsSignal.update(products => 
+    this.productsSignal.update(products =>
       products.map(p => p.id === id ? { ...p, ...product } : p)
     );
+  }
+
+  updateProductFormData(id: string, formData: FormData) {
+    return this.http.put<ProductItem>(`${this.API}/products/${id}`, formData);
   }
 
   deleteProduct(id: string) {
     this.productsSignal.update(products => products.filter(p => p.id !== id));
   }
+
+  loadProducts() {
+    this.getProducts().subscribe(products => {
+      this.productsSignal.set(products);
+    });
+  }
+
+
 }

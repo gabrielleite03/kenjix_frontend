@@ -1,11 +1,74 @@
-version: '3.8'
+version: "3.9"
 
 services:
+  # FRONTEND
   kenjix-frontend:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: kenjix-frontend
+    container_name: kenjix-frontend_container
     ports:
-      - "80:80" # Mapeia a porta 80 do contêiner para a porta 80 do host
+      - "80:80"
     restart: always
+    depends_on:
+      - kenjix-security
+      - kenjix-core
+    networks:
+      - kenjix_net
+
+  # BACKEND / SECURITY (Spring)
+  kenjix-security:
+    image: gabrielleite03/kenjix_security:0.0.15
+    container_name: kenjix-security_conteiner
+    restart: always
+    ports:
+      - "7020:7020"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://${MYSQL_HOST}:${MYSQL_PORT}/${MYSQL_DATABASE_KENJIX}?useSSL=false&serverTimezone=UTC
+      SPRING_DATASOURCE_USERNAME: ${MYSQL_USER}
+      SPRING_DATASOURCE_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      SPRING_FLYWAY_ENABLED: false
+      SECURITY_JWT_TOKEN_SECRET_KEY: ${SECURITY_JWT_TOKEN_SECRET_KEY}
+
+      SERVER_PORT: 7020
+
+
+      SPRING_APPLICATION_NAME: kenjix_security
+
+      # 🔥 MYSQL FORA DO DOCKER
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_DATABASE_KENJIX: ${MYSQL_DATABASE_KENJIX}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+    networks:
+      - kenjix_net
+
+  # GO SERVICE
+  kenjix-core:
+    image: gabrielleite03/kenjix_core:0.0.1
+    container_name: kenjix-core_conteiner
+    restart: always
+    ports:
+      - "7010:7010"
+    environment:
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      AWS_REGION: ${AWS_REGION}
+
+      # 🔥 MYSQL FORA DO DOCKER
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_DATABASE_KENJIX: ${MYSQL_DATABASE_KENJIX}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      REAL_JWT_SECRET: ${REAL_JWT_SECRET}
+      
+
+    networks:
+      - kenjix_net
+
+networks:
+  kenjix_net:
+    driver: bridge

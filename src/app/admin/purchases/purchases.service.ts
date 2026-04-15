@@ -1,6 +1,8 @@
-import {Injectable, signal, inject} from '@angular/core';
-import {ProductService} from '../product/product.service';
-import {StockMovementService} from '../product/stock-movement.service';
+import { Injectable, signal, inject } from '@angular/core';
+import { ProductService } from '../product/product.service';
+import { StockMovementService } from '../product/stock-movement.service';
+import { environment } from '../../../../src/environment';
+import { HttpClient } from '@angular/common/http';
 
 export interface PurchaseItem {
   productId: string;
@@ -8,6 +10,7 @@ export interface PurchaseItem {
   quantity: number;
   costPrice: number;
   total: number;
+  costCenter?: string;
 }
 
 export interface Purchase {
@@ -26,61 +29,34 @@ export interface Purchase {
   providedIn: 'root'
 })
 export class PurchasesService {
+  constructor(private http: HttpClient) { }
+  private API = `${environment.API_URL}/purchases`;
   private productService = inject(ProductService);
   private stockMovementService = inject(StockMovementService);
-  private purchasesSignal = signal<Purchase[]>([
-    {
-      id: 'P-001',
-      invoiceNumber: 'NF-12345',
-      invoiceType: 'Integral',
-      supplierId: '1',
-      supplierName: 'PetFood Distribuidora',
-      items: [
-        { productId: '1', productName: 'Ração Premium Adulto Frango', quantity: 50, costPrice: 120.00, total: 6000.00 }
-      ],
-      total: 6000.00,
-      status: 'Recebido',
-      createdAt: new Date(Date.now() - 86400000 * 2) // 2 days ago
-    }
-  ]);
+  private purchasesSignal = signal<Purchase[]>([]);
 
-  purchases = this.purchasesSignal.asReadonly();
-
-  createPurchase(purchaseData: Omit<Purchase, 'id' | 'createdAt'>) {
-    const newPurchase: Purchase = {
-      ...purchaseData,
-      id: `P-${Math.random().toString(36).substring(2, 7).toUpperCase()}`,
-      createdAt: new Date()
-    };
-
-    // If status is 'Recebido', update stock
-    if (newPurchase.status === 'Recebido') {
-      this.updateStockFromPurchase(newPurchase);
-    }
-
-    this.purchasesSignal.update(purchases => [newPurchase, ...purchases]);
-    return newPurchase;
+  getAll() {
+    const token = localStorage.getItem('kenji_token');
+    return this.http.get<Purchase[]>(`${this.API}`,{
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+        }
+    });
   }
 
-  private updateStockFromPurchase(purchase: Purchase) {
-    purchase.items.forEach(item => {
-      const product = this.productService.getProductById(item.productId);
-      if (product) {
-        this.productService.updateProduct(item.productId, {
-          stock: product.stock + item.quantity,
-          costPrice: item.costPrice // Update cost price to the latest purchase price
-        });
+  getPurchaseById(id: string) {
+     const token = localStorage.getItem('kenji_token');
+    return this.http.get<Purchase>(`${this.API}/purchases/${id}`);
+  }
 
-        // Record stock movement
-        this.stockMovementService.addMovement({
-          productId: item.productId,
-          productName: item.productName,
-          type: 'Entrada',
-          quantity: item.quantity,
-          reason: `Compra ${purchase.id}`,
-          referenceId: purchase.id
-        });
-      }
-    });
+  createPurchase(data: any) {
+     const token = localStorage.getItem('kenji_token');
+    return this.http.post(`${this.API}`, data);
+  }
+
+  updatePurchase(id: string, data: any) {
+     const token = localStorage.getItem('kenji_token');
+    return this.http.put(`${this.API}/${id}`, data);
   }
 }

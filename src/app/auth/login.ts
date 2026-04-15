@@ -22,8 +22,8 @@ export class Login {
 
   constructor(private cdr: ChangeDetectorRef) {
     this.loginForm = this.fb.group({
-      email: ['admin@kenjipet.com', [Validators.required, Validators.email]],
-      password: ['admin123', [Validators.required, Validators.minLength(6)]]
+      email: ['gabriel', [Validators.required, Validators.minLength(5)]],
+      password: ['K0t0net#g4', [Validators.required, Validators.minLength(6)]]
     });
   }
 
@@ -36,13 +36,15 @@ export class Login {
       // Simulate API call
       setTimeout(() => {
         const { email, password } = this.loginForm.value;
-        if (email === 'admin@kenjipet.com' && password === 'admin123') {
-          this.authService.login(email, 'Administrador');
-        } else {
-          this.errorMessage.set('E-mail ou senha incorretos.');
-          this.isLoading.set(false);
-          this.cdr.detectChanges();
-        }
+          this.authService.login(email, password)
+          .subscribe({
+            next: () => {},
+            error: (err) => {
+              this.errorMessage.set(err.message);
+              this.isLoading.set(false);
+              this.cdr.detectChanges();
+            }
+          });
       }, 1000);
     }
   }

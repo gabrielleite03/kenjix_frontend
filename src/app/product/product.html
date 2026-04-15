@@ -6,10 +6,9 @@
 
   <div class="flex flex-1 max-w-[1440px] mx-auto w-full px-4 lg:px-8 py-4 lg:py-8 gap-8 relative">
     <!-- Sidebar (Desktop) / Drawer (Mobile) -->
-    <aside 
+    <aside
       class="fixed inset-y-0 left-0 z-40 w-72 bg-white shadow-2xl transform transition-transform duration-300 lg:relative lg:translate-x-0 lg:shadow-none lg:z-0 lg:w-64 flex-shrink-0 flex flex-col gap-8 p-6 lg:p-0"
-      [class.-translate-x-full]="!isSidebarOpen()"
-    >
+      [class.-translate-x-full]="!isSidebarOpen()">
       <div class="flex items-center justify-between lg:hidden mb-4">
         <h2 class="text-lg font-bold text-slate-800">Filtros</h2>
         <button (click)="isSidebarOpen.set(false)" class="p-2 text-slate-400 hover:text-slate-600">
@@ -20,19 +19,25 @@
       <section>
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Categorias</h3>
         <div class="flex flex-col gap-2">
-          @for (cat of categories; track cat) {
-            <label class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer py-1 hover:text-accent transition-colors">
-              <input class="rounded border-slate-300 text-accent focus:ring-accent size-4" type="checkbox" [checked]="cat === 'Alimentação'"/>
-              <span>{{cat}}</span>
-            </label>
+          @for (cat of categories(); track cat) {
+          <label
+            class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer py-1 hover:text-accent transition-colors">
+            <input class="rounded border-slate-300 text-accent focus:ring-accent size-4" type="checkbox"
+              [checked]="selectedCategories().includes(cat)" (change)="onCategoryChange(cat, $event.target.checked)" />
+            <span>{{cat}}</span>
+          </label>
           }
         </div>
       </section>
 
       <section>
-        <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Faixa de Preço</h3>
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Faixa de Preço</h3>
+          <span class="text-xs font-bold text-accent">Até ${{maxPrice()}}</span>
+        </div>
         <div class="px-2">
-          <input class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-accent" max="500" min="0" step="10" type="range"/>
+          <input class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-accent" max="500"
+            min="0" step="10" type="range" [value]="maxPrice()" (input)="updatePriceFilter($event)" />
           <div class="flex justify-between mt-3 text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
             <span>$0</span>
             <span>$500+</span>
@@ -43,30 +48,28 @@
       <section>
         <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-4">Marca</h3>
         <div class="flex flex-col gap-2">
-          @for (brand of brands; track brand) {
-            <label class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer py-1 hover:text-accent transition-colors">
-              <input class="rounded border-slate-300 text-accent focus:ring-accent size-4" type="checkbox"/>
-              <span>{{brand}}</span>
-            </label>
+          @for (brand of brands(); track brand) {
+          <label
+            class="flex items-center gap-3 text-sm text-slate-600 cursor-pointer py-1 hover:text-accent transition-colors">
+            <input class="rounded border-slate-300 text-accent focus:ring-accent size-4" type="checkbox"
+              [checked]="selectedBrands().includes(brand)" (change)="onBrandChange(brand, $event.target.checked)" />
+            <span>{{brand}}</span>
+          </label>
           }
         </div>
       </section>
 
-      <button class="mt-4 text-accent text-xs font-bold border border-accent/30 py-2.5 rounded-lg hover:bg-accent/5 transition-colors uppercase tracking-widest">
+      <button
+        class="mt-4 text-accent text-xs font-bold border border-accent/30 py-2.5 rounded-lg hover:bg-accent/5 transition-colors uppercase tracking-widest">
         Limpar Filtros
       </button>
     </aside>
 
     <!-- Overlay for mobile sidebar -->
     @if (isSidebarOpen()) {
-      <div 
-        (click)="isSidebarOpen.set(false)"
-        (keydown.escape)="isSidebarOpen.set(false)"
-        tabindex="0"
-        role="button"
-        aria-label="Fechar filtros"
-        class="fixed inset-0 bg-black/40 z-30 lg:hidden backdrop-blur-sm transition-opacity"
-      ></div>
+    <div (click)="isSidebarOpen.set(false)" (keydown.escape)="isSidebarOpen.set(false)" tabindex="0" role="button"
+      aria-label="Fechar filtros" class="fixed inset-0 bg-black/40 z-30 lg:hidden backdrop-blur-sm transition-opacity">
+    </div>
     }
 
     <!-- Main Content -->
@@ -75,35 +78,32 @@
         <div>
           <h1 class="text-xl lg:text-2xl font-bold text-slate-800">Produtos</h1>
           <p class="text-xs lg:text-sm text-slate-500">
-            Mostrando {{ (currentPage() - 1) * itemsPerPage() + 1 }}-{{ Math.min(currentPage() * itemsPerPage(), products().length) }} de {{ products().length }} produtos
+            Mostrando {{ (currentPage() - 1) * itemsPerPage() + 1 }}-{{ Math.min(currentPage() * itemsPerPage(),
+            products().length) }} de {{ products().length }} produtos
           </p>
         </div>
-        
+
         <div class="flex items-center gap-2">
           <!-- Mobile Filter Toggle -->
-          <button 
-            (click)="isSidebarOpen.set(true)"
-            class="lg:hidden flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors"
-          >
+          <button (click)="isSidebarOpen.set(true)"
+            class="lg:hidden flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-medium text-slate-600 hover:bg-slate-50 transition-colors">
             <mat-icon class="text-[18px] h-[18px] w-[18px]">filter_list</mat-icon>
             Filtros
           </button>
 
           <div class="flex items-center gap-2 ml-auto sm:ml-0">
             <label class="hidden sm:block text-sm text-slate-500" for="items-per-page">Exibir:</label>
-            <select 
-              id="items-per-page" 
-              (change)="setItemsPerPage($event)"
-              class="bg-white border border-slate-200 rounded-lg text-xs lg:text-sm px-3 py-2 focus:ring-accent focus:border-accent transition-all"
-            >
-              <option value="6" [selected]="itemsPerPage() === 6">6</option>
-              <option value="12" [selected]="itemsPerPage() === 12">12</option>
-              <option value="24" [selected]="itemsPerPage() === 24">24</option>
-              <option value="48" [selected]="itemsPerPage() === 48">48</option>
+            <select id="items-per-page" (change)="setItemsPerPage($event)"
+              class="bg-white border border-slate-200 rounded-lg text-xs lg:text-sm px-3 py-2 focus:ring-accent focus:border-accent transition-all">
+              <option value="10" [selected]="itemsPerPage() === 10">10</option>
+              <option value="20" [selected]="itemsPerPage() === 20">20</option>
+              <option value="30" [selected]="itemsPerPage() === 30">30</option>
+              <option value="50" [selected]="itemsPerPage() === 50">50</option>
             </select>
 
             <label class="hidden sm:block text-sm text-slate-500 ml-2" for="sort-select">Ordenar:</label>
-            <select id="sort-select" class="bg-white border border-slate-200 rounded-lg text-xs lg:text-sm px-3 py-2 focus:ring-accent focus:border-accent transition-all">
+            <select id="sort-select"
+              class="bg-white border border-slate-200 rounded-lg text-xs lg:text-sm px-3 py-2 focus:ring-accent focus:border-accent transition-all">
               <option>Recomendados</option>
               <option>Preço: Menor para Maior</option>
               <option>Preço: Maior para Menor</option>
@@ -114,113 +114,113 @@
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-        @for (product of paginatedProducts(); track product.id) {
-          <div class="mat-card group">
-            <div class="relative w-full aspect-square overflow-hidden bg-slate-100">
-              <!-- Swiper Carousel -->
-              <swiper-container 
-                class="w-full h-full"
-                pagination="true"
-                navigation="true"
-                pagination-dynamic-bullets="true"
-                loop="true"
-                observer="true"
-                observe-parents="true"
-                style="--swiper-pagination-color: #0d9488; --swiper-pagination-bullet-size: 6px; --swiper-navigation-color: #0d9488; --swiper-navigation-size: 20px;"
-              >
-                @for (img of product.images; track img) {
-                  <swiper-slide class="w-full h-full">
-                    @if (isYouTube(img)) {
-                      <div class="w-full h-full relative">
-                        <iframe 
-                          [src]="getYouTubeEmbedUrl(img)" 
-                          class="w-full h-full border-none"
-                          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                          allowfullscreen
-                        ></iframe>
-                      </div>
-                    } @else {
-                      <button 
-                        class="w-full h-full flex-shrink-0 cursor-pointer border-none p-0 block relative" 
-                        (click)="openImage(img)"
-                        aria-label="Ver imagem completa"
-                      >
-                        <img
-                          [src]="img"
-                          [alt]="product.name"
-                          referrerpolicy="no-referrer"
-                          class="w-full h-full object-cover"
-                        />
-                      </button>
-                    }
-                  </swiper-slide>
-                }
-              </swiper-container>
-
-              <!-- Overlay Icon -->
-              <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors flex items-center justify-center pointer-events-none z-10">
-                <mat-icon class="text-white opacity-0 group-hover:opacity-100 transition-opacity">open_in_new</mat-icon>
-              </div>
+        @if (isLoading()) {
+        @for (i of [1,2,3,4,5,6]; track i) {
+        <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm animate-pulse">
+          <div class="aspect-square bg-slate-200"></div>
+          <div class="p-4 space-y-3">
+            <div class="h-3 bg-slate-200 rounded w-1/4"></div>
+            <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+            <div class="h-3 bg-slate-200 rounded w-full"></div>
+            <div class="flex justify-between items-center pt-4">
+              <div class="h-6 bg-slate-200 rounded w-1/3"></div>
             </div>
-            <div class="p-4 flex flex-col h-[200px]">
-              <div class="flex-1">
-                <div class="flex justify-between items-center mb-2">
-                  <p class="text-[10px] uppercase font-bold text-accent tracking-widest">{{product.category}}</p>
-                  <span class="text-[10px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200 font-medium shadow-sm">
-                    {{product.sku}}
-                  </span>
+          </div>
+        </div>
+        }
+        } @else {
+        @for (product of paginatedProducts(); track product.id) {
+        <div class="mat-card group cursor-pointer" (click)="goToDetail(product.id)"
+          (keydown.enter)="goToDetail(product.id)" (keydown.space)="goToDetail(product.id)" tabindex="0" role="button"
+          [aria-label]="'Ver detalhes de ' + product.name">
+          <div class="relative w-full aspect-square overflow-hidden bg-slate-100">
+            <!-- Out of Stock Tag -->
+            @if (product.available === false) {
+            <div
+              class="absolute top-3 left-3 z-20 bg-red-500 text-white text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider shadow-sm">
+              Esgotado
+            </div>
+            }
+
+            <!-- Swiper Carousel -->
+            <swiper-container class="w-full h-full" pagination="true" navigation="true"
+              pagination-dynamic-bullets="true" loop="true" observer="true" observe-parents="true"
+              style="--swiper-pagination-color: #0d9488; --swiper-pagination-bullet-size: 6px; --swiper-navigation-color: #0d9488; --swiper-navigation-size: 20px;"
+              (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+              @for (img of product.images; track img) {
+              <swiper-slide class="w-full h-full">
+                @if (isYouTube(img)) {
+                <div class="w-full h-full relative" (click)="$event.stopPropagation()"
+                  (keydown)="$event.stopPropagation()" tabindex="0" role="region" aria-label="Vídeo do produto">
+                  <iframe [src]="getYouTubeEmbedUrl(img)" class="w-full h-full border-none"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
                 </div>
-                <h3 class="font-semibold text-slate-800 line-clamp-2 mb-2">{{product.name}}</h3>
-                <p class="text-xs text-slate-500 line-clamp-2 mb-2 h-8">
-                  {{product.description}}
-                </p>
+                } @else {
+                <div class="w-full h-full flex-shrink-0 border-none p-0 block relative">
+                  <img [src]="img" [alt]="product.name" referrerpolicy="no-referrer"
+                    class="w-full h-full object-cover" />
+                </div>
+                }
+              </swiper-slide>
+              }
+            </swiper-container>
+
+
+          </div>
+          <div class="p-4 flex flex-col h-[200px]">
+            <div class="flex-1">
+              <div class="flex justify-between items-center mb-2">
+                <p class="text-[10px] uppercase font-bold text-accent tracking-widest">{{product.category}}</p>
+                <span
+                  class="text-[10px] font-mono bg-slate-100 text-slate-600 px-2 py-0.5 rounded border border-slate-200 font-medium shadow-sm">
+                  {{product.sku}}
+                </span>
               </div>
-              <div class="flex items-center mt-4">
-                <div class="flex flex-col">
-                  @if (product.oldPrice) {
-                    <span class="text-[10px] text-red-500 line-through">${{product.oldPrice}}</span>
-                  }
-                  <span class="text-xl font-bold text-slate-900">${{product.price}}</span>
-                </div>
+              <h3 class="font-semibold text-slate-800 line-clamp-2 mb-2">{{product.name}}</h3>
+              <p class="text-xs text-slate-500 line-clamp-2 mb-2 h-8">
+                {{product.description}}
+              </p>
+            </div>
+            <div class="flex items-center mt-4">
+              <div class="flex flex-col">
+                @if (product.oldPrice) {
+                <span class="text-[10px] text-red-500 line-through">R$ {{product.oldPrice}}</span>
+                }
+                <span class="text-xl font-bold text-slate-900"> {{ (product.price |
+                  currency:'BRL':'symbol':'1.2-2')?.replace('R$', 'R$ ') }}</span>
               </div>
             </div>
           </div>
+        </div>
+        }
         }
       </div>
 
       <!-- Pagination -->
       @if (totalPages() > 1) {
-        <div class="flex justify-center mt-12 gap-2">
-          <button 
-            class="size-10 flex items-center justify-center rounded border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            (click)="prevPage()"
-            [disabled]="currentPage() === 1"
-          >
-            <mat-icon>chevron_left</mat-icon>
-          </button>
-          
-          @for (page of [].constructor(totalPages()); track $index) {
-            <button 
-              class="size-10 flex items-center justify-center rounded font-bold transition-colors"
-              [class.bg-accent]="currentPage() === $index + 1"
-              [class.text-white]="currentPage() === $index + 1"
-              [class.border]="currentPage() !== $index + 1"
-              [class.border-slate-200]="currentPage() !== $index + 1"
-              [class.hover:bg-slate-50]="currentPage() !== $index + 1"
-              (click)="setPage($index + 1)"
-            >
-              {{ $index + 1 }}
-            </button>
-          }
+      <div class="flex justify-center mt-12 gap-2">
+        <button
+          class="size-10 flex items-center justify-center rounded border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          (click)="prevPage()" [disabled]="currentPage() === 1">
+          <mat-icon>chevron_left</mat-icon>
+        </button>
 
-          <button 
-            class="size-10 flex items-center justify-center rounded border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            (click)="nextPage()"
-            [disabled]="currentPage() === totalPages()"
-          >
-            <mat-icon>chevron_right</mat-icon>
-          </button>
-        </div>
+        @for (page of [].constructor(totalPages()); track $index) {
+        <button class="size-10 flex items-center justify-center rounded font-bold transition-colors"
+          [class.bg-accent]="currentPage() === $index + 1" [class.text-white]="currentPage() === $index + 1"
+          [class.border]="currentPage() !== $index + 1" [class.border-slate-200]="currentPage() !== $index + 1"
+          [class.hover:bg-slate-50]="currentPage() !== $index + 1" (click)="setPage($index + 1)">
+          {{ $index + 1 }}
+        </button>
+        }
+
+        <button
+          class="size-10 flex items-center justify-center rounded border border-slate-200 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
+          (click)="nextPage()" [disabled]="currentPage() === totalPages()">
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
       }
     </main>
   </div>

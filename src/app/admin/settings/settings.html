@@ -8,45 +8,43 @@
     <!-- Sidebar Navigation -->
     <div class="lg:col-span-1">
       <nav class="flex flex-col gap-1">
-        <button 
-          (click)="activeTab.set('general')"
-          [class]="(activeTab() === 'general' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'"
-        >
+        <button (click)="activeTab.set('general')"
+          [class]="(activeTab() === 'general' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'">
           <mat-icon>settings</mat-icon>
           Geral
         </button>
-        <button 
-          (click)="activeTab.set('notifications')"
-          [class]="(activeTab() === 'notifications' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'"
-        >
+        <button (click)="activeTab.set('notifications')"
+          [class]="(activeTab() === 'notifications' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'">
           <mat-icon>notifications</mat-icon>
           Notificações
         </button>
-        <button 
-          (click)="activeTab.set('categories')"
-          [class]="(activeTab() === 'categories' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'"
-        >
+        <button (click)="activeTab.set('categories')"
+          [class]="(activeTab() === 'categories' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'">
           <mat-icon>category</mat-icon>
           Categorias
         </button>
-        <button 
-          (click)="activeTab.set('warehouses')"
-          [class]="(activeTab() === 'warehouses' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'"
-        >
+        <button (click)="activeTab.set('warehouses')"
+          [class]="(activeTab() === 'warehouses' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'">
           <mat-icon>warehouse</mat-icon>
           Depósitos
         </button>
-        <button 
-          (click)="activeTab.set('products')"
-          [class]="(activeTab() === 'products' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'"
-        >
+        <button (click)="activeTab.set('products')"
+          [class]="(activeTab() === 'products' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'">
           <mat-icon>inventory_2</mat-icon>
           Produtos
         </button>
-        <button 
-          (click)="activeTab.set('security')"
-          [class]="(activeTab() === 'security' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'"
-        >
+        <button (click)="activeTab.set('expenses')"
+          [class]="(activeTab() === 'expenses' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'">
+          <mat-icon>payments</mat-icon>
+          Despesas
+        </button>
+        <button (click)="activeTab.set('cost-centers')"
+          [class]="(activeTab() === 'cost-centers' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'">
+          <mat-icon>account_tree</mat-icon>
+          Centro de Custos
+        </button>
+        <button (click)="activeTab.set('security')"
+          [class]="(activeTab() === 'security' ? 'bg-primary/10 text-primary ' : 'text-slate-600 ') + 'flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-semibold hover:bg-slate-50 transition-colors text-left'">
           <mat-icon>security</mat-icon>
           Segurança
         </button>
@@ -56,109 +54,120 @@
     <!-- Content Area -->
     <div class="lg:col-span-3">
       @if (activeTab() === 'general') {
-        <div class="admin-card p-6">
-          <h2 class="text-lg font-bold text-slate-800 mb-6">Informações da Loja</h2>
-          <form [formGroup]="generalForm" (ngSubmit)="saveGeneral()" class="space-y-6">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div class="flex flex-col gap-2">
-                <label for="storeName" class="admin-label">Nome da Loja</label>
-                <input id="storeName" type="text" formControlName="storeName" class="admin-input" placeholder="Ex: Kenji Pet Shop">
-              </div>
-              <div class="flex flex-col gap-2">
-                <label for="email" class="admin-label">E-mail de Contato</label>
-                <input id="email" type="email" formControlName="email" class="admin-input" placeholder="contato@exemplo.com">
-              </div>
-              <div class="flex flex-col gap-2">
-                <label for="phone" class="admin-label">Telefone</label>
-                <input id="phone" type="text" formControlName="phone" class="admin-input" placeholder="(11) 99999-9999">
-              </div>
-              <div class="flex flex-col gap-2">
-                <label for="currency" class="admin-label">Moeda</label>
-                <select id="currency" formControlName="currency" class="admin-input">
-                  <option value="BRL">Real Brasileiro (R$)</option>
-                  <option value="USD">Dólar Americano ($)</option>
-                  <option value="EUR">Euro (€)</option>
-                </select>
-              </div>
+      <div class="admin-card p-6">
+        <h2 class="text-lg font-bold text-slate-800 mb-6">Informações da Loja</h2>
+        <form [formGroup]="generalForm" (ngSubmit)="saveGeneral()" class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div class="flex flex-col gap-2">
+              <label for="storeName" class="admin-label">Nome da Loja</label>
+              <input id="storeName" type="text" formControlName="storeName" class="admin-input"
+                placeholder="Ex: Kenji Pet Shop">
             </div>
             <div class="flex flex-col gap-2">
-              <label for="address" class="admin-label">Endereço Completo</label>
-              <input id="address" type="text" formControlName="address" class="admin-input" placeholder="Rua, Número, Bairro, Cidade - UF">
+              <label for="email" class="admin-label">E-mail de Contato</label>
+              <input id="email" type="email" formControlName="email" class="admin-input"
+                placeholder="contato@exemplo.com">
             </div>
             <div class="flex flex-col gap-2">
-              <label for="timezone" class="admin-label">Fuso Horário</label>
-              <select id="timezone" formControlName="timezone" class="admin-input">
-                <option value="America/Sao_Paulo">Brasília (GMT-3)</option>
-                <option value="America/Manaus">Manaus (GMT-4)</option>
-                <option value="America/New_York">Nova York (GMT-5)</option>
+              <label for="phone" class="admin-label">Telefone</label>
+              <input id="phone" type="text" formControlName="phone" class="admin-input" placeholder="(11) 99999-9999">
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="currency" class="admin-label">Moeda</label>
+              <select id="currency" formControlName="currency" class="admin-input">
+                <option value="BRL">Real Brasileiro (R$)</option>
+                <option value="USD">Dólar Americano ($)</option>
+                <option value="EUR">Euro (€)</option>
               </select>
             </div>
-            <div class="pt-4 border-t border-slate-100 flex justify-end">
-              <button type="submit" class="admin-button-primary">
-                Salvar Alterações
-              </button>
-            </div>
-          </form>
-        </div>
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="address" class="admin-label">Endereço Completo</label>
+            <input id="address" type="text" formControlName="address" class="admin-input"
+              placeholder="Rua, Número, Bairro, Cidade - UF">
+          </div>
+          <div class="flex flex-col gap-2">
+            <label for="timezone" class="admin-label">Fuso Horário</label>
+            <select id="timezone" formControlName="timezone" class="admin-input">
+              <option value="America/Sao_Paulo">Brasília (GMT-3)</option>
+              <option value="America/Manaus">Manaus (GMT-4)</option>
+              <option value="America/New_York">Nova York (GMT-5)</option>
+            </select>
+          </div>
+          <div class="pt-4 border-t border-slate-100 flex justify-end">
+            <button type="submit" class="admin-button-primary">
+              Salvar Alterações
+            </button>
+          </div>
+        </form>
+      </div>
       }
 
       @if (activeTab() === 'notifications') {
-        <div class="admin-card p-6">
-          <h2 class="text-lg font-bold text-slate-800 mb-6">Preferências de Notificação</h2>
-          <form [formGroup]="notificationForm" (ngSubmit)="saveNotifications()" class="space-y-6">
-            <div class="space-y-4">
-              <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                <div class="flex items-center gap-3">
-                  <mat-icon class="text-primary">inventory_2</mat-icon>
-                  <div>
-                    <p class="text-sm font-bold text-slate-800">Alertas de Baixo Estoque</p>
-                    <p class="text-xs text-slate-500">Notificar quando um produto atingir o estoque mínimo.</p>
-                  </div>
+      <div class="admin-card p-6">
+        <h2 class="text-lg font-bold text-slate-800 mb-6">Preferências de Notificação</h2>
+        <form [formGroup]="notificationForm" (ngSubmit)="saveNotifications()" class="space-y-6">
+          <div class="space-y-4">
+            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+              <div class="flex items-center gap-3">
+                <mat-icon class="text-primary">inventory_2</mat-icon>
+                <div>
+                  <p class="text-sm font-bold text-slate-800">Alertas de Baixo Estoque</p>
+                  <p class="text-xs text-slate-500">Notificar quando um produto atingir o estoque mínimo.</p>
                 </div>
-                <input type="checkbox" formControlName="lowStockAlert" class="w-5 h-5 accent-primary">
               </div>
-              <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                <div class="flex items-center gap-3">
-                  <mat-icon class="text-primary">shopping_cart</mat-icon>
-                  <div>
-                    <p class="text-sm font-bold text-slate-800">Novos Pedidos</p>
-                    <p class="text-xs text-slate-500">Receber e-mail a cada nova venda realizada.</p>
-                  </div>
-                </div>
-                <input type="checkbox" formControlName="newOrderEmail" class="w-5 h-5 accent-primary">
-              </div>
-              <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
-                <div class="flex items-center gap-3">
-                  <mat-icon class="text-primary">assessment</mat-icon>
-                  <div>
-                    <p class="text-sm font-bold text-slate-800">Relatórios Semanais</p>
-                    <p class="text-xs text-slate-500">Receber resumo de desempenho toda segunda-feira.</p>
-                  </div>
-                </div>
-                <input type="checkbox" formControlName="weeklyReport" class="w-5 h-5 accent-primary">
-              </div>
+              <input type="checkbox" formControlName="lowStockAlert" class="w-5 h-5 accent-primary">
             </div>
-            <div class="pt-4 border-t border-slate-100 flex justify-end">
-              <button type="submit" class="admin-button-primary">
-                Salvar Preferências
-              </button>
+            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+              <div class="flex items-center gap-3">
+                <mat-icon class="text-primary">shopping_cart</mat-icon>
+                <div>
+                  <p class="text-sm font-bold text-slate-800">Novos Pedidos</p>
+                  <p class="text-xs text-slate-500">Receber e-mail a cada nova venda realizada.</p>
+                </div>
+              </div>
+              <input type="checkbox" formControlName="newOrderEmail" class="w-5 h-5 accent-primary">
             </div>
-          </form>
-        </div>
+            <div class="flex items-center justify-between p-4 bg-slate-50 rounded-lg">
+              <div class="flex items-center gap-3">
+                <mat-icon class="text-primary">assessment</mat-icon>
+                <div>
+                  <p class="text-sm font-bold text-slate-800">Relatórios Semanais</p>
+                  <p class="text-xs text-slate-500">Receber resumo de desempenho toda segunda-feira.</p>
+                </div>
+              </div>
+              <input type="checkbox" formControlName="weeklyReport" class="w-5 h-5 accent-primary">
+            </div>
+          </div>
+          <div class="pt-4 border-t border-slate-100 flex justify-end">
+            <button type="submit" class="admin-button-primary">
+              Salvar Preferências
+            </button>
+          </div>
+        </form>
+      </div>
       }
 
       @if (activeTab() === 'categories') {
-        <div class="admin-card p-6">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-bold text-slate-800">Categorias de Produtos</h2>
-          </div>
+      <div class="admin-card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-lg font-bold text-slate-800">Categorias de Produtos</h2>
+        </div>
 
-          <!-- Category Form -->
-          <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-8">
-            <h3 class="text-sm font-bold text-slate-700 mb-4">
+        <!-- Category Form -->
+        <div class="bg-slate-50 rounded-xl border border-slate-100 mb-8 overflow-hidden transition-all duration-300">
+          <button (click)="isCategoryFormCollapsed.set(!isCategoryFormCollapsed())"
+            class="w-full px-4 py-3 flex items-center justify-between hover:bg-slate-100/50 transition-colors">
+            <h3 class="text-sm font-bold text-slate-700">
               {{ editingCategory() ? 'Editar Categoria' : 'Adicionar Nova Categoria' }}
             </h3>
-            <form [formGroup]="categoryForm" (ngSubmit)="editingCategory() ? saveCategory() : addCategory()" class="space-y-6">
+            <mat-icon [class.rotate-180]="isCategoryFormCollapsed()"
+              class="text-slate-400 transition-transform">expand_more</mat-icon>
+          </button>
+
+          <div [class.hidden]="isCategoryFormCollapsed()" class="p-4 pt-0">
+            <form [formGroup]="categoryForm" (ngSubmit)="editingCategory() ? saveCategory() : addCategory()"
+              class="space-y-6">
               <div class="grid grid-cols-1 md:grid-cols-4 gap-4 items-start">
                 <div class="flex flex-col gap-2">
                   <label for="catName" class="admin-label">Nome</label>
@@ -166,13 +175,8 @@
                 </div>
                 <div class="flex flex-col gap-2 md:col-span-2">
                   <label for="catDesc" class="admin-label">Descrição (Máx 500 caracteres)</label>
-                  <textarea 
-                    id="catDesc" 
-                    formControlName="description" 
-                    class="admin-input min-h-[42px] py-2" 
-                    placeholder="Breve descrição..."
-                    maxlength="500"
-                  ></textarea>
+                  <textarea id="catDesc" formControlName="description" class="admin-input min-h-[42px] py-2"
+                    placeholder="Breve descrição..." maxlength="500"></textarea>
                   <div class="flex justify-end">
                     <span class="text-[10px] text-slate-400 font-medium">
                       {{ categoryForm.get('description')?.value?.length || 0 }}/500
@@ -192,562 +196,1299 @@
                   {{ editingCategory() ? 'Salvar Categoria' : 'Adicionar Categoria' }}
                 </button>
                 @if (editingCategory()) {
-                  <button type="button" (click)="cancelEditCategory()" class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50">
-                    Cancelar
-                  </button>
+                <button type="button" (click)="cancelEditCategory()"
+                  class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50">
+                  Cancelar
+                </button>
                 }
               </div>
             </form>
           </div>
+        </div>
 
-          <!-- Categories List -->
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b border-slate-100">
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Nome</th>
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Descrição</th>
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Status</th>
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-right">Ações</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-50">
-                @for (cat of categories(); track cat.id) {
-                  <tr class="hover:bg-slate-50/50 transition-colors">
-                    <td class="px-4 py-3 text-sm font-bold text-slate-700">{{ cat.name }}</td>
-                    <td class="px-4 py-3 text-sm text-slate-500">{{ cat.description }}</td>
-                    <td class="px-4 py-3">
-                      <span 
-                        [class.bg-emerald-50]="cat.active" 
-                        [class.text-emerald-600]="cat.active"
-                        [class.bg-slate-100]="!cat.active"
-                        [class.text-slate-500]="!cat.active"
-                        class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider"
-                      >
-                        {{ cat.active ? 'Ativo' : 'Inativo' }}
-                      </span>
-                    </td>
-                    <td class="px-4 py-3 text-right">
-                      <div class="flex items-center justify-end gap-1">
-                        <button (click)="editCategory(cat)" class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md">
-                          <mat-icon class="text-lg">edit</mat-icon>
-                        </button>
-                        <button (click)="deleteCategory(cat.id)" class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-md">
-                          <mat-icon class="text-lg">delete</mat-icon>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
+        <!-- Controls: Items per page and Search -->
+        <!-- Items per page -->
+        <div class="mb-6">
+          <h2 class="text-lg font-bold text-slate-800 mb-4">Categorias de Produtos</h2>
+          <div
+            class="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-slate-50/50 rounded-xl border border-slate-100">
+            <div class="flex items-center gap-4 w-full sm:w-auto">
+              <!-- Items per page -->
+              <div class="flex items-center gap-2">
+                <span class="text-xs text-slate-500 whitespace-nowrap">Itens por página:</span>
+                <select (change)="setCategoryItemsPerPage(+$any($event.target).value)"
+                  class="bg-white border border-slate-200 rounded-lg text-xs px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary/20">
+                  @for (option of categoryItemsPerPageOptions; track option) {
+                  <option [value]="option" [selected]="categoryItemsPerPage() === option">{{ option }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            <!-- Search -->
+            <div class="relative w-full sm:w-64">
+              <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</mat-icon>
+              <input type="text" [value]="categorySearch()" (input)="onCategorySearch($event)"
+                placeholder="Buscar categoria..."
+                class="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
+            </div>
           </div>
         </div>
+
+
+        <!-- Categories List -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-100">
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Nome</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Descrição</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Status</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+              @for (cat of paginatedCategories(); track cat.id) {
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-4 py-3 text-sm font-bold text-slate-700">{{ cat.name }}</td>
+                <td class="px-4 py-3 text-sm text-slate-500">{{ cat.description }}</td>
+                <td class="px-4 py-3">
+                  <span [class.bg-emerald-50]="cat.active" [class.text-emerald-600]="cat.active"
+                    [class.bg-slate-100]="!cat.active" [class.text-slate-500]="!cat.active"
+                    class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                    {{ cat.active ? 'Ativo' : 'Inativo' }}
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <button (click)="editCategory(cat)"
+                      class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md">
+                      <mat-icon class="text-lg">edit</mat-icon>
+                    </button>
+                    <button (click)="deleteCategory(cat.id)"
+                      class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-md">
+                      <mat-icon class="text-lg">delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              } @empty {
+              <tr>
+                <td colspan="4" class="px-4 py-12 text-center text-slate-400 italic">
+                  Nenhuma categoria encontrada.
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+        <!-- Pagination -->
+        @if (totalCategoryPages() > 1 || filteredCategories().length > 0) {
+        <div class="flex flex-col sm:flex-row items-center justify-between mt-6 pt-6 border-t border-slate-100 gap-4">
+          <p class="text-xs text-slate-500">
+            Mostrando {{ paginatedCategories().length }} de {{ filteredCategories().length }} categorias
+          </p>
+
+          <div class="flex items-center gap-4">
+            <!-- Go to page -->
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-500">Ir para:</span>
+              <input type="number" [value]="categoryPage()" (input)="setCategoryPage(+$any($event.target).value)"
+                class="w-12 py-1 text-center border border-slate-200 rounded text-xs focus:outline-none focus:ring-2 focus:ring-primary/20"
+                min="1" [max]="totalCategoryPages()">
+            </div>
+
+            <div class="flex items-center gap-2">
+              <button (click)="setCategoryPage(categoryPage() - 1)" [disabled]="categoryPage() === 1"
+                class="p-2 text-slate-400 hover:text-primary disabled:opacity-30 transition-colors">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+
+              <div class="hidden sm:flex items-center gap-1">
+                @for (p of [].constructor(totalCategoryPages()); track $index) {
+                @if ($index + 1 === 1 || $index + 1 === totalCategoryPages() || ($index + 1 >= categoryPage() - 1 &&
+                $index + 1 <= categoryPage() + 1)) { <button (click)="setCategoryPage($index + 1)"
+                  [class.bg-primary]="categoryPage() === $index + 1" [class.text-white]="categoryPage() === $index + 1"
+                  [class.text-slate-600]="categoryPage() !== $index + 1"
+                  [class.hover:bg-slate-100]="categoryPage() !== $index + 1"
+                  class="w-8 h-8 rounded-lg text-xs font-bold transition-all">
+                  {{ $index + 1 }}
+                  </button>
+                  } @else if (($index + 1 === 2 && categoryPage() > 3) || ($index + 1 === totalCategoryPages() - 1 &&
+                  categoryPage() < totalCategoryPages() - 2)) { <span class="text-slate-400 text-xs px-1">...</span>
+                    }
+                    }
+              </div>
+
+              <div class="sm:hidden text-xs font-bold text-slate-600">
+                Página {{ categoryPage() }} de {{ totalCategoryPages() }}
+              </div>
+
+              <button (click)="setCategoryPage(categoryPage() + 1)" [disabled]="categoryPage() === totalCategoryPages()"
+                class="p-2 text-slate-400 hover:text-primary disabled:opacity-30 transition-colors">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
       }
 
       @if (activeTab() === 'warehouses') {
-        <div class="admin-card p-6">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-bold text-slate-800">Gerenciamento de Depósitos</h2>
-          </div>
-
-          <!-- Warehouse Form -->
-          <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-8">
-            <h3 class="text-sm font-bold text-slate-700 mb-4">
-              {{ editingWarehouse() ? 'Editar Depósito' : 'Adicionar Novo Depósito' }}
-            </h3>
-            <form [formGroup]="warehouseForm" (ngSubmit)="editingWarehouse() ? saveWarehouse() : addWarehouse()" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
-              <div class="flex flex-col gap-2">
-                <label for="wName" class="admin-label">Nome</label>
-                <input id="wName" type="text" formControlName="name" class="admin-input" placeholder="Ex: Depósito Central">
-              </div>
-              <div class="flex flex-col gap-2">
-                <label for="wLocation" class="admin-label">Localização</label>
-                <input id="wLocation" type="text" formControlName="location" class="admin-input" placeholder="Cidade, UF">
-              </div>
-              <div class="flex flex-col gap-2">
-                <label for="wCapacity" class="admin-label">Capacidade (m²)</label>
-                <input id="wCapacity" type="number" formControlName="capacity" class="admin-input">
-              </div>
-              <div class="flex gap-2">
-                <button type="submit" [disabled]="warehouseForm.invalid" class="admin-button-primary flex-1">
-                  {{ editingWarehouse() ? 'Salvar' : 'Adicionar' }}
-                </button>
-                @if (editingWarehouse()) {
-                  <button type="button" (click)="cancelEditWarehouse()" class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50">
-                    Cancelar
-                  </button>
-                }
-              </div>
-            </form>
-          </div>
-
-          <!-- Warehouse List -->
-          <div class="overflow-x-auto">
-            <table class="w-full text-left border-collapse">
-              <thead>
-                <tr class="border-b border-slate-100">
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Nome</th>
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Localização</th>
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Capacidade</th>
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Locais</th>
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-right">Ações</th>
-                </tr>
-              </thead>
-              <tbody class="divide-y divide-slate-50">
-                @for (w of warehouses(); track w.id) {
-                  <tr class="hover:bg-slate-50/50 transition-colors">
-                    <td class="px-4 py-3 text-sm font-bold text-slate-700">{{ w.name }}</td>
-                    <td class="px-4 py-3 text-sm text-slate-500">{{ w.location }}</td>
-                    <td class="px-4 py-3 text-sm text-slate-500">{{ w.capacity }} m²</td>
-                    <td class="px-4 py-3">
-                      <button (click)="openManageLocations(w)" class="flex items-center gap-1 px-2 py-1 bg-slate-100 hover:bg-primary/10 text-slate-600 hover:text-primary rounded text-[10px] font-bold uppercase transition-colors">
-                        <mat-icon class="text-sm">location_on</mat-icon>
-                        {{ w.storageLocations.length }} Locais
-                      </button>
-                    </td>
-                    <td class="px-4 py-3 text-right">
-                      <div class="flex items-center justify-end gap-1">
-                        <button (click)="editWarehouse(w)" class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md">
-                          <mat-icon class="text-lg">edit</mat-icon>
-                        </button>
-                        <button (click)="deleteWarehouse(w.id)" class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-md">
-                          <mat-icon class="text-lg">delete</mat-icon>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                }
-              </tbody>
-            </table>
-          </div>
-
-          <!-- Storage Locations Management (Sub-section) -->
-          @if (selectedWarehouseForLocations()) {
-            <div class="mt-8 pt-8 border-t border-slate-100 animate-in fade-in slide-in-from-top-4 duration-300">
-              <div class="flex items-center justify-between mb-6">
-                <div>
-                  <h3 class="text-lg font-bold text-slate-800">Locais de Armazenamento</h3>
-                  <p class="text-sm text-slate-500">Gerenciando locais para: <span class="font-bold text-primary">{{ selectedWarehouseForLocations()?.name }}</span></p>
-                </div>
-                <button (click)="closeManageLocations()" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
-                  <mat-icon>close</mat-icon>
-                </button>
-              </div>
-
-              <!-- Storage Location Form -->
-              <div class="bg-primary/5 p-4 rounded-xl border border-primary/10 mb-6">
-                <h4 class="text-xs font-bold text-primary uppercase tracking-wider mb-4">
-                  {{ editingStorageLocation() ? 'Editar Local' : 'Novo Local de Armazenamento' }}
-                </h4>
-                <form [formGroup]="storageLocationForm" (ngSubmit)="editingStorageLocation() ? saveStorageLocation() : addStorageLocation()" class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                  <div class="flex flex-col gap-2">
-                    <label for="locName" class="admin-label">Identificação/Nome</label>
-                    <input id="locName" type="text" formControlName="name" class="admin-input" placeholder="Ex: Prateleira A1">
-                  </div>
-                  <div class="flex flex-col gap-2">
-                    <label for="locType" class="admin-label">Tipo de Armazenamento</label>
-                    <select id="locType" formControlName="type" class="admin-input">
-                      <option value="Prateleira">Prateleira</option>
-                      <option value="Freezer">Freezer</option>
-                      <option value="Palete">Palete</option>
-                      <option value="Gaveta">Gaveta</option>
-                      <option value="Box">Box</option>
-                    </select>
-                  </div>
-                  <div class="flex gap-2">
-                    <button type="submit" [disabled]="storageLocationForm.invalid" class="admin-button-primary flex-1">
-                      {{ editingStorageLocation() ? 'Salvar' : 'Adicionar Local' }}
-                    </button>
-                    @if (editingStorageLocation()) {
-                      <button type="button" (click)="cancelEditStorageLocation()" class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50">
-                        Cancelar
-                      </button>
-                    }
-                  </div>
-                </form>
-              </div>
-
-              <!-- Locations List -->
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                @for (loc of selectedWarehouseForLocations()?.storageLocations; track loc.id) {
-                  <div class="p-4 bg-white border border-slate-100 rounded-xl hover:border-primary/30 transition-all group">
-                    <div class="flex items-start justify-between">
-                      <div class="flex items-center gap-3">
-                        <div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
-                          <mat-icon>{{ loc.type === 'Freezer' ? 'ac_unit' : 'inventory_2' }}</mat-icon>
-                        </div>
-                        <div>
-                          <p class="text-sm font-bold text-slate-800">{{ loc.name }}</p>
-                          <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{{ loc.type }}</p>
-                        </div>
-                      </div>
-                      <div class="flex gap-1">
-                        <button (click)="editStorageLocation(loc)" class="p-1 text-slate-300 hover:text-primary transition-colors">
-                          <mat-icon class="text-lg">edit</mat-icon>
-                        </button>
-                        <button (click)="deleteStorageLocation(loc.id)" class="p-1 text-slate-300 hover:text-rose-500 transition-colors">
-                          <mat-icon class="text-lg">delete</mat-icon>
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                } @empty {
-                  <div class="col-span-full py-12 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
-                    <mat-icon class="text-slate-300 text-4xl mb-2">location_off</mat-icon>
-                    <p class="text-slate-500 font-medium">Nenhum local de armazenamento cadastrado para este depósito.</p>
-                  </div>
-                }
-              </div>
-            </div>
-          }
+      <div class="admin-card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-lg font-bold text-slate-800">Gerenciamento de Depósitos</h2>
         </div>
-      }
 
-      @if (activeTab() === 'products') {
-        <div class="admin-card p-6">
+        <!-- Warehouse Form -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-8">
+          <h3 class="text-sm font-bold text-slate-700 mb-4">
+            {{ editingWarehouse() ? 'Editar Depósito' : 'Adicionar Novo Depósito' }}
+          </h3>
+          <form [formGroup]="warehouseForm" (ngSubmit)="editingWarehouse() ? saveWarehouse() : addWarehouse()"
+            class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            <div class="flex flex-col gap-2">
+              <label for="wName" class="admin-label">Nome</label>
+              <input id="wName" type="text" formControlName="name" class="admin-input"
+                placeholder="Ex: Depósito Central">
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="wLocation" class="admin-label">Localização</label>
+              <input id="wLocation" type="text" formControlName="location" class="admin-input" placeholder="Cidade, UF">
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="wCapacity" class="admin-label">Capacidade (cm³)</label>
+              <input id="wCapacity" type="number" formControlName="capacity" class="admin-input">
+            </div>
+            <div class="flex gap-2">
+              <button type="submit" [disabled]="warehouseForm.invalid" class="admin-button-primary flex-1">
+                {{ editingWarehouse() ? 'Salvar' : 'Adicionar' }}
+              </button>
+              @if (editingWarehouse()) {
+              <button type="button" (click)="cancelEditWarehouse()"
+                class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50">
+                Cancelar
+              </button>
+              }
+            </div>
+          </form>
+        </div>
+
+        <!-- Warehouse List -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-100">
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Nome</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Localização</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Capacidade</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Locais</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+              @for (w of warehouses(); track w.id) {
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-4 py-3 text-sm font-bold text-slate-700">{{ w.name }}</td>
+                <td class="px-4 py-3 text-sm text-slate-500">{{ w.location }}</td>
+                <td class="px-4 py-3 text-sm text-slate-500">{{ w.capacity }} m²</td>
+                <td class="px-4 py-3">
+                  <button (click)="openManageLocations(w)"
+                    class="flex items-center gap-1 px-2 py-1 bg-slate-100 hover:bg-primary/10 text-slate-600 hover:text-primary rounded text-[10px] font-bold uppercase transition-colors">
+                    <mat-icon class="text-sm">location_on</mat-icon>
+                    {{ w.storageLocations.length }} {{ w.storageLocations.length === 1 ? 'Local' : 'Locais' }}
+                  </button>
+                </td>
+                <td class="px-4 py-3 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <button (click)="editWarehouse(w)"
+                      class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md">
+                      <mat-icon class="text-lg">edit</mat-icon>
+                    </button>
+                    <button (click)="deleteWarehouse(w.id)"
+                      class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-md">
+                      <mat-icon class="text-lg">delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Storage Locations Management (Sub-section) -->
+        @if (selectedWarehouseForLocations()) {
+        <div class="mt-8 pt-8 border-t border-slate-100 animate-in fade-in slide-in-from-top-4 duration-300">
           <div class="flex items-center justify-between mb-6">
-            <h2 class="text-lg font-bold text-slate-800">Gerenciamento de Produtos</h2>
+            <div>
+              <h3 class="text-lg font-bold text-slate-800">Locais de Armazenamento</h3>
+              <p class="text-sm text-slate-500">Gerenciando locais para: <span class="font-bold text-primary">{{
+                  selectedWarehouseForLocations()?.name }}</span></p>
+            </div>
+            <button (click)="closeManageLocations()"
+              class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
+              <mat-icon>close</mat-icon>
+            </button>
           </div>
 
-          <!-- Product Form -->
-          <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-8 transition-all duration-300">
-            <div class="flex items-center justify-between" [class.mb-4]="!isProductFormCollapsed()">
-              <h3 class="text-sm font-bold text-slate-700 flex items-center gap-2">
-                <mat-icon class="text-primary text-lg">{{ editingProduct() ? 'edit' : 'add_circle' }}</mat-icon>
-                {{ editingProduct() ? 'Editar Produto' : 'Adicionar Novo Produto' }}
-              </h3>
-              <button (click)="isProductFormCollapsed.set(!isProductFormCollapsed())" class="p-1 text-slate-400 hover:text-primary transition-colors" [title]="isProductFormCollapsed() ? 'Expandir' : 'Recolher'">
-                <mat-icon>{{ isProductFormCollapsed() ? 'expand_more' : 'expand_less' }}</mat-icon>
-              </button>
-            </div>
-            
-            @if (!isProductFormCollapsed()) {
-              <form [formGroup]="productForm" (ngSubmit)="editingProduct() ? saveProduct() : addProduct()" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end animate-in fade-in slide-in-from-top-2 duration-300">
+          <!-- Storage Location Form -->
+          <div class="bg-primary/5 p-4 rounded-xl border border-primary/10 mb-6">
+            <h4 class="text-xs font-bold text-primary uppercase tracking-wider mb-4">
+              {{ editingStorageLocation() ? 'Editar Local' : 'Novo Local de Armazenamento' }}
+            </h4>
+            <form [formGroup]="storageLocationForm"
+              (ngSubmit)="editingStorageLocation() ? saveStorageLocation() : addStorageLocation()"
+              class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
               <div class="flex flex-col gap-2">
-                <label for="pName" class="admin-label">Nome</label>
-                <input id="pName" type="text" formControlName="name" class="admin-input" placeholder="Ex: Ração Golden">
+                <label for="locName" class="admin-label">Identificação/Nome</label>
+                <input id="locName" type="text" formControlName="name" class="admin-input"
+                  placeholder="Ex: Prateleira A1">
               </div>
               <div class="flex flex-col gap-2">
-                <label for="pSku" class="admin-label">SKU</label>
-                <input id="pSku" type="text" formControlName="sku" class="admin-input" placeholder="KP-00001">
-              </div>
-              <div class="flex flex-col gap-2">
-                <label for="pCat" class="admin-label">Categoria</label>
-                <select id="pCat" formControlName="category" class="admin-input">
-                  @for (cat of categories(); track cat.id) {
-                    <option [value]="cat.name">{{ cat.name }}</option>
+                <label for="locType" class="admin-label">Tipo de Armazenamento</label>
+                <select id="locType" formControlName="type" class="admin-input">
+                  @for (t of storageLocationTypes(); track t.id) {
+                  <option [ngValue]="t.id">{{ t.name }}</option>
                   }
                 </select>
               </div>
               <div class="flex flex-col gap-2">
-                <label for="pBrand" class="admin-label">Marca</label>
-                <input id="pBrand" type="text" formControlName="brand" class="admin-input" placeholder="Ex: Royal Canin">
+                <label for="locCapacity" class="admin-label">Capacidade (cm³)</label>
+                <input id="locCapacity" type="number" formControlName="capacity" class="admin-input" placeholder="0">
               </div>
-              <div class="flex flex-col gap-2">
-                <label for="pPrice" class="admin-label">Preço Venda</label>
-                <input id="pPrice" type="number" formControlName="sellingPrice" class="admin-input">
-              </div>
-              <div class="flex items-center gap-3 h-[42px] px-2">
-                <input id="pActive" type="checkbox" formControlName="active" class="w-5 h-5 accent-primary">
-                <label for="pActive" class="text-sm font-bold text-slate-700 cursor-pointer">Ativo</label>
-              </div>
-
-              <div class="flex flex-col gap-2 md:col-span-2 lg:col-span-3">
-                <label for="pDesc" class="admin-label">Descrição</label>
-                <textarea id="pDesc" formControlName="description" class="admin-input min-h-[100px] py-3" placeholder="Descreva o produto com detalhes..."></textarea>
-              </div>
-
-              <div class="flex flex-col gap-2">
-                <label for="pVideo" class="admin-label">URL do Vídeo (YouTube)</label>
-                <div class="relative">
-                  <input id="pVideo" type="text" formControlName="videoUrl" class="admin-input" placeholder="https://www.youtube.com/watch?v=...">
-                </div>
-                @if (youtubeThumbnail()) {
-                  <div class="mt-2 relative w-full aspect-video rounded-lg overflow-hidden border border-slate-200 group shadow-sm animate-in fade-in zoom-in-95 duration-300">
-                    <img [src]="youtubeThumbnail()" alt="YouTube Thumbnail" class="w-full h-full object-cover">
-                    <div class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                      <mat-icon class="text-white text-4xl">play_circle</mat-icon>
-                    </div>
-                  </div>
-                }
-              </div>
-
-              <!-- Product Images Upload -->
-              <div class="md:col-span-2 lg:col-span-3 space-y-3">
-                <p class="admin-label">Imagens do Produto (Máx 4)</p>
-                <div class="flex flex-wrap gap-3">
-                  @for (img of productImages(); track $index) {
-                    <div class="relative w-20 h-20 rounded-lg border border-slate-200 overflow-hidden group">
-                      <img [src]="img" alt="Preview" class="w-full h-full object-cover">
-                      <button 
-                        type="button"
-                        (click)="removeProductImage($index)"
-                        class="absolute inset-0 bg-rose-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                      >
-                        <mat-icon>delete</mat-icon>
-                      </button>
-                    </div>
-                  }
-                  
-                  @if (productImages().length < 4) {
-                    <label class="w-20 h-20 rounded-lg border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 hover:border-primary hover:text-primary cursor-pointer transition-all">
-                      <mat-icon>add_a_photo</mat-icon>
-                      <span class="text-[10px] font-bold mt-1">Upload</span>
-                      <input type="file" class="hidden" accept="image/*" (change)="onProductFileSelected($event)" multiple>
-                    </label>
-                  }
-                </div>
-              </div>
-
-              <!-- Product Properties -->
-              <div class="md:col-span-2 lg:col-span-3 space-y-4 pt-4 border-t border-slate-100">
-                <div class="flex items-center justify-between">
-                  <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Propriedades do Produto</h4>
-                  <button type="button" (click)="addProductProperty()" class="flex items-center gap-1 text-xs font-bold text-primary hover:bg-primary/5 px-2 py-1 rounded">
-                    <mat-icon class="text-sm">add</mat-icon>
-                    Adicionar Propriedade
-                  </button>
-                </div>
-
-                <div formArrayName="properties" class="space-y-3">
-                  @for (prop of productProperties.controls; track $index) {
-                    <div [formGroupName]="$index" class="grid grid-cols-1 md:grid-cols-3 gap-3 items-end bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
-                      <div class="flex flex-col gap-1">
-                        <label [for]="'pPropName' + $index" class="text-[10px] font-bold text-slate-400 uppercase">Nome</label>
-                        <input [id]="'pPropName' + $index" type="text" formControlName="name" class="admin-input text-xs" placeholder="Ex: Sabor">
-                      </div>
-                      <div class="flex flex-col gap-1">
-                        <label [for]="'pPropVal' + $index" class="text-[10px] font-bold text-slate-400 uppercase">Valor</label>
-                        <input [id]="'pPropVal' + $index" type="text" formControlName="value" class="admin-input text-xs" placeholder="Ex: Frango">
-                      </div>
-                      <div class="flex justify-end">
-                        <button type="button" (click)="removeProductProperty($index)" class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors">
-                          <mat-icon class="text-lg">delete</mat-icon>
-                        </button>
-                      </div>
-                    </div>
-                  } @empty {
-                    <p class="text-xs text-slate-400 italic">Nenhuma propriedade personalizada definida.</p>
-                  }
-                </div>
-              </div>
-
-              <div class="flex gap-2 md:col-span-2 lg:col-span-3">
-                <button type="submit" [disabled]="productForm.invalid" class="admin-button-primary flex-1">
-                  {{ editingProduct() ? 'Salvar Produto' : 'Adicionar Produto' }}
+              <div class="flex gap-2">
+                <button type="submit" [disabled]="storageLocationForm.invalid" class="admin-button-primary flex-1">
+                  {{ editingStorageLocation() ? 'Salvar' : 'Adicionar Local' }}
                 </button>
-                @if (editingProduct()) {
-                  <button type="button" (click)="cancelEditProduct()" class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50">
-                    Cancelar
-                  </button>
+                @if (editingStorageLocation()) {
+                <button type="button" (click)="cancelEditStorageLocation()"
+                  class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50">
+                  Cancelar
+                </button>
                 }
               </div>
             </form>
-            }
           </div>
 
-          <!-- Product Preview Section -->
-          <div class="mb-12 pt-8 border-t border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            <div class="flex items-center justify-between mb-6">
-              <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
-                <mat-icon class="text-primary">visibility</mat-icon>
-                Visualização do Produto (Preview)
-              </h3>
-              <button (click)="isProductPreviewCollapsed.set(!isProductPreviewCollapsed())" class="p-2 text-slate-400 hover:text-primary transition-colors flex items-center gap-1 text-sm font-bold" [title]="isProductPreviewCollapsed() ? 'Expandir' : 'Recolher'">
-                <span class="hidden sm:inline">{{ isProductPreviewCollapsed() ? 'Mostrar Preview' : 'Esconder Preview' }}</span>
-                <mat-icon>{{ isProductPreviewCollapsed() ? 'expand_more' : 'expand_less' }}</mat-icon>
-              </button>
-            </div>
-            
-            @if (!isProductPreviewCollapsed()) {
-              <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm animate-in fade-in zoom-in-95 duration-300">
-              <!-- Image Gallery Preview -->
-              <div class="space-y-4">
-                <div class="relative aspect-square rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 group">
-                  @if (productPreview().activeMedia; as active) {
-                    @if (active.type === 'image') {
-                      <img [src]="active.url" [alt]="productPreview().name" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
-                    } @else if (active.type === 'video' && active.videoId) {
-                      <iframe 
-                        [src]="getSafeVideoUrl(active.videoId)" 
-                        class="w-full h-full border-0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowfullscreen
-                      ></iframe>
-                    }
-                  } @else {
-                    <div class="w-full h-full flex flex-col items-center justify-center text-slate-300">
-                      <mat-icon class="text-6xl mb-2">image</mat-icon>
-                      <p class="text-sm font-medium">Sem imagem</p>
+          <!-- Locations List -->
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            @for (loc of selectedWarehouseForLocations()?.storageLocations; track loc.id) {
+            <div class="p-4 bg-white border border-slate-100 rounded-xl hover:border-primary/30 transition-all group">
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <div
+                    class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 group-hover:text-primary transition-colors">
+                    <mat-icon>{{ loc.type === '1' ? 'ac_unit' : 'inventory_2' }}</mat-icon>
+                  </div>
+                  <div>
+                    <p class="text-sm font-bold text-slate-800">{{ loc.name }}</p>
+                    <div class="flex items-center gap-2">
+                      <p class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">{{ loc.type }}</p>
+                      <span class="text-slate-200">•</span>
+                      <p class="text-[10px] text-primary font-bold uppercase tracking-wider">{{ loc.capacity }} m³</p>
                     </div>
-                  }
-                  
-                  <!-- Badge -->
-                  <div class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold text-primary uppercase tracking-widest shadow-sm">
-                    {{ productPreview().category }}
                   </div>
                 </div>
-                
-                <!-- Thumbnails -->
-                <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
-                  @for (item of productPreview().media; track $index) {
-                    <button 
-                      type="button"
-                      (click)="currentPreviewImageIndex.set($index)"
-                      [class.ring-2]="currentPreviewImageIndex() === $index"
-                      class="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden border border-slate-100 ring-primary ring-offset-2 transition-all"
-                    >
-                      <img [src]="item.url" [alt]="'Thumbnail ' + ($index + 1)" class="w-full h-full object-cover" [class.opacity-60]="item.type === 'video'">
-                      @if (item.type === 'video') {
-                        <mat-icon class="absolute inset-0 m-auto text-white text-xl">play_circle</mat-icon>
-                      }
-                    </button>
-                  }
-                </div>
-              </div>
-              
-              <!-- Info Preview -->
-              <div class="flex flex-col justify-between py-2">
-                <div>
-                  <div class="flex items-center justify-between mb-2">
-                    <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ productPreview().brand }}</span>
-                    <span class="text-xs font-medium text-slate-400">SKU: {{ productPreview().sku }}</span>
-                  </div>
-                  <h4 class="text-2xl font-black text-slate-800 mb-4 leading-tight">{{ productPreview().name }}</h4>
-                  
-                  <div class="flex items-baseline gap-2 mb-6">
-                    <span class="text-3xl font-black text-primary">R$ {{ productPreview().price | number:'1.2-2' }}</span>
-                    <span class="text-xs text-slate-400 font-medium">à vista</span>
-                  </div>
-                  
-                  <div class="space-y-4">
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                      <p class="text-xs font-bold text-slate-500 uppercase mb-2">Descrição</p>
-                      <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{{ productPreview().description }}</p>
-                    </div>
-
-                    @if (productPreview().properties.length > 0) {
-                      <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                        <p class="text-xs font-bold text-slate-500 uppercase mb-3">Propriedades</p>
-                        <div class="grid grid-cols-2 gap-y-3 gap-x-4">
-                          @for (prop of productPreview().properties; track $index) {
-                            <div class="flex flex-col">
-                              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{{ prop.name }}</span>
-                              <span class="text-sm font-medium text-slate-700">{{ prop.value }}</span>
-                            </div>
-                          }
-                        </div>
-                      </div>
-                    }
-                  </div>
-                </div>
-                
-                <div class="pt-6">
-                  <button type="button" class="w-full py-4 bg-slate-900 text-white font-bold rounded-xl shadow-lg shadow-slate-200 flex items-center justify-center gap-2 hover:bg-slate-800 transition-all active:scale-[0.98]">
-                    <mat-icon>shopping_bag</mat-icon>
-                    Adicionar ao Carrinho
+                <div class="flex gap-1">
+                  <button (click)="editStorageLocation(loc)"
+                    class="p-1 text-slate-300 hover:text-primary transition-colors">
+                    <mat-icon class="text-lg">edit</mat-icon>
+                  </button>
+                  <button (click)="deleteStorageLocation(loc.id)"
+                    class="p-1 text-slate-300 hover:text-rose-500 transition-colors">
+                    <mat-icon class="text-lg">delete</mat-icon>
                   </button>
                 </div>
               </div>
             </div>
+            } @empty {
+            <div
+              class="col-span-full py-12 text-center bg-slate-50 rounded-2xl border-2 border-dashed border-slate-200">
+              <mat-icon class="text-slate-300 text-4xl mb-2">location_off</mat-icon>
+              <p class="text-slate-500 font-medium">Nenhum local de armazenamento cadastrado para este depósito.</p>
+            </div>
             }
           </div>
+        </div>
+        }
+      </div>
+      }
 
-          <!-- Product List -->
+      @if (activeTab() === 'products') {
+      <div class="admin-card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-lg font-bold text-slate-800">Gerenciamento de Produtos</h2>
+        </div>
+
+        <!-- Product Form -->
+        <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 mb-8 transition-all duration-300">
+          <div class="flex items-center justify-between" [class.mb-4]="!isProductFormCollapsed()">
+            <h3 class="text-sm font-bold text-slate-700 flex items-center gap-2">
+              <mat-icon class="text-primary text-lg">{{ editingProduct() ? 'edit' : 'add_circle' }}</mat-icon>
+              {{ editingProduct() ? 'Editar Produto' : 'Adicionar Novo Produto' }}
+            </h3>
+            <button (click)="isProductFormCollapsed.set(!isProductFormCollapsed())"
+              class="p-1 text-slate-400 hover:text-primary transition-colors"
+              [title]="isProductFormCollapsed() ? 'Expandir' : 'Recolher'">
+              <mat-icon>{{ isProductFormCollapsed() ? 'expand_more' : 'expand_less' }}</mat-icon>
+            </button>
+          </div>
+
+          @if (!isProductFormCollapsed()) {
+          <form [formGroup]="productForm" (ngSubmit)="editingProduct() ? saveProduct() : addProduct()"
+            class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end animate-in fade-in slide-in-from-top-2 duration-300">
+            <div class="flex flex-col gap-2">
+              <label for="pName" class="admin-label">Nome</label>
+              <input id="pName" type="text" formControlName="name" class="admin-input" placeholder="Ex: Ração Golden">
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="pCat" class="admin-label">Categoria</label>
+              <select id="pCat" formControlName="category" class="admin-input">
+                @for (cat of categories(); track cat.id) {
+                <option [value]="cat.id">{{ cat.name }}</option>
+                }
+              </select>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="pSku" class="admin-label">SKU</label>
+              <input id="pSku" type="text" formControlName="sku" class="admin-input" placeholder="KP-00001">
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="pBrand" class="admin-label">Marca</label>
+              <input id="pBrand" type="text" formControlName="brand" class="admin-input" placeholder="Ex: Royal Canin">
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="pVolume" class="admin-label">Volume (cm³)</label>
+              <input id="pVolume" type="number" formControlName="volume" class="admin-input h-10" placeholder="0">
+            </div>
+            <div class="flex items-center gap-3 h-[42px] px-2">
+              <input id="pActive" type="checkbox" formControlName="active" class="w-5 h-5 accent-primary">
+              <label for="pActive" class="text-sm font-bold text-slate-700 cursor-pointer">Ativo</label>
+            </div>
+
+            <div class="flex flex-col gap-2 md:col-span-2 lg:col-span-3">
+              <label for="pDesc" class="admin-label">Descrição</label>
+              <textarea id="pDesc" formControlName="description" class="admin-input min-h-[100px] py-3"
+                placeholder="Descreva o produto com detalhes..."></textarea>
+            </div>
+
+            <div class="flex flex-col gap-2">
+              <label for="pVideo" class="admin-label">URL do Vídeo (YouTube)</label>
+              <div class="relative">
+                <input id="pVideo" type="text" formControlName="videoUrl" class="admin-input"
+                  placeholder="https://www.youtube.com/watch?v=...">
+              </div>
+              @if (youtubeThumbnail()) {
+              <div
+                class="mt-2 relative w-full aspect-video rounded-lg overflow-hidden border border-slate-200 group shadow-sm animate-in fade-in zoom-in-95 duration-300">
+                <img [src]="youtubeThumbnail()" alt="YouTube Thumbnail" class="w-full h-full object-cover">
+                <div
+                  class="absolute inset-0 bg-black/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                  <mat-icon class="text-white text-4xl">play_circle</mat-icon>
+                </div>
+              </div>
+              }
+            </div>
+
+            <!-- Product Images Upload -->
+            <div class="md:col-span-2 lg:col-span-3 space-y-3">
+              <p class="admin-label">Imagens do Produto (Máx 4)</p>
+              <div class="flex flex-wrap gap-3">
+                @for (img of existingImages(); track $index) {
+                <div class="relative w-20 h-20 rounded-lg border border-slate-200 overflow-hidden group">
+
+                  <img [src]="img" alt="Preview" class="w-full h-full object-cover">
+
+                  <button type="button" (click)="removeExistingImage($index)"
+                    class="absolute inset-0 bg-rose-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+
+                </div>
+                }
+
+                @for (img of productImages(); track $index) {
+                <div class="relative w-20 h-20 rounded-lg border border-slate-200 overflow-hidden group">
+
+                  <img [src]="createPreview(img)" alt="Preview" class="w-full h-full object-cover">
+
+                  <button type="button" (click)="removeNewImage($index)"
+                    class="absolute inset-0 bg-rose-500/80 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+
+                </div>
+                }
+
+
+                @if ((productImages().length + existingImages().length) < 4) { <label
+                  class="w-20 h-20 rounded-lg border-2 border-dashed border-slate-200 flex flex-col items-center justify-center text-slate-400 hover:border-primary hover:text-primary cursor-pointer transition-all">
+                  <mat-icon>add_a_photo</mat-icon>
+                  <span class="text-[10px] font-bold mt-1">Upload</span>
+                  <input type="file" multiple class="hidden" accept="image/*" (change)="onProductFileSelected($event)"
+                    [disabled]="(productImages().length + existingImages().length) >= 4">
+                  </label>
+                  }
+              </div>
+            </div>
+
+            <!-- Product Properties -->
+            <div class="md:col-span-2 lg:col-span-3 space-y-4 pt-4 border-t border-slate-100">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Propriedades do Produto</h4>
+                <button type="button" (click)="addProductProperty()"
+                  class="flex items-center gap-1 text-xs font-bold text-primary hover:bg-primary/5 px-2 py-1 rounded">
+                  <mat-icon class="text-sm">add</mat-icon>
+                  Adicionar Propriedade
+                </button>
+              </div>
+
+              <div formArrayName="properties" class="space-y-3">
+                @for (prop of productProperties.controls; track $index) {
+                <div [formGroupName]="$index"
+                  class="grid grid-cols-1 md:grid-cols-3 gap-3 items-end bg-white p-3 rounded-lg border border-slate-100 shadow-sm">
+                  <div class="flex flex-col gap-1">
+                    <label [for]="'pPropName' + $index"
+                      class="text-[10px] font-bold text-slate-400 uppercase">Nome</label>
+                    <input [id]="'pPropName' + $index" type="text" formControlName="name" class="admin-input text-xs"
+                      placeholder="Ex: Sabor">
+                  </div>
+                  <div class="flex flex-col gap-1">
+                    <label [for]="'pPropVal' + $index"
+                      class="text-[10px] font-bold text-slate-400 uppercase">Valor</label>
+                    <input [id]="'pPropVal' + $index" type="text" formControlName="value" class="admin-input text-xs"
+                      placeholder="Ex: Frango">
+                  </div>
+                  <div class="flex justify-end">
+                    <button type="button" (click)="removeProductProperty($index)"
+                      class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors">
+                      <mat-icon class="text-lg">delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                } @empty {
+                <p class="text-xs text-slate-400 italic">Nenhuma propriedade personalizada definida.</p>
+                }
+              </div>
+            </div>
+
+            <div class="flex gap-2 md:col-span-2 lg:col-span-3">
+              <button type="submit" [disabled]="productForm.invalid" class="admin-button-primary flex-1">
+                {{ editingProduct() ? 'Salvar Produto' : 'Adicionar Produto' }}
+              </button>
+              @if (editingProduct()) {
+              <button type="button" (click)="cancelEditProduct()"
+                class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50">
+                Cancelar
+              </button>
+              }
+            </div>
+          </form>
+          }
+        </div>
+
+        <!-- Product Preview Section -->
+        <div class="mb-12 pt-8 border-t border-slate-100 animate-in fade-in slide-in-from-bottom-4 duration-500">
+          <div class="flex items-center justify-between mb-6">
+            <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <mat-icon class="text-primary">visibility</mat-icon>
+              Visualização do Produto (Preview)
+            </h3>
+            <button (click)="isProductPreviewCollapsed.set(!isProductPreviewCollapsed())"
+              class="p-2 text-slate-400 hover:text-primary transition-colors flex items-center gap-1 text-sm font-bold"
+              [title]="isProductPreviewCollapsed() ? 'Expandir' : 'Recolher'">
+              <span class="hidden sm:inline">{{ isProductPreviewCollapsed() ? 'Mostrar Preview' : 'Esconder Preview'
+                }}</span>
+              <mat-icon>{{ isProductPreviewCollapsed() ? 'expand_more' : 'expand_less' }}</mat-icon>
+            </button>
+          </div>
+
+          @if (!isProductPreviewCollapsed()) {
+          <div
+            class="grid grid-cols-1 lg:grid-cols-2 gap-8 bg-white p-6 rounded-2xl border border-slate-100 shadow-sm animate-in fade-in zoom-in-95 duration-300">
+            <!-- Image Gallery Preview -->
+            <div class="space-y-4">
+              <div class="relative aspect-square rounded-2xl overflow-hidden bg-slate-50 border border-slate-100 group">
+                @if (productPreview().activeMedia; as active) {
+                @if (active.type === 'image') {
+                <img [src]="active.url" [alt]="productPreview().name"
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                } @else if (active.type === 'video' && active.videoId) {
+                <iframe [src]="getSafeVideoUrl(active.videoId)" class="w-full h-full border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
+                }
+                } @else {
+                <div class="w-full h-full flex flex-col items-center justify-center text-slate-300">
+                  <mat-icon class="text-6xl mb-2">image</mat-icon>
+                  <p class="text-sm font-medium">Sem imagem</p>
+                </div>
+                }
+
+                <!-- Badge -->
+                <div
+                  class="absolute top-4 left-4 px-3 py-1 bg-white/90 backdrop-blur-sm rounded-full text-[10px] font-bold text-primary uppercase tracking-widest shadow-sm">
+                  {{ productPreview().category }}
+                </div>
+              </div>
+
+              <!-- Thumbnails -->
+              <div class="flex gap-2 overflow-x-auto pb-2 scrollbar-hide">
+                @for (item of productPreview().media; track $index) {
+                <button type="button" (click)="currentPreviewImageIndex.set($index)"
+                  [class.ring-2]="currentPreviewImageIndex() === $index"
+                  class="relative w-16 h-16 flex-shrink-0 rounded-lg overflow-hidden border border-slate-100 ring-primary ring-offset-2 transition-all">
+                  <img [src]="item.url" [alt]="'Thumbnail ' + ($index + 1)" class="w-full h-full object-cover"
+                    [class.opacity-60]="item.type === 'video'">
+                  @if (item.type === 'video') {
+                  <mat-icon class="absolute inset-0 m-auto text-white text-xl">play_circle</mat-icon>
+                  }
+                </button>
+                }
+              </div>
+            </div>
+
+            <!-- Info Preview -->
+            <div class="flex flex-col justify-between py-2">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">{{ productPreview().brand
+                    }}</span>
+                  <span class="text-xs font-medium text-slate-400">SKU: {{ productPreview().sku }}</span>
+                </div>
+                <h4 class="text-2xl font-black text-slate-800 mb-4 leading-tight">{{ productPreview().name }}</h4>
+
+
+                <div class="space-y-4">
+                  <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <p class="text-xs font-bold text-slate-500 uppercase mb-2">Descrição</p>
+                    <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{{
+                      productPreview().description }}</p>
+                  </div>
+
+                  @if (productPreview().properties.length > 0) {
+                  <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <p class="text-xs font-bold text-slate-500 uppercase mb-3">Propriedades</p>
+                    <div class="grid grid-cols-2 gap-y-3 gap-x-4">
+                      @for (prop of productPreview().properties; track $index) {
+                      <div class="flex flex-col">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">{{ prop.name
+                          }}</span>
+                        <span class="text-sm font-medium text-slate-700">{{ prop.value }}</span>
+                      </div>
+                      }
+                      @if (productForm.get('volume')?.value) {
+                      <div class="flex flex-col">
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Volume</span>
+                        <span class="text-sm font-medium text-slate-700">{{ productForm.get('volume')?.value |
+                          number:'1.1-3' }} m³</span>
+                      </div>
+                      }
+                    </div>
+                  </div>
+                  }
+                </div>
+              </div>
+
+              <div class="pt-6">
+                <button type="button"
+                  class="w-full py-4 bg-slate-900 text-white font-bold rounded-xl shadow-lg shadow-slate-200 flex items-center justify-center gap-2 hover:bg-slate-800 transition-all active:scale-[0.98]">
+                  <mat-icon>shopping_bag</mat-icon>
+                  Adicionar ao Carrinho
+                </button>
+              </div>
+            </div>
+          </div>
+          }
+        </div>
+
+
+        <!-- Product List Filters -->
+        <div class="mb-6">
+          <div
+            class="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 p-4 bg-slate-50/50 rounded-xl border border-slate-100">
+            <div class="flex flex-wrap items-center gap-6 w-full lg:w-auto">
+              <!-- Category Filter -->
+              <div class="flex items-center gap-3">
+                <span
+                  class="text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Categoria</span>
+                <select (change)="onProductCategoryFilter($event)"
+                  class="bg-white border border-slate-200 rounded-lg text-xs px-3 h-10 min-w-[140px] focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer">
+                  <option value="">Todas as Categorias</option>
+                  @for (cat of categories(); track cat.id) {
+                  <option [value]="cat.id">{{ cat.name }}</option>
+                  }
+                </select>
+              </div>
+              <!-- Items per page -->
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-slate-500 uppercase tracking-wider whitespace-nowrap">Exibir</span>
+                <select (change)="setProductItemsPerPage(+$any($event.target).value)"
+                  class="bg-white border border-slate-200 rounded-lg text-xs px-3 h-10 w-20 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all cursor-pointer">
+                  @for (option of productItemsPerPageOptions; track option) {
+                  <option [value]="option" [selected]="productItemsPerPage() === option">{{ option }}</option>
+                  }
+                </select>
+              </div>
+            </div>
+
+            <!-- Search -->
+            <div class="relative w-full lg:w-80">
+              <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</mat-icon>
+              <input type="text" [value]="productSearch()" (input)="onProductSearch($event)"
+                placeholder="Buscar por nome ou SKU..."
+                class="w-full pl-10 pr-4 h-10 bg-white border border-slate-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all">
+            </div>
+          </div>
+        </div>
+
+        <!-- Product List -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-100">
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Produto</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Categoria</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Volume</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Status</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+              @for (p of paginatedProducts(); track p.id) {
+              <tr class="hover:bg-slate-50/50 transition-colors">
+                <td class="px-4 py-3">
+                  <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center overflow-hidden">
+                      @if (p.images.length > 0) {
+                      <img [src]="p.images[0]" [alt]="p.name" class="w-full h-full object-cover"
+                        referrerpolicy="no-referrer">
+                      } @else {
+                      <mat-icon class="text-slate-300 text-sm">image</mat-icon>
+                      }
+                    </div>
+                    <div>
+                      <p class="text-sm font-bold text-slate-700">{{ p.name }}</p>
+                      <p class="text-[10px] text-slate-400 uppercase">{{ p.sku }}</p>
+                    </div>
+                  </div>
+                </td>
+                <td class="px-4 py-3">
+                  <span class="text-xs font-medium text-slate-600 px-2 py-1 bg-slate-100 rounded-md">{{
+                    getCategoryNameById(p.category) }}</span>
+                </td>
+                <td class="px-4 py-3 text-sm text-slate-500">
+                  {{ p.volume || 0 }} cm³
+                </td>
+                <td class="px-4 py-3">
+                  <span [class.bg-emerald-50]="p.active" [class.text-emerald-600]="p.active"
+                    [class.bg-slate-100]="!p.active" [class.text-slate-500]="!p.active"
+                    class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">
+                    {{ p.active ? 'Ativo' : 'Inativo' }}
+                  </span>
+                </td>
+                <td class="px-4 py-3 text-right">
+                  <div class="flex items-center justify-end gap-1">
+                    <button (click)="editProduct(p)"
+                      class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md transition-colors">
+                      <mat-icon class="text-lg h-5 w-5 flex items-center justify-center">edit</mat-icon>
+                    </button>
+                    <button (click)="deleteProduct(p.id)"
+                      class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-md transition-colors">
+                      <mat-icon class="text-lg h-5 w-5 flex items-center justify-center">delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Product Pagination -->
+        @if (totalProductPages() > 1) {
+        <div class="mt-6 flex items-center justify-between border-t border-slate-100 pt-6">
+          <p class="text-xs text-slate-500">
+            Mostrando página <span class="font-bold text-slate-700">{{ productPage() }}</span> de <span
+              class="font-bold text-slate-700">{{ totalProductPages() }}</span>
+          </p>
+          <div class="flex items-center gap-1">
+            <button (click)="setProductPage(productPage() - 1)" [disabled]="productPage() === 1"
+              class="p-2 text-slate-400 hover:text-primary disabled:opacity-30 disabled:hover:text-slate-400 transition-colors">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+
+            @for (p of [].constructor(totalProductPages()); track $index) {
+            <button (click)="setProductPage($index + 1)"
+              [class]="(productPage() === $index + 1 ? 'bg-primary text-white ' : 'text-slate-600 hover:bg-slate-100 ') + 'w-8 h-8 rounded-lg text-xs font-bold transition-all'">
+              {{ $index + 1 }}
+            </button>
+            }
+
+            <button (click)="setProductPage(productPage() + 1)" [disabled]="productPage() === totalProductPages()"
+              class="p-2 text-slate-400 hover:text-primary disabled:opacity-30 disabled:hover:text-slate-400 transition-colors">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+
+      }
+
+      @if (activeTab() === 'expenses') {
+      <div class="space-y-6">
+        <!-- Expense Form -->
+        <div class="admin-card">
+          <div
+            class="p-4 border-b border-slate-100 flex items-center justify-between cursor-pointer hover:bg-slate-50/50 transition-colors"
+            (click)="isExpenseFormCollapsed.set(!isExpenseFormCollapsed())"
+            (keydown.enter)="isExpenseFormCollapsed.set(!isExpenseFormCollapsed())"
+            (keydown.space)="isExpenseFormCollapsed.set(!isExpenseFormCollapsed())" tabindex="0" role="button"
+            aria-label="Alternar formulário de despesa">
+            <h2 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+              <mat-icon class="text-primary">{{ editingExpense() ? 'edit' : 'add_circle' }}</mat-icon>
+              {{ editingExpense() ? 'Editar Despesa' : 'Nova Despesa Administrativa' }}
+            </h2>
+            <button class="p-1 text-slate-400 hover:text-slate-600 transition-all"
+              [class.rotate-180]="!isExpenseFormCollapsed()">
+              <mat-icon>expand_more</mat-icon>
+            </button>
+          </div>
+          <div class="p-6" [class.hidden]="isExpenseFormCollapsed()">
+            <form [formGroup]="expenseForm" (ngSubmit)="editingExpense() ? saveExpense() : addExpense()"
+              class="space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+                <div class="flex flex-col gap-1">
+                  <label for="expense-desc"
+                    class="text-xs font-bold text-slate-500 uppercase tracking-wider">Descrição</label>
+                  <input id="expense-desc" type="text" formControlName="description"
+                    placeholder="Ex: Aluguel, Energia..." class="admin-input h-10">
+                </div>
+                <div class="flex flex-col gap-1">
+                  <label for="expense-cat"
+                    class="text-xs font-bold text-slate-500 uppercase tracking-wider">Categoria</label>
+                  <select id="expense-cat" formControlName="category" class="admin-input h-10">
+                    @for (cat of expenseCategories(); track cat) {
+                    <option [value]="cat.id">{{ cat.name }}</option>
+                    }
+                  </select>
+                </div>
+                <div class="flex flex-col gap-1">
+                  <label for="expense-amount" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Valor
+                    (R$)</label>
+                  <input id="expense-amount" type="number" formControlName="amount" placeholder="0.00"
+                    class="admin-input h-10">
+                </div>
+                <div class="flex flex-col gap-1">
+                  <label for="expense-date"
+                    class="text-xs font-bold text-slate-500 uppercase tracking-wider">Data</label>
+                  <input id="expense-date" type="date" formControlName="date" class="admin-input h-10">
+                </div>
+              </div>
+              <div class="flex flex-col gap-4 pt-2">
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+                  <div class="flex items-center gap-4">
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Status:</span>
+                    <div class="flex items-center gap-4">
+                      <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" formControlName="status" value="pending"
+                          class="text-primary focus:ring-primary">
+                        <span class="text-sm text-slate-600">Pendente</span>
+                      </label>
+                      <label class="flex items-center gap-2 cursor-pointer">
+                        <input type="radio" formControlName="status" value="paid"
+                          class="text-primary focus:ring-primary">
+                        <span class="text-sm text-slate-600">Pago</span>
+                      </label>
+                    </div>
+                  </div>
+
+
+                  <div class="flex items-center gap-2">
+                    <input #expenseFileInput type="file" multiple class="hidden"
+                      (change)="onExpenseFileSelected($event)">
+                    <button type="button" (click)="expenseFileInput.click()"
+                      class="flex items-center gap-2 px-4 h-10 rounded-lg border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 transition-all">
+                      <mat-icon class="text-lg">attach_file</mat-icon>
+                      Anexar Arquivos
+                    </button>
+                  </div>
+                </div>
+
+                <!-- Attachments Preview -->
+                @if (expenseForm.get('attachments')?.value?.length > 0) {
+                <div class="flex flex-wrap gap-3">
+                  @for (file of expenseForm.get('attachments')?.value; track $index) {
+                  <div
+                    class="relative flex items-center gap-3 p-2 bg-white border border-slate-200 rounded-xl shadow-sm hover:border-primary/30 transition-all group">
+                    <div
+                      class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center overflow-hidden border border-slate-100">
+
+                      <img [src]="file.url || file.previewUrl" class="w-full h-full object-cover"
+                        referrerpolicy="no-referrer">
+
+                    </div>
+                    <div class="flex flex-col min-w-0 pr-6">
+                      <span class="text-xs font-bold text-slate-700 truncate max-w-[120px]">{{ file.url }}</span>
+                      <span class="text-[10px] text-slate-400 uppercase font-medium">{{ file.id}}</span>
+                    </div>
+                    <button type="button" (click)="removeExpenseAttachment($index)"
+                      class="absolute -top-1.5 -right-1.5 w-5 h-5 bg-white border border-slate-200 text-slate-400 hover:text-rose-500 hover:border-rose-200 rounded-full flex items-center justify-center shadow-sm transition-all z-10"
+                      title="Remover anexo">
+                      <mat-icon class="!text-[14px] w-auto h-auto">close</mat-icon>
+                    </button>
+                  </div>
+                  }
+                </div>
+                }
+
+                <div class="flex justify-end gap-2 pt-2 border-t border-slate-50">
+                  @if (editingExpense()) {
+                  <button type="button" (click)="cancelEditExpense()"
+                    class="px-4 h-10 rounded-lg border border-slate-200 text-slate-600 font-bold text-sm hover:bg-slate-50 transition-all">
+                    Cancelar
+                  </button>
+                  <button type="submit" [disabled]="expenseForm.invalid" class="admin-btn-primary h-10 px-6">
+                    Salvar Alterações
+                  </button>
+                  } @else {
+                  <button type="submit" [disabled]="expenseForm.invalid" class="admin-btn-primary h-10 px-6">
+                    Adicionar Despesa
+                  </button>
+                  }
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Expense List -->
+        <div class="admin-card overflow-hidden">
+          <div class="p-4 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <h2 class="text-lg font-bold text-slate-800">Lista de Despesas</h2>
+            <div class="flex flex-wrap items-center gap-2">
+              <div class="relative">
+                <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</mat-icon>
+                <input type="text" (input)="expenseSearch.set($any($event.target).value); expensePage.set(1)"
+                  placeholder="Buscar despesa..."
+                  class="pl-9 pr-4 h-10 w-48 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary transition-all">
+              </div>
+              <select (change)="expenseCategoryFilter.set($any($event.target).value); expensePage.set(1)"
+                class="h-10 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary transition-all">
+                <option value="">Todas Categorias</option>
+                @for (cat of expenseCategories(); track cat) {
+                <option [value]="cat.id">{{ cat.name }}</option>
+                }
+              </select>
+              <select (change)="setExpenseItemsPerPage(+$any($event.target).value)"
+                class="h-10 px-3 bg-slate-50 border border-slate-200 rounded-lg text-sm focus:outline-none focus:border-primary transition-all">
+                @for (opt of expenseItemsPerPageOptions; track opt) {
+                <option [value]="opt">Exibir {{ opt }}</option>
+                }
+              </select>
+            </div>
+          </div>
+
           <div class="overflow-x-auto">
             <table class="w-full text-left border-collapse">
               <thead>
-                <tr class="border-b border-slate-100">
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Produto</th>
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Estoque</th>
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Status</th>
-                  <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-right">Ações</th>
+                <tr class="bg-slate-50 border-b border-slate-100">
+                  <th class="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Data</th>
+                  <th class="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Descrição</th>
+                  <th class="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Categoria</th>
+                  <th class="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Valor</th>
+                  <th class="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Anexos</th>
+                  <th class="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider">Status</th>
+                  <th class="px-4 py-3 text-xs font-bold text-slate-400 uppercase tracking-wider text-right">Ações</th>
                 </tr>
               </thead>
-              <tbody class="divide-y divide-slate-50">
-                @for (p of products(); track p.id) {
-                  <tr class="hover:bg-slate-50/50 transition-colors">
-                    <td class="px-4 py-3">
-                      <div class="flex items-center gap-3">
-                        <div class="w-8 h-8 rounded bg-slate-100 flex items-center justify-center overflow-hidden">
-                          @if (p.images.length > 0) {
-                            <img [src]="p.images[0]" [alt]="p.name" class="w-full h-full object-cover" referrerpolicy="no-referrer">
-                          } @else {
-                            <mat-icon class="text-slate-300 text-sm">image</mat-icon>
-                          }
-                        </div>
-                        <div>
-                          <p class="text-sm font-bold text-slate-700">{{ p.name }}</p>
-                          <p class="text-[10px] text-slate-400 uppercase">{{ p.sku }}</p>
-                        </div>
-                      </div>
-                    </td>
-                    <td class="px-4 py-3">
-                      <span 
-                        [class.text-rose-500]="p.stock <= p.minStock"
-                        [class.text-emerald-500]="p.stock > p.minStock"
-                        class="text-sm font-black"
-                      >
-                        {{ p.stock }}
-                      </span>
-                    </td>
-                    <td class="px-4 py-3">
-                      <span 
-                        [class.bg-emerald-50]="p.active" 
-                        [class.text-emerald-600]="p.active"
-                        [class.bg-slate-100]="!p.active"
-                        [class.text-slate-500]="!p.active"
-                        class="px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider"
-                      >
-                        {{ p.active ? 'Ativo' : 'Inativo' }}
-                      </span>
-                    </td>
-                    <td class="px-4 py-3 text-right">
-                      <div class="flex items-center justify-end gap-1">
-                        <button (click)="editProduct(p)" class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md">
-                          <mat-icon class="text-lg">edit</mat-icon>
-                        </button>
-                        <button (click)="deleteProduct(p.id)" class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-md">
-                          <mat-icon class="text-lg">delete</mat-icon>
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
+              <tbody class="divide-y divide-slate-100">
+                @for (exp of paginatedExpenses(); track exp.id) {
+                <tr class="hover:bg-slate-50 transition-colors">
+                  <td class="px-4 py-3 text-sm text-slate-600">{{ exp.date | date:'dd/MM/yyyy' }}</td>
+                  <td class="px-4 py-3 text-sm font-bold text-slate-800">{{ exp.description }}</td>
+                  <td class="px-4 py-3">
+                    <span class="px-2 py-1 bg-slate-100 text-slate-600 rounded text-[10px] font-bold uppercase">{{
+                      exp.category }}</span>
+                  </td>
+                  <td class="px-4 py-3 text-sm font-bold text-slate-800">{{ exp.amount | currency:'BRL' }}</td>
+                  <td class="px-4 py-3">
+                    @if (exp.attachments && exp.attachments.length > 0) {
+                    <button (click)="viewAttachments(exp)"
+                      class="flex items-center gap-1 text-primary hover:bg-primary/5 px-2 py-1 rounded-md transition-all group"
+                      [title]="'Ver ' + exp.attachments.length + ' anexo(s)'">
+                      <mat-icon class="text-sm">attach_file</mat-icon>
+                      <span class="text-[10px] font-bold group-hover:underline">{{ exp.attachments.length }}</span>
+                    </button>
+                    } @else {
+                    <span class="text-[10px] text-slate-300 px-2">-</span>
+                    }
+                  </td>
+                  <td class="px-4 py-3">
+                    <button (click)="toggleExpenseStatus(exp)"
+                      [class]="exp.status === 'paid' ? 'bg-emerald-50 text-emerald-600' : 'bg-amber-50 text-amber-600'"
+                      class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all hover:opacity-80">
+                      {{ exp.status === 'paid' ? 'Pago' : 'Pendente' }}
+                    </button>
+                  </td>
+                  <td class="px-4 py-3 text-right">
+                    <div class="flex items-center justify-end gap-1">
+                      <button (click)="editExpense(exp)"
+                        class="p-1.5 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-md transition-colors">
+                        <mat-icon class="text-lg h-5 w-5 flex items-center justify-center">edit</mat-icon>
+                      </button>
+                      <button (click)="deleteExpense(exp.id)"
+                        class="p-1.5 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-md transition-colors">
+                        <mat-icon class="text-lg h-5 w-5 flex items-center justify-center">delete</mat-icon>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                } @empty {
+                <tr>
+                  <td colspan="6" class="px-4 py-12 text-center text-slate-400">
+                    <mat-icon class="text-4xl mb-2">payments</mat-icon>
+                    <p>Nenhuma despesa encontrada.</p>
+                  </td>
+                </tr>
                 }
               </tbody>
             </table>
           </div>
+
+          <!-- Expense Pagination -->
+          @if (totalExpensePages() > 1) {
+          <div class="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-between">
+            <p class="text-xs text-slate-500">
+              Mostrando página <span class="font-bold text-slate-700">{{ expensePage() }}</span> de <span
+                class="font-bold text-slate-700">{{ totalExpensePages() }}</span>
+            </p>
+            <div class="flex items-center gap-1">
+              <button (click)="setExpensePage(expensePage() - 1)" [disabled]="expensePage() === 1"
+                class="p-2 text-slate-400 hover:text-primary disabled:opacity-30 disabled:hover:text-slate-400 transition-colors">
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+
+              @for (p of [].constructor(totalExpensePages()); track $index) {
+              <button (click)="setExpensePage($index + 1)"
+                [class]="(expensePage() === $index + 1 ? 'bg-primary text-white ' : 'text-slate-600 hover:bg-slate-100 ') + 'w-8 h-8 rounded-lg text-xs font-bold transition-all'">
+                {{ $index + 1 }}
+              </button>
+              }
+
+              <button (click)="setExpensePage(expensePage() + 1)" [disabled]="expensePage() === totalExpensePages()"
+                class="p-2 text-slate-400 hover:text-primary disabled:opacity-30 disabled:hover:text-slate-400 transition-colors">
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+          </div>
+          }
         </div>
+      </div>
+      }
+
+      @if (activeTab() === 'cost-centers') {
+      <div class="admin-card p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-lg font-bold text-slate-800">Centros de Custos</h2>
+          <button (click)="isCostCenterFormCollapsed.set(!isCostCenterFormCollapsed())"
+            class="admin-button-primary flex items-center gap-2">
+            <mat-icon>{{ isCostCenterFormCollapsed() ? 'add' : 'remove' }}</mat-icon>
+            {{ isCostCenterFormCollapsed() ? 'Novo Centro de Custo' : 'Fechar Formulário' }}
+          </button>
+        </div>
+
+        <!-- Cost Center Form -->
+        <div [class.hidden]="isCostCenterFormCollapsed()"
+          class="bg-slate-50 p-6 rounded-xl border border-slate-100 mb-8 animate-in fade-in slide-in-from-top-4 duration-300">
+          <h3 class="text-sm font-bold text-slate-700 mb-4">
+            {{ editingCostCenter() ? 'Editar Centro de Custo' : 'Cadastrar Novo Centro de Custo' }}
+          </h3>
+          <form [formGroup]="costCenterForm" (ngSubmit)="editingCostCenter() ? saveCostCenter() : addCostCenter()"
+            class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div class="flex flex-col gap-2">
+                <label for="ccName" class="admin-label">Nome do Centro de Custo</label>
+                <input id="ccName" type="text" formControlName="name" class="admin-input" placeholder="Ex: Operacional">
+              </div>
+              <div class="flex flex-col gap-2">
+                <label for="ccCode" class="admin-label">Código / Identificador</label>
+                <input id="ccCode" type="text" formControlName="code" class="admin-input" placeholder="Ex: 100">
+              </div>
+            </div>
+            <div class="flex flex-col gap-2">
+              <label for="ccDesc" class="admin-label">Descrição</label>
+              <textarea id="ccDesc" formControlName="description" class="admin-input min-h-[80px]"
+                placeholder="Para que serve este centro de custo?"></textarea>
+            </div>
+            <div class="flex items-center gap-3">
+              <input id="ccActive" type="checkbox" formControlName="active" class="w-5 h-5 accent-primary">
+              <label for="ccActive" class="text-sm font-medium text-slate-600">Ativo para uso em lançamentos</label>
+            </div>
+
+            <!-- Cost Center Properties -->
+            <div class="pt-6 border-t border-slate-100 space-y-4">
+              <div class="flex items-center justify-between">
+                <h4 class="text-xs font-bold text-slate-500 uppercase tracking-wider">Propriedades Adicionais</h4>
+                <button type="button" (click)="addCostCenterProperty()"
+                  class="flex items-center gap-1 text-xs font-bold text-primary hover:bg-primary/5 px-2 py-1 rounded transition-colors">
+                  <mat-icon class="text-sm">add</mat-icon>
+                  Adicionar Propriedade
+                </button>
+              </div>
+
+              <div formArrayName="properties" class="space-y-3">
+                @for (prop of costCenterProperties.controls; track $index) {
+                <div [formGroupName]="$index"
+                  class="grid grid-cols-1 md:grid-cols-12 gap-3 items-end bg-white p-4 rounded-xl border border-slate-100 shadow-sm animate-in fade-in slide-in-from-left-2 duration-200">
+                  <div class="md:col-span-4 flex flex-col gap-1">
+                    <label [for]="'ccPropName' + $index" class="text-[10px] font-bold text-slate-400 uppercase">Nome da
+                      Propriedade</label>
+                    <input [id]="'ccPropName' + $index" type="text" formControlName="name" class="admin-input text-xs"
+                      placeholder="Ex: Região">
+                  </div>
+                  <div class="md:col-span-4 flex flex-col gap-1">
+                    <label [for]="'ccPropVal' + $index"
+                      class="text-[10px] font-bold text-slate-400 uppercase">Valor</label>
+                    <input [id]="'ccPropVal' + $index" type="text" formControlName="value" class="admin-input text-xs"
+                      placeholder="Ex: Sudeste">
+                  </div>
+                  <div class="md:col-span-3 flex flex-col gap-1">
+                    <label [for]="'ccPropType' + $index"
+                      class="text-[10px] font-bold text-slate-400 uppercase">Tipo</label>
+                    <select [id]="'ccPropType' + $index" formControlName="type" class="admin-input text-xs h-10">
+                      <option value="value">Valor</option>
+                      <option value="index">Índice</option>
+                    </select>
+                  </div>
+                  <div class="md:col-span-1 flex justify-end">
+                    <button type="button" (click)="removeCostCenterProperty($index)"
+                      class="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors">
+                      <mat-icon class="text-lg">delete</mat-icon>
+                    </button>
+                  </div>
+                </div>
+                } @empty {
+                <div class="py-4 text-center border-2 border-dashed border-slate-100 rounded-xl">
+                  <p class="text-xs text-slate-400 italic">Nenhuma propriedade personalizada definida.</p>
+                </div>
+                }
+              </div>
+            </div>
+
+            <div class="pt-4 border-t border-slate-100 flex justify-end gap-3">
+              <button type="button" (click)="cancelEditCostCenter()"
+                class="px-6 py-2 bg-white border border-slate-200 rounded-lg text-sm font-bold text-slate-500 hover:bg-slate-50 transition-colors">
+                Cancelar
+              </button>
+              <button type="submit" [disabled]="costCenterForm.invalid" class="admin-button-primary">
+                {{ editingCostCenter() ? 'Salvar Alterações' : 'Confirmar Cadastro' }}
+              </button>
+            </div>
+          </form>
+        </div>
+
+        <!-- Search and Filters -->
+        <div class="flex flex-col md:flex-row items-center justify-between gap-4 mb-6">
+          <div class="relative w-full md:w-96">
+            <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</mat-icon>
+            <input type="text" (input)="onCostCenterSearch($event)"
+              placeholder="Buscar por nome, código ou descrição..."
+              class="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-100 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/20 transition-all">
+          </div>
+        </div>
+
+        <!-- Cost Centers Table -->
+        <div class="overflow-x-auto">
+          <table class="w-full text-left border-collapse">
+            <thead>
+              <tr class="border-b border-slate-100">
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Código</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Nome</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Descrição</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase">Status</th>
+                <th class="px-4 py-3 text-xs font-bold text-slate-500 uppercase text-right">Ações</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-50">
+              @for (cc of paginatedCostCenters(); track cc.id) {
+              <tr class="hover:bg-slate-50/50 transition-colors group">
+                <td class="px-4 py-4 text-sm font-mono text-primary font-bold">{{ cc.code }}</td>
+                <td class="px-4 py-4 text-sm font-bold text-slate-700">
+                  {{ cc.name }}
+                  @if (cc.properties && cc.properties.length > 0) {
+                  <div class="flex flex-wrap gap-1 mt-1">
+                    @for (prop of cc.properties; track $index) {
+                    <span
+                      [class]="prop.type === 'index' ? 'bg-indigo-50 text-indigo-600 border-indigo-100' : 'bg-slate-100 text-slate-600 border-slate-200'"
+                      class="text-[9px] px-1.5 py-0.5 rounded border font-medium"
+                      [title]="prop.name + ': ' + prop.value">
+                      {{ prop.name }}
+                    </span>
+                    }
+                  </div>
+                  }
+                </td>
+                <td class="px-4 py-4 text-sm text-slate-500 max-w-xs truncate">{{ cc.description }}</td>
+                <td class="px-4 py-4">
+                  <button (click)="toggleCostCenterStatus(cc)"
+                    [class]="cc.active ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'"
+                    class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all">
+                    {{ cc.active ? 'Ativo' : 'Inativo' }}
+                  </button>
+                </td>
+                <td class="px-4 py-4 text-right">
+                  <div class="flex items-center justify-end gap-2">
+                    <button (click)="editCostCenter(cc)"
+                      class="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all">
+                      <mat-icon class="text-lg">edit</mat-icon>
+                    </button>
+                    <button (click)="deleteCostCenter(cc.id)"
+                      class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all">
+                      <mat-icon class="text-lg">delete</mat-icon>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              } @empty {
+              <tr>
+                <td colspan="5" class="px-4 py-12 text-center">
+                  <div class="flex flex-col items-center gap-2 text-slate-400">
+                    <mat-icon class="text-4xl">account_tree</mat-icon>
+                    <p class="text-sm italic">Nenhum centro de custo encontrado.</p>
+                  </div>
+                </td>
+              </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination -->
+        @if (totalCostCenterPages() > 1) {
+        <div class="flex items-center justify-between mt-6 pt-6 border-t border-slate-100">
+          <p class="text-xs text-slate-500">
+            Página {{ costCenterPage() }} de {{ totalCostCenterPages() }}
+          </p>
+          <div class="flex items-center gap-2">
+            <button (click)="setCostCenterPage(costCenterPage() - 1)" [disabled]="costCenterPage() === 1"
+              class="p-2 text-slate-400 hover:text-primary disabled:opacity-30 transition-colors">
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+            <button (click)="setCostCenterPage(costCenterPage() + 1)"
+              [disabled]="costCenterPage() === totalCostCenterPages()"
+              class="p-2 text-slate-400 hover:text-primary disabled:opacity-30 transition-colors">
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+        </div>
+        }
+      </div>
       }
 
       @if (activeTab() === 'security') {
-        <div class="admin-card p-6">
-          <h2 class="text-lg font-bold text-slate-800 mb-6">Segurança e Acesso</h2>
-          <div class="space-y-6">
-            <div class="p-4 border border-slate-100 rounded-lg">
-              <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                  <mat-icon class="text-slate-400">lock</mat-icon>
-                  <p class="text-sm font-bold text-slate-800">Alterar Senha</p>
-                </div>
-                <button class="text-xs font-bold text-primary hover:underline">Redefinir</button>
+      <div class="admin-card p-6">
+        <h2 class="text-lg font-bold text-slate-800 mb-6">Segurança e Acesso</h2>
+        <div class="space-y-6">
+          <div class="p-4 border border-slate-100 rounded-lg">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <mat-icon class="text-slate-400">lock</mat-icon>
+                <p class="text-sm font-bold text-slate-800">Alterar Senha</p>
               </div>
-              <p class="text-xs text-slate-500">Recomendamos trocar sua senha a cada 90 dias para maior segurança.</p>
+              <button class="text-xs font-bold text-primary hover:underline">Redefinir</button>
             </div>
-            <div class="p-4 border border-slate-100 rounded-lg">
-              <div class="flex items-center justify-between mb-4">
-                <div class="flex items-center gap-3">
-                  <mat-icon class="text-slate-400">devices</mat-icon>
-                  <p class="text-sm font-bold text-slate-800">Sessões Ativas</p>
-                </div>
-                <button class="text-xs font-bold text-rose-500 hover:underline">Encerrar Todas</button>
+            <p class="text-xs text-slate-500">Recomendamos trocar sua senha a cada 90 dias para maior segurança.</p>
+          </div>
+          <div class="p-4 border border-slate-100 rounded-lg">
+            <div class="flex items-center justify-between mb-4">
+              <div class="flex items-center gap-3">
+                <mat-icon class="text-slate-400">devices</mat-icon>
+                <p class="text-sm font-bold text-slate-800">Sessões Ativas</p>
               </div>
-              <p class="text-xs text-slate-500">Você está logado em 2 dispositivos no momento.</p>
+              <button class="text-xs font-bold text-rose-500 hover:underline">Encerrar Todas</button>
             </div>
+            <p class="text-xs text-slate-500">Você está logado em 2 dispositivos no momento.</p>
           </div>
         </div>
+      </div>
       }
     </div>
   </div>
 </div>
+
+
+<!-- Attachment Viewer Modal -->
+@if (viewingExpenseAttachments(); as expense) {
+<div
+  class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg overflow-hidden animate-in zoom-in-95 duration-200">
+    <div class="p-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+          <mat-icon>attach_file</mat-icon>
+        </div>
+        <div>
+          <h3 class="text-sm font-bold text-slate-800">Anexos da Despesa</h3>
+          <p class="text-[10px] text-slate-500 uppercase font-medium tracking-wider">{{ expense.description }}</p>
+        </div>
+      </div>
+      <button (click)="closeAttachmentViewer()"
+        class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <div class="p-4 max-h-[60vh] overflow-y-auto">
+      <div class="space-y-3">
+        @for (file of expense.attachments; track $index) {
+        <div
+          class="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-xl hover:border-primary/30 transition-all group">
+          <div class="flex items-center gap-3">
+            <div
+              class="w-10 h-10 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-400 shadow-sm">
+              @if (file.url.endsWith('jpg') || file.url.endsWith('jpeg') || file.url.endsWith('png') ||
+              file.url.endsWith('gif')) {
+              <img [src]="file.url" [alt]="file.url" class="w-full h-full object-cover rounded-lg"
+                referrerpolicy="no-referrer">
+              } @else {
+              <mat-icon>description</mat-icon>
+              }
+            </div>
+            <div>
+              <p class="text-xs font-bold text-slate-700 truncate max-w-[200px]">{{ file.url }}</p>
+              <p class="text-[10px] text-slate-400">File</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2">
+            <button (click)="downloadAttachment(file)"
+              class="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
+              title="Baixar arquivo">
+              <mat-icon class="text-lg">download</mat-icon>
+            </button>
+
+            <a [href]="file.url" target="_blank"
+              class="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all"
+              title="Visualizar em nova aba">
+              <mat-icon class="text-lg">open_in_new</mat-icon>
+            </a>
+
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+
+    <div class="p-4 bg-slate-50 border-t border-slate-100 flex justify-end">
+      <button (click)="closeAttachmentViewer()"
+        class="px-6 py-2 bg-white border border-slate-200 text-slate-600 font-bold text-xs rounded-lg hover:bg-slate-100 transition-all">
+        Fechar
+      </button>
+    </div>
+  </div>
+</div>
+}

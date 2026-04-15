@@ -60,7 +60,7 @@
               </td>
               <td class="px-6 py-4">
                 <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-semibold">
-                  {{ supplier.category }}
+                  {{ supplier.category.name }}
                 </span>
               </td>
               <td class="px-6 py-4">
@@ -70,9 +70,9 @@
               <td class="px-6 py-4">
                 <span 
                   class="px-2.5 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider"
-                  [ngClass]="getStatusClass(supplier.status)"
+                  [ngClass]="getStatusClass(supplier.active)"
                 >
-                  {{ supplier.status }}
+                  {{ supplier.active }}
                 </span>
               </td>
               <td class="px-6 py-4 text-right">

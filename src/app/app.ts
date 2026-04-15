@@ -1,17 +1,20 @@
-import {ChangeDetectionStrategy, Component, signal, inject, ChangeDetectorRef, OnInit} from '@angular/core';
-import {RouterOutlet, Router, NavigationEnd} from '@angular/router';
-import {CommonModule} from '@angular/common';
-import {Sidebar} from './admin/sidebar/sidebar';
-import {MatIconModule} from '@angular/material/icon';
-import {AuthService} from './auth/auth.service';
-import {filter} from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component, signal, inject, ChangeDetectorRef, OnInit, PLATFORM_ID } from '@angular/core';
+import { RouterOutlet, Router, NavigationEnd } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { Sidebar } from './admin/sidebar/sidebar';
+import { NotificationComponent } from './shared/components/notification';
+import { MatIconModule } from '@angular/material/icon';
+import { AuthService } from './auth/auth.service';
+import { filter } from 'rxjs/operators';
+import { isPlatformBrowser } from '@angular/common';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, CommonModule, Sidebar, MatIconModule],
+  imports: [RouterOutlet, CommonModule, Sidebar, MatIconModule, NotificationComponent],
   template: `
     <div class="flex h-screen overflow-hidden relative">
+    <app-notification></app-notification>
       <!-- Loading Overlay for Logout/Reload -->
       @if (isReloading()) {
         <div class="fixed inset-0 bg-white/80 backdrop-blur-sm z-[9999] flex flex-col items-center justify-center animate-in fade-in duration-300">
@@ -20,7 +23,7 @@ import {filter} from 'rxjs/operators';
         </div>
       }
 
-      @if (isAuthenticated() && !isReloading()) {
+      @if (isLoggedIn() && !isReloading()) {
         <app-sidebar [(isOpen)]="isSidebarOpen"></app-sidebar>
       }
 
@@ -72,7 +75,8 @@ export class App implements OnInit {
   private authService = inject(AuthService);
   private cdr = inject(ChangeDetectorRef);
   private router = inject(Router);
-  
+  private platformId = inject(PLATFORM_ID);
+
   isSidebarOpen = signal(false);
   isReloading = signal(false);
   isAuthenticated = this.authService.isAuthenticated;
@@ -90,10 +94,30 @@ export class App implements OnInit {
   logout() {
     this.isReloading.set(true);
     this.cdr.detectChanges();
-    
+
     // Small delay to show the loading state before the full reload
     setTimeout(() => {
       this.authService.logout();
     }, 800);
   }
+
+isLoggedIn(): boolean {
+  if (!isPlatformBrowser(this.platformId)) {
+    return false;
+  }
+
+  const token = localStorage.getItem('kenji_token');
+  if (!token) return false;
+
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    const now = Math.floor(Date.now() / 1000);
+
+    return payload.exp > now;
+  } catch {
+    return false;
+  }
+}
+
+
 }
