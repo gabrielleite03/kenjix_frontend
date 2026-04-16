@@ -10,21 +10,14 @@ jobs:
   deploy:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
-    steps:
-      - run: echo "Deploy rodando após build"
-      
-  build:
-    uses: ./.github/workflows/build.yml
-    
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
 
     env:
       AWS_REGION: ${{ secrets.AWS_REGION }}
       ECR_REPOSITORY: kenjix/frontend
-
+      
     steps:
+      - run: echo "Deploy rodando após build"
+
       - name: Checkout código
         uses: actions/checkout@v4
 
