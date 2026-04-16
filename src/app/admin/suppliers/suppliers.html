@@ -1,0 +1,114 @@
+<div class="p-6 lg:p-8 max-w-7xl mx-auto">
+  <header class="admin-header flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="admin-title">Fornecedores</h1>
+      <p class="admin-subtitle">Gerencie seus parceiros e fornecedores de produtos.</p>
+    </div>
+    <button routerLink="/admin/suppliers/add" class="admin-button-primary">
+      <mat-icon>person_add</mat-icon>
+      Novo Fornecedor
+    </button>
+  </header>
+
+  <div class="admin-card overflow-hidden">
+    <!-- Filters -->
+    <div class="p-4 border-b border-slate-100 bg-slate-50/50 flex flex-col sm:flex-row gap-4">
+      <div class="relative flex-1">
+        <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-lg">search</mat-icon>
+        <input 
+          type="text" 
+          placeholder="Buscar por nome, categoria ou contato..." 
+          class="admin-input pl-10"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="searchTerm.set($event)"
+        >
+      </div>
+      <select class="px-4 py-2 bg-white border border-slate-200 rounded-lg text-sm text-slate-600 outline-none focus:border-primary">
+        <option value="">Todas Categorias</option>
+        <option value="Alimentação">Alimentação</option>
+        <option value="Higiene">Higiene</option>
+        <option value="Acessórios">Acessórios</option>
+        <option value="Saúde">Saúde</option>
+      </select>
+    </div>
+
+    <!-- Table -->
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-slate-50/50">
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Fornecedor / CNPJ</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Categoria</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Vendedor</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-100">
+          @for (supplier of filteredSuppliers(); track supplier.id) {
+            <tr class="hover:bg-slate-50/50 transition-colors">
+              <td class="px-6 py-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+                    <mat-icon>business</mat-icon>
+                  </div>
+                  <div>
+                    <p class="text-sm font-bold text-slate-800">{{ supplier.nomeFantasia }}</p>
+                    <p class="text-xs text-slate-500">{{ supplier.cnpj }}</p>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-600 text-xs font-semibold">
+                  {{ supplier.category.name }}
+                </span>
+              </td>
+              <td class="px-6 py-4">
+                <p class="text-sm text-slate-700">{{ supplier.salesperson }}</p>
+                <p class="text-xs text-slate-400">{{ supplier.phone }}</p>
+              </td>
+              <td class="px-6 py-4">
+                <span 
+                  class="px-2.5 py-1 rounded-full border text-[10px] font-bold uppercase tracking-wider"
+                  [ngClass]="getStatusClass(supplier.active)"
+                >
+                  {{ supplier.active }}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex items-center justify-end gap-2">
+                  <a [routerLink]="['/admin/suppliers/edit', supplier.id]" class="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all">
+                    <mat-icon class="text-lg">edit</mat-icon>
+                  </a>
+                  <button class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all">
+                    <mat-icon class="text-lg">delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="5" class="px-6 py-12 text-center">
+                <mat-icon class="text-4xl text-slate-200 mb-2">search_off</mat-icon>
+                <p class="text-slate-500 font-medium">Nenhum fornecedor encontrado.</p>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Pagination -->
+    <div class="p-4 border-t border-slate-100 flex items-center justify-between bg-slate-50/30">
+      <p class="text-xs text-slate-500 font-medium">Mostrando {{ filteredSuppliers().length }} fornecedores</p>
+      <div class="flex gap-2">
+        <button class="p-2 text-slate-400 hover:text-slate-600 disabled:opacity-30" disabled>
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button class="p-2 text-slate-400 hover:text-slate-600 disabled:opacity-30" disabled>
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

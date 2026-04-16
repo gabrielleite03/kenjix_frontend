@@ -1,0 +1,138 @@
+<div class="relative flex h-auto min-h-screen w-full flex-col overflow-x-hidden">
+    <app-header></app-header>
+
+    <main class="flex-1 max-w-[1440px] mx-auto w-full px-4 lg:px-8 py-8 lg:py-12">
+        <div class="mb-8">
+            <a routerLink="/"
+                class="inline-flex items-center gap-2 text-slate-500 hover:text-accent transition-colors font-bold text-sm group">
+                <mat-icon
+                    class="text-[20px] h-[20px] w-[20px] transition-transform group-hover:-translate-x-1">arrow_back</mat-icon>
+                Voltar para a loja
+            </a>
+        </div>
+        @if (product(); as p) {
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <!-- Image Gallery -->
+            <div class="flex flex-col gap-4">
+                <div
+                    class="aspect-square rounded-3xl overflow-hidden bg-white border border-slate-200 shadow-sm relative">
+                    @if (isYouTube(selectedImage())) {
+                    <iframe [src]="getYouTubeEmbedUrl(selectedImage())" class="w-full h-full border-none"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                    } @else {
+                    <img [src]="selectedImage()" [alt]="p.name" class="w-full h-full object-contain p-8"
+                        referrerpolicy="no-referrer">
+                    }
+                </div>
+
+                <div class="flex gap-4 overflow-x-auto pb-2 scrollbar-hide">
+                    @for (img of p.images; track img) {
+                    <button (click)="selectedImage.set(img)"
+                        class="size-20 lg:size-24 rounded-xl border-2 transition-all flex-shrink-0 overflow-hidden bg-white"
+                        [class.border-accent]="selectedImage() === img"
+                        [class.border-transparent]="selectedImage() !== img"
+                        [class.opacity-60]="selectedImage() !== img">
+                        @if (isYouTube(img)) {
+                        <div class="relative w-full h-full">
+                            <img [src]="getYouTubeThumbnail(img)" [alt]="'Thumbnail do vídeo ' + p.name"
+                                class="w-full h-full object-cover" referrerpolicy="no-referrer">
+                            referrerpolicy="no-referrer">
+                            <div class="absolute inset-0 flex items-center justify-center bg-black/20">
+                                <mat-icon class="text-white">play_circle</mat-icon>
+                            </div>
+                        </div>
+                        } @else {
+                        <img [src]="img" [alt]="'Miniatura ' + p.name" class="w-full h-full object-cover"
+                            referrerpolicy="no-referrer">
+                        }
+                    </button>
+                    }
+                </div>
+            </div>
+
+            <!-- Product Info -->
+            <div class="flex flex-col gap-6">
+                <div>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-xs font-bold uppercase tracking-widest text-accent">{{p.category}}</span>
+                        <span class="text-slate-300">•</span>
+                        <span class="text-xs font-mono text-slate-500">SKU: {{p.sku}}</span>
+                    </div>
+                    <h1 class="text-3xl lg:text-4xl font-black text-slate-900 leading-tight mb-4">{{p.name}}</h1>
+
+                </div>
+
+                <div class="bg-slate-50 rounded-2xl p-6 border border-slate-100">
+                    <div class="flex items-baseline gap-3 mb-1">
+                        <span class="text-3xl font-black text-slate-900">
+                            {{ (p.price | currency:'BRL':'symbol':'1.2-2')?.replace('R$', 'R$ ') }}
+                        </span>
+                    </div>
+                    @if (p.available) {
+                    <p class="text-xs text-emerald-600 font-bold mb-6">
+                        Em estoque - Envio imediato
+                    </p>
+                    } @else {
+                    <p class="text-xs text-red-600 font-bold mb-6">
+                        Indisponível
+                    </p>
+                    }
+
+                </div>
+
+                <div class="flex flex-col gap-4">
+                    <h3 class="font-bold text-slate-900">Descrição do Produto</h3>
+                    <p class="text-slate-600 leading-relaxed">
+                        {{p.description}}
+                    </p>
+                    @if (p.properties) {
+                    <div class="mt-4">
+                        <h3 class="font-bold text-slate-900 mb-3">Especificações</h3>
+                        <div class="grid grid-cols-1 gap-2">
+                            @for (prop of properties(); track prop.name) {
+                            <div class="flex items-center justify-between py-2 border-b border-slate-100 last:border-0">
+                                <span
+                                    class="text-xs font-bold text-slate-400 uppercase tracking-wider">{{prop.name}}</span>
+                                <span class="text-sm text-slate-700 font-medium">{{prop.value}}</span>
+                            </div>
+                            }
+                        </div>
+                    </div>
+                    }
+                </div>
+
+                <div class="grid grid-cols-2 gap-4 mt-4">
+                    <div class="flex items-center gap-3 p-4 rounded-xl bg-white border border-slate-100 shadow-sm">
+                        <div class="size-10 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+                            <mat-icon>local_shipping</mat-icon>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-slate-900">Frete Grátis</span>
+                            <span class="text-[10px] text-slate-500">Em compras acima de $199</span>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3 p-4 rounded-xl bg-white border border-slate-100 shadow-sm">
+                        <div class="size-10 rounded-full bg-accent/10 flex items-center justify-center text-accent">
+                            <mat-icon>verified_user</mat-icon>
+                        </div>
+                        <div class="flex flex-col">
+                            <span class="text-xs font-bold text-slate-900">Garantia Kenji</span>
+                            <span class="text-[10px] text-slate-500">Satisfação garantida</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        } @else {
+        <div class="flex flex-col items-center justify-center py-20 gap-4">
+            <mat-icon class="text-6xl text-slate-200 h-auto w-auto">search_off</mat-icon>
+            <h2 class="text-2xl font-bold text-slate-400">Produto não encontrado</h2>
+            <a routerLink="/" class="text-accent font-bold hover:underline">Voltar para a loja</a>
+        </div>
+        }
+    </main>
+
+    <app-footer></app-footer>
+    <app-whatsapp-button></app-whatsapp-button>
+</div>

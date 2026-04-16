@@ -1,0 +1,149 @@
+<div class="purchase-form-container">
+    <div class="flex items-center gap-4">
+        <a routerLink="/admin/purchases" class="purchase-back-btn">
+            <mat-icon>arrow_back</mat-icon>
+        </a>
+        <h1 class="purchase-title">{{ isEditing ? 'Editar Compra' : 'Nova Compra' }}</h1>
+    </div>
+
+    <form [formGroup]="purchaseForm" (ngSubmit)="savePurchase()" class="space-y-6">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Form -->
+            <div class="lg:col-span-2 space-y-6">
+                <section class="purchase-card">
+                    <div class="purchase-section-header">
+                        <mat-icon class="purchase-section-icon">local_shipping</mat-icon>
+                        <h3 class="purchase-section-title">Dados do Fornecedor</h3>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                        <div>
+                            <label class="mat-label" for="supplier">Fornecedor</label>
+                            <select class="mat-input-field" id="supplier" formControlName="supplierId">
+                                <option value="">Selecione um fornecedor</option>
+                                @for (supplier of suppliers(); track supplier.id) {
+                                <option [value]="supplier.id">
+                                    {{ supplier.nomeFantasia || supplier.razaoSocial }}
+                                </option>
+                                }
+                            </select>
+                        </div>
+                        <div>
+                            <label class="mat-label" for="invoiceNumber">Número da Nota Fiscal</label>
+                            <input type="text" class="mat-input-field" id="invoiceNumber"
+                                formControlName="invoiceNumber" placeholder="Ex: NF-12345">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="mat-label" for="invoiceType">Tipo de Nota</label>
+                            <select class="mat-input-field" id="invoiceType" formControlName="invoiceType">
+                                <option value="Integral">Integral</option>
+                                <option value="Baixa">Baixa</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label class="mat-label" for="status">Status do Pedido</label>
+                            <select class="mat-input-field" id="status" formControlName="status">
+                                <option value="Pendente">Pendente</option>
+                                <option value="Recebido">Recebido (Atualiza Estoque)</option>
+                                <option value="Cancelado">Cancelado</option>
+                            </select>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="purchase-card">
+                    <div class="purchase-items-header">
+                        <div class="purchase-section-header mb-0 border-0 pb-0">
+                            <mat-icon class="purchase-section-icon">inventory_2</mat-icon>
+                            <h3 class="purchase-section-title">Itens da Compra</h3>
+                        </div>
+                        <button type="button" (click)="addItem()" class="purchase-add-btn">
+                            <mat-icon class="text-sm">add</mat-icon>
+                            Adicionar Item
+                        </button>
+                    </div>
+
+                    <div formArrayName="items" class="space-y-4">
+                        @for (item of items.controls; track $index; let i = $index) {
+                        <div [formGroupName]="i" class="purchase-item-row group">
+                            <div class="purchase-item-col-product">
+                                <span class="purchase-item-label">Produto</span>
+                                <select class="mat-input-field text-sm" formControlName="productId">
+                                    <option value="">Selecione o produto</option>
+                                    @for (p of products(); track p.id) {
+                                    <option [value]="p.id">{{ p.name }} ({{ p.sku }})</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="purchase-item-col-cost-center">
+                                <span class="purchase-item-label">Centro de Custo</span>
+                                <select class="mat-input-field text-sm" formControlName="costCenter"
+                                    [class.border-rose-500]="item.get('costCenter')?.invalid && item.get('costCenter')?.touched">
+                                    <option [ngValue]="null">Selecione</option>
+
+                                    @for (cc of costCenters(); track cc.id) {
+                                    <option [ngValue]="cc.id">
+                                        {{ cc.code }} - {{ cc.name }}
+                                    </option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="purchase-item-col-qty">
+                                <span class="purchase-item-label">Qtd</span>
+                                <input type="number" class="mat-input-field text-sm" formControlName="quantity">
+                            </div>
+                            <div class="purchase-item-col-cost">
+                                <span class="purchase-item-label">Custo Unit.</span>
+                                <input type="number" class="mat-input-field text-sm" formControlName="costPrice">
+                            </div>
+                            <div class="purchase-item-col-total">
+                                <span class="purchase-item-label">Total</span>
+                                <div class="purchase-item-total-display">
+                                    R$ {{ calculateItemTotal(i) | number:'1.2-2' }}
+                                </div>
+                            </div>
+                            <div class="purchase-item-col-actions">
+                                <button type="button" (click)="removeItem(i)" class="purchase-item-delete-btn">
+                                    <mat-icon>delete</mat-icon>
+                                </button>
+                            </div>
+                        </div>
+                        } @empty {
+                        <div class="purchase-empty-state-msg">
+                            Nenhum item adicionado. Clique em "Adicionar Item" para começar.
+                        </div>
+                        }
+                    </div>
+                </section>
+            </div>
+
+            <!-- Sidebar Summary -->
+            <div class="lg:col-span-1">
+                <div class="lg:sticky lg:top-24 flex flex-col gap-6">
+                    <div class="purchase-summary-card">
+                        <h3 class="purchase-summary-title">Resumo Financeiro</h3>
+                        <div class="space-y-3">
+                            <div class="purchase-summary-row">
+                                <span>Subtotal</span>
+                                <span>R$ {{ total() | number:'1.2-2' }}</span>
+                            </div>
+                            <div class="purchase-summary-total">
+                                <span>Total</span>
+                                <span>R$ {{ total() | number:'1.2-2' }}</span>
+                            </div>
+                        </div>
+                        <button type="submit" [disabled]="purchaseForm.invalid || items.length === 0"
+                            class="purchase-submit-btn">
+                            Confirmar Compra
+                        </button>
+                        <button type="button" routerLink="/admin/purchases" class="purchase-cancel-btn">
+                            Cancelar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

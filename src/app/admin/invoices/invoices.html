@@ -1,0 +1,203 @@
+<div class="p-6 max-w-7xl mx-auto space-y-6 animate-in fade-in duration-500">
+  <!-- Header -->
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-black text-slate-800 tracking-tight">Notas Fiscais</h1>
+      <p class="text-slate-500 text-sm font-medium">Gerencie a emissão e recebimento de notas fiscais.</p>
+    </div>
+    <div class="flex items-center gap-3">
+      <div class="relative flex-1 md:w-64">
+        <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xl">search</mat-icon>
+        <input 
+          type="text" 
+          placeholder="Buscar nota ou cliente..." 
+          class="admin-input pl-10 h-10 text-sm"
+          [value]="searchTerm()"
+          (input)="searchTerm.set($any($event.target).value)"
+        >
+      </div>
+      <button (click)="openForm()" class="admin-button-primary flex items-center gap-2 h-10 px-4">
+        <mat-icon class="text-xl">add</mat-icon>
+        Nova Nota
+      </button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div class="admin-card p-4 flex items-center gap-4 border-l-4 border-emerald-500">
+      <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+        <mat-icon class="text-2xl">check_circle</mat-icon>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Emitidas</p>
+        <p class="text-xl font-black text-slate-800">124</p>
+      </div>
+    </div>
+    <div class="admin-card p-4 flex items-center gap-4 border-l-4 border-amber-500">
+      <div class="w-12 h-12 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center">
+        <mat-icon class="text-2xl">pending</mat-icon>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Pendentes</p>
+        <p class="text-xl font-black text-slate-800">12</p>
+      </div>
+    </div>
+    <div class="admin-card p-4 flex items-center gap-4 border-l-4 border-rose-500">
+      <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+        <mat-icon class="text-2xl">cancel</mat-icon>
+      </div>
+      <div>
+        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider">Canceladas</p>
+        <p class="text-xl font-black text-slate-800">3</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table -->
+  <div class="admin-card overflow-hidden">
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-slate-50/50 border-b border-slate-100">
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Número/Série</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Tipo</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Emissão</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Cliente/Fornecedor</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Valor Total</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Status</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-right">Ações</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-slate-50">
+          @for (invoice of filteredInvoices(); track invoice.id) {
+            <tr class="hover:bg-slate-50/50 transition-colors group">
+              <td class="px-6 py-4">
+                <div class="flex flex-col">
+                  <span class="text-sm font-bold text-slate-800">{{ invoice.number }}</span>
+                  <span class="text-[10px] text-slate-400 font-medium">Série {{ invoice.series }}</span>
+                </div>
+              </td>
+              <td class="px-6 py-4">
+                <span 
+                  class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                  [ngClass]="invoice.type === 'entrada' ? 'bg-blue-100 text-blue-700' : 'bg-purple-100 text-purple-700'"
+                >
+                  {{ invoice.type }}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-sm text-slate-600 font-medium">
+                {{ invoice.issueDate | date:'dd/MM/yyyy' }}
+              </td>
+              <td class="px-6 py-4">
+                <span class="text-sm font-bold text-slate-700">{{ invoice.supplierOrCustomer }}</span>
+              </td>
+              <td class="px-6 py-4">
+                <span class="text-sm font-black text-slate-800">R$ {{ invoice.totalValue | number:'1.2-2' }}</span>
+              </td>
+              <td class="px-6 py-4">
+                <span 
+                  class="px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider"
+                  [ngClass]="getStatusClass(invoice.status)"
+                >
+                  {{ invoice.status }}
+                </span>
+              </td>
+              <td class="px-6 py-4 text-right">
+                <div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <button (click)="openForm(invoice)" class="p-2 text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all" title="Editar">
+                    <mat-icon class="text-xl">edit</mat-icon>
+                  </button>
+                  <button class="p-2 text-slate-400 hover:text-blue-500 hover:bg-blue-50 rounded-lg transition-all" title="Ver XML">
+                    <mat-icon class="text-xl">code</mat-icon>
+                  </button>
+                  <button class="p-2 text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all" title="Ver PDF">
+                    <mat-icon class="text-xl">picture_as_pdf</mat-icon>
+                  </button>
+                  <button (click)="deleteInvoice(invoice.id)" class="p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all" title="Excluir">
+                    <mat-icon class="text-xl">delete</mat-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="7" class="px-6 py-12 text-center">
+                <div class="flex flex-col items-center gap-2 text-slate-400">
+                  <mat-icon class="text-5xl">description</mat-icon>
+                  <p class="font-medium">Nenhuma nota fiscal encontrada.</p>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Form Modal -->
+  @if (isFormOpen()) {
+    <div class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 animate-in fade-in duration-300">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-300">
+        <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+          <h2 class="text-xl font-black text-slate-800 flex items-center gap-2">
+            <mat-icon class="text-primary">{{ editingInvoice() ? 'edit' : 'add_circle' }}</mat-icon>
+            {{ editingInvoice() ? 'Editar Nota Fiscal' : 'Nova Nota Fiscal' }}
+          </h2>
+          <button (click)="closeForm()" class="p-2 text-slate-400 hover:text-slate-600 rounded-full hover:bg-slate-100 transition-all">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+
+        <form [formGroup]="invoiceForm" (ngSubmit)="saveInvoice()" class="p-6 space-y-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="flex flex-col gap-1.5">
+              <label for="invNumber" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Número da Nota</label>
+              <input id="invNumber" type="text" formControlName="number" class="admin-input" placeholder="000000">
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label for="invSeries" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Série</label>
+              <input id="invSeries" type="text" formControlName="series" class="admin-input" placeholder="1">
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label for="invType" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Tipo</label>
+              <select id="invType" formControlName="type" class="admin-input">
+                <option value="saida">Saída (Venda)</option>
+                <option value="entrada">Entrada (Compra)</option>
+              </select>
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label for="invDate" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Data de Emissão</label>
+              <input id="invDate" type="date" formControlName="issueDate" class="admin-input">
+            </div>
+            <div class="flex flex-col gap-1.5 md:col-span-2">
+              <label for="invEntity" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Cliente / Fornecedor</label>
+              <input id="invEntity" type="text" formControlName="supplierOrCustomer" class="admin-input" placeholder="Nome completo ou Razão Social">
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label for="invValue" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Valor Total (R$)</label>
+              <input id="invValue" type="number" formControlName="totalValue" class="admin-input" step="0.01">
+            </div>
+            <div class="flex flex-col gap-1.5">
+              <label for="invStatus" class="text-xs font-bold text-slate-500 uppercase tracking-wider">Status</label>
+              <select id="invStatus" formControlName="status" class="admin-input">
+                <option value="emitida">Emitida</option>
+                <option value="pendente">Pendente</option>
+                <option value="cancelada">Cancelada</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="pt-6 flex items-center justify-end gap-3">
+            <button type="button" (click)="closeForm()" class="px-6 py-2.5 text-sm font-bold text-slate-500 hover:bg-slate-50 rounded-xl transition-all">
+              Cancelar
+            </button>
+            <button type="submit" [disabled]="invoiceForm.invalid" class="admin-button-primary px-8 py-2.5">
+              {{ editingInvoice() ? 'Salvar Alterações' : 'Emitir Nota' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  }
+</div>

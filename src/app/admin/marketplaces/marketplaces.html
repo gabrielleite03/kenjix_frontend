@@ -1,0 +1,197 @@
+<div class="p-4 lg:p-8 max-w-7xl w-full mx-auto">
+  <header class="mb-8 flex flex-col md:flex-row md:items-center justify-between gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Marketplaces</h1>
+      <p class="text-slate-500">Gerencie suas integrações com canais de venda externos.</p>
+    </div>
+    <button (click)="showAddForm()" class="admin-btn-primary h-11 px-6">
+      <mat-icon>add_circle</mat-icon>
+      Novo Marketplace
+    </button>
+  </header>
+
+  <!-- Filters & Search -->
+  <div class="admin-card mb-8 p-4">
+    <div class="flex flex-col md:flex-row items-center gap-4">
+      <div class="relative flex-1 w-full">
+        <mat-icon class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400">search</mat-icon>
+        <input 
+          type="text" 
+          (input)="searchTerm.set($any($event.target).value)"
+          placeholder="Buscar marketplace por nome..." 
+          class="admin-input pl-10 h-11"
+        >
+      </div>
+      <div class="flex items-center gap-2 w-full md:w-auto">
+        <select 
+          (change)="statusFilter.set($any($event.target).value)"
+          class="admin-input h-11 min-w-[160px]"
+        >
+          <option value="all">Todos Status</option>
+          <option value="active">Ativos</option>
+          <option value="inactive">Inativos</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Marketplace List -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    @for (m of filteredMarketplaces(); track m.id) {
+      <div class="admin-card group hover:border-primary/30 transition-all overflow-hidden flex flex-col">
+        <div class="p-6 flex-1">
+          <div class="flex items-start justify-between mb-6">
+            <div class="w-16 h-16 rounded-xl bg-slate-50 border border-slate-100 p-2 flex items-center justify-center overflow-hidden">
+              @if (m.logo) {
+                <img [src]="m.logo" [alt]="m.name" class="w-full h-full object-contain" referrerpolicy="no-referrer">
+              } @else {
+                <mat-icon class="text-3xl text-slate-300">storefront</mat-icon>
+              }
+            </div>
+            <div class="flex flex-col items-end gap-2">
+              <button 
+                (click)="toggleStatus(m)"
+                [class]="m.status === 'active' ? 'bg-emerald-50 text-emerald-600' : 'bg-slate-100 text-slate-400'"
+                class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all hover:opacity-80"
+              >
+                {{ m.status === 'active' ? 'Ativo' : 'Inativo' }}
+              </button>
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">{{ m.integrationType }}</span>
+            </div>
+          </div>
+
+          <h3 class="text-lg font-bold text-slate-800 mb-1">{{ m.name }}</h3>
+          <div class="flex items-center gap-2 mb-4">
+            <span class="text-xs text-slate-500">Comissão:</span>
+            <span class="text-xs font-bold text-primary">{{ m.commissionRate }}%</span>
+          </div>
+
+          @if (m.apiUrl) {
+            <div class="flex items-center gap-2 p-2 bg-slate-50 rounded-lg border border-slate-100 mb-2">
+              <mat-icon class="text-sm text-slate-400">link</mat-icon>
+              <span class="text-[10px] text-slate-500 truncate">{{ m.apiUrl }}</span>
+            </div>
+          }
+           @if (m.apiEndpoint) {
+            <div class="flex items-center gap-2 p-2 bg-slate-50 rounded-lg border border-slate-100 mb-4">
+              <mat-icon class="text-sm text-slate-400">api</mat-icon>
+              <span class="text-[10px] text-slate-500 truncate">{{ m.apiEndpoint }}</span>
+            </div>
+          }
+        </div>
+
+        <div class="p-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between">
+          <span class="text-[10px] text-slate-400">Criado em {{ m.createdAt | date:'dd/MM/yyyy' }}</span>
+          <div class="flex items-center gap-1">
+            <button (click)="editMarketplace(m)" class="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-primary hover:bg-primary/5 rounded-lg transition-all">
+              <mat-icon>edit</mat-icon>
+            </button>
+            <button (click)="deleteMarketplace(m.id)" class="w-9 h-9 flex items-center justify-center text-slate-400 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    } @empty {
+      <div class="col-span-full py-20 text-center bg-white rounded-2xl border-2 border-dashed border-slate-100">
+        <div class="w-20 h-20 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <mat-icon class="text-4xl text-slate-300">storefront</mat-icon>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">Nenhum marketplace encontrado</h3>
+        <p class="text-slate-500 max-w-xs mx-auto">Tente ajustar seus filtros ou adicione uma nova integração.</p>
+      </div>
+    }
+  </div>
+</div>
+
+<!-- Add/Edit Modal -->
+@if (isFormVisible()) {
+  <div class="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm animate-in fade-in duration-200">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl overflow-hidden animate-in zoom-in-95 duration-200">
+      <div class="p-6 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+            <mat-icon>{{ editingMarketplace() ? 'edit' : 'add_circle' }}</mat-icon>
+          </div>
+          <div>
+            <h2 class="text-lg font-bold text-slate-800">{{ editingMarketplace() ? 'Editar Marketplace' : 'Novo Marketplace' }}</h2>
+            <p class="text-xs text-slate-500">Preencha as informações para configurar a integração.</p>
+          </div>
+        </div>
+        <button (click)="cancelForm()" class="p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all">
+          <mat-icon>close</mat-icon>
+        </button>
+      </div>
+
+      <form [formGroup]="marketplaceForm" (ngSubmit)="saveMarketplace()" class="p-6">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div class="flex flex-col gap-1.5">
+            <label for="marketplaceName" class="admin-label">Nome do Marketplace</label>
+            <input id="marketplaceName" type="text" formControlName="name" class="admin-input" placeholder="Ex: Mercado Livre">
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label for="marketplaceLogo" class="admin-label">URL do Logo</label>
+            <input id="marketplaceLogo" type="text" formControlName="logo" class="admin-input" placeholder="https://exemplo.com/logo.png">
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label for="commissionRate" class="admin-label">Taxa de Comissão (%)</label>
+            <input id="commissionRate" type="number" formControlName="commissionRate" class="admin-input" placeholder="0.00">
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label for="integrationType" class="admin-label">Tipo de Integração</label>
+            <select id="integrationType" formControlName="integrationType" class="admin-input">
+              <option value="manual">Manual</option>
+              <option value="api">API</option>
+              <option value="webhook">Webhook</option>
+            </select>
+          </div>
+
+          <div class="flex flex-col gap-1.5 md:col-span-2">
+            <span class="admin-label">Status</span>
+            <div class="flex items-center gap-4 p-3 bg-slate-50 rounded-lg border border-slate-200">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" formControlName="status" value="active" class="text-primary focus:ring-primary">
+                <span class="text-sm font-medium text-slate-700">Ativo</span>
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input type="radio" formControlName="status" value="inactive" class="text-primary focus:ring-primary">
+                <span class="text-sm font-medium text-slate-700">Inativo</span>
+              </label>
+            </div>
+          </div>
+
+          @if (marketplaceForm.get('integrationType')?.value === 'api') {
+            <div class="flex flex-col gap-1.5 md:col-span-2 animate-in slide-in-from-top-2 duration-200">
+              <label for="apiUrl" class="admin-label">URL da API</label>
+              <input id="apiUrl" type="text" formControlName="apiUrl" class="admin-input" placeholder="https://api.marketplace.com">
+            </div>
+            <div class="flex flex-col gap-1.5 md:col-span-2 animate-in slide-in-from-top-2 duration-200">
+              <label for="apiKey" class="admin-label">Chave da API (Token)</label>
+              <input id="apiKey" type="password" formControlName="apiKey" class="admin-input" placeholder="••••••••••••••••">
+            </div>
+            <div class="flex flex-col gap-1.5 md:col-span-2 animate-in slide-in-from-top-2 duration-200">
+              <label for="apiEndpoint" class="admin-label">Endpoint da API</label>
+              <input id="apiEndpoint" type="text" formControlName="apiEndpoint" class="admin-input" placeholder="/v1/orders">
+            </div>
+            <div class="flex flex-col gap-1.5 md:col-span-2 animate-in slide-in-from-top-2 duration-200">
+              <label for="apiSecret" class="admin-label">Secret da API</label>
+              <input id="apiSecret" type="password" formControlName="apiSecret" class="admin-input" placeholder="••••••••••••••••">
+            </div>
+          }
+        </div>
+
+        <div class="flex justify-end gap-3 pt-6 border-t border-slate-100">
+          <button type="button" (click)="cancelForm()" class="px-6 py-2.5 bg-white border border-slate-200 text-slate-600 font-bold rounded-lg hover:bg-slate-50 transition-all">
+            Cancelar
+          </button>
+          <button type="submit" [disabled]="marketplaceForm.invalid" class="admin-btn-primary h-11 px-8">
+            {{ editingMarketplace() ? 'Salvar Alterações' : 'Criar Marketplace' }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+}

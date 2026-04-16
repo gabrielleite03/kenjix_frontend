@@ -1,0 +1,133 @@
+<div class="p-4 lg:p-8 max-w-7xl w-full mx-auto">
+  <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-slate-800">Estoque de Produtos</h1>
+      <p class="text-slate-500 text-sm">Gerencie seus itens, preços e níveis de estoque.</p>
+    </div>
+  </header>
+  @if (isLoading()) {
+  @for (i of [1,2,3,4,5,6]; track i) {
+  <div class="bg-white rounded-2xl border border-slate-100 overflow-hidden shadow-sm animate-pulse">
+    <div class="aspect-square bg-slate-200"></div>
+    <div class="p-4 space-y-3">
+      <div class="h-3 bg-slate-200 rounded w-1/4"></div>
+      <div class="h-4 bg-slate-200 rounded w-3/4"></div>
+      <div class="h-3 bg-slate-200 rounded w-full"></div>
+      <div class="flex justify-between items-center pt-4">
+        <div class="h-6 bg-slate-200 rounded w-1/3"></div>
+      </div>
+    </div>
+  </div>
+  }
+  } @else {
+  <!-- Product Grid (Replacing Table) -->
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
+    @for (stock of paginatedStocks(); track stock.productId) {
+    <div
+      class="bg-white rounded-2xl mat-shadow border border-slate-100 p-5 hover:border-primary/30 transition-all group flex flex-col">
+      <div class="flex items-start gap-4 mb-4">
+        <div class="w-16 h-16 rounded-xl bg-slate-100 overflow-hidden border border-slate-200 shrink-0">
+          <img [src]="stock.product.images[0] || 'https://picsum.photos/seed/pet/100/100'" [alt]="stock.product.name"
+            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+            referrerpolicy="no-referrer">
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <span [class.bg-emerald-50]="stock.active" [class.text-emerald-600]="stock.active"
+              [class.bg-slate-100]="!stock.active" [class.text-slate-500]="!stock.active"
+              class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider">
+              {{ stock.active ? 'Ativo' : 'Inativo' }}
+            </span>
+            <span class="text-[10px] font-bold text-slate-400 uppercase tracking-tight">{{ stock.product.sku }}</span>
+          </div>
+          <h3 class="font-bold text-slate-800 text-sm truncate">{{ stock.product.name }}</h3>
+          <p class="text-xs text-slate-500">{{ stock.product.brand }}</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-4 pt-4 border-t border-slate-50 mt-auto">
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Estoque Atual</p>
+          <div class="flex flex-col">
+            <span [class.text-rose-500]="stock.quantity <= 5" [class.text-emerald-500]="stock.quantity > 6"
+              class="text-lg font-black">
+              {{ stock.quantity }} <span class="text-xs font-medium">un.</span>
+            </span>
+          </div>
+        </div>
+        <div class="text-right">
+          <p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Preço Venda</p>
+          @if ((stock.minPrice && stock.maxPrice) && (stock.maxPrice > stock.minPrice )) {
+          <div class="flex flex-col items-end">
+            <div class="flex items-center gap-1 font-bold text-sm">
+              <span class="text-emerald-600">{{ stock.minPrice | currency:'BRL' }}</span>
+              <span class="text-slate-300 font-normal">~</span>
+              <span class="text-indigo-600">{{ stock.maxPrice | currency:'BRL' }}</span>
+            </div>
+            <span class="text-[9px] text-slate-400 italic font-medium">Variação por C. Custo</span>
+          </div>
+          } @else {
+          <p class="text-base font-black text-slate-800">
+            {{ stock.minPrice | currency:'BRL' }}
+          </p>
+          }
+        </div>
+      </div>
+
+      @if (stock.warehouseName || stock.warehousePlaceName) {
+      <div class="mt-4 p-3 bg-slate-50 rounded-xl border border-slate-100">
+        <div class="flex items-center gap-2 text-slate-500 mb-1">
+          <mat-icon class="text-[14px] w-4 h-4 flex items-center justify-center">warehouse</mat-icon>
+          <span class="text-[10px] font-bold uppercase tracking-wider">Localização</span>
+        </div>
+        <div class="flex flex-col pl-6">
+          @if (stock.warehouseName) {
+          <span class="text-xs text-slate-700 font-medium">{{ stock.warehouseName }}</span>
+          }
+          @if (stock.warehousePlaceName) {
+          <span class="text-[10px] text-slate-500 italic">{{ stock.warehousePlaceName }}</span>
+          }
+        </div>
+      </div>
+      }
+    </div>
+    } @empty {
+    <div class="col-span-full bg-white rounded-2xl mat-shadow border border-slate-100 p-12 text-center text-slate-400">
+      <mat-icon class="text-6xl mb-4 text-slate-200">inventory_2</mat-icon>
+      <p class="text-lg font-medium">Nenhum produto encontrado.</p>
+      <p class="text-sm">Tente ajustar seus filtros de busca.</p>
+    </div>
+    }
+  </div>
+
+  <!-- Pagination -->
+  <div
+    class="p-6 bg-white rounded-2xl mat-shadow border border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4">
+    <p class="text-xs text-slate-500">
+      Mostrando <span class="font-bold text-slate-700">{{ paginatedStocks().length }}</span> de <span
+        class="font-bold text-slate-700">{{ stocks().length }}</span> produtos
+    </p>
+
+    @if (totalPages() > 1) {
+    <div class="flex items-center gap-1">
+      <button (click)="setPage(currentPage() - 1)" [disabled]="currentPage() === 1"
+        class="p-2 text-slate-400 hover:text-primary disabled:opacity-30 disabled:hover:text-slate-400 transition-colors">
+        <mat-icon>chevron_left</mat-icon>
+      </button>
+
+      @for (p of [].constructor(totalPages()); track $index) {
+      <button (click)="setPage($index + 1)"
+        [class]="(currentPage() === $index + 1 ? 'bg-primary text-white ' : 'text-slate-600 hover:bg-slate-100 ') + 'w-8 h-8 rounded-lg text-xs font-bold transition-all'">
+        {{ $index + 1 }}
+      </button>
+      }
+
+      <button (click)="setPage(currentPage() + 1)" [disabled]="currentPage() === totalPages()"
+        class="p-2 text-slate-400 hover:text-primary disabled:opacity-30 disabled:hover:text-slate-400 transition-colors">
+        <mat-icon>chevron_right</mat-icon>
+      </button>
+    </div>
+    }
+  </div>
+  }
+</div>

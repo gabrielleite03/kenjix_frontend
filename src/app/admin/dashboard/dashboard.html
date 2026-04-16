@@ -1,0 +1,75 @@
+<div class="p-4 lg:p-8 max-w-7xl w-full mx-auto">
+  <header class="mb-8">
+    <h1 class="text-2xl font-bold text-slate-800">Painel de Controle</h1>
+    <p class="text-slate-500">Bem-vindo de volta! Aqui está o resumo da sua pet shop hoje.</p>
+  </header>
+
+  <!-- Stats Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    @for (stat of stats; track stat.label) {
+      <div class="bg-white p-6 rounded-xl mat-shadow border border-slate-100">
+        <div class="flex items-center justify-between mb-4">
+          <div [class]="stat.color + ' w-12 h-12 rounded-lg flex items-center justify-center text-white shadow-lg'">
+            <mat-icon>{{ stat.icon }}</mat-icon>
+          </div>
+          <span class="text-xs font-bold text-emerald-500 bg-emerald-50 px-2 py-1 rounded">+12%</span>
+        </div>
+        <h3 class="text-slate-500 text-sm font-medium">{{ stat.label }}</h3>
+        <p class="text-2xl font-bold text-slate-800">{{ stat.value }}</p>
+      </div>
+    }
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Recent Activity -->
+    <div class="lg:col-span-2 bg-white rounded-xl mat-shadow border border-slate-100 overflow-hidden">
+      <div class="p-6 border-b border-slate-100 flex items-center justify-between">
+        <h3 class="font-bold text-slate-800">Atividades Recentes</h3>
+        <button class="text-primary text-sm font-semibold hover:underline">Ver tudo</button>
+      </div>
+      <div class="divide-y divide-slate-100">
+        @for (activity of recentActivities; track activity.description) {
+          <div class="p-6 flex items-start gap-4 hover:bg-slate-50 transition-colors">
+            <div class="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center shrink-0">
+              <mat-icon class="text-slate-500 text-xl">
+                {{ activity.type === 'sale' ? 'shopping_cart' : activity.type === 'stock' ? 'inventory' : 'add_circle' }}
+              </mat-icon>
+            </div>
+            <div class="flex-1">
+              <div class="flex items-center justify-between mb-1">
+                <h4 class="font-semibold text-slate-800">{{ activity.title }}</h4>
+                <span class="text-xs text-slate-400">{{ activity.time }}</span>
+              </div>
+              <p class="text-sm text-slate-500">{{ activity.description }}</p>
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-xl mat-shadow border border-slate-100 p-6">
+      <h3 class="font-bold text-slate-800 mb-6">Ações Rápidas</h3>
+      <div class="space-y-4">
+        <button class="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-100 hover:border-primary hover:bg-primary/5 transition-all group">
+          <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+            <mat-icon>receipt_long</mat-icon>
+          </div>
+          <div class="text-left">
+            <p class="font-semibold text-slate-800">Nova Venda</p>
+            <p class="text-xs text-slate-500">Registrar pedido manual</p>
+          </div>
+        </button>
+        <button class="w-full flex items-center gap-4 p-4 rounded-xl border border-slate-100 hover:border-primary hover:bg-primary/5 transition-all group">
+          <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 flex items-center justify-center group-hover:bg-amber-500 group-hover:text-white transition-colors">
+            <mat-icon>person_add</mat-icon>
+          </div>
+          <div class="text-left">
+            <p class="font-semibold text-slate-800">Novo Cliente</p>
+            <p class="text-xs text-slate-500">Adicionar à base de dados</p>
+          </div>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

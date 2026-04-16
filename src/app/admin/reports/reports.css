@@ -1,0 +1,17 @@
+:host {
+  display: block;
+}
+
+svg {
+  overflow: visible;
+}
+
+.domain, .tick line {
+  stroke: #e2e8f0;
+}
+
+.tick text {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  fill: #64748b;
+}

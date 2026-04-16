@@ -1,0 +1,215 @@
+@reference "../../../styles.css";
+
+:host {
+  display: block;
+}
+
+.purchase-card {
+  @apply bg-white rounded-2xl shadow-mat p-6 border border-slate-100;
+}
+
+.purchase-section-header {
+  @apply flex items-center gap-2 mb-6 border-b border-slate-100 pb-4;
+}
+
+.purchase-item-row {
+  @apply grid grid-cols-1 md:grid-cols-12 gap-x-6 gap-y-4 p-5 border border-slate-100 rounded-2xl bg-slate-50/50 hover:bg-white hover:shadow-md transition-all relative;
+}
+
+.purchase-summary-card {
+  @apply bg-white rounded-2xl shadow-mat p-6 border border-slate-100;
+}
+
+.purchase-info-box {
+  @apply p-4 bg-amber-50 border border-amber-200 rounded-xl flex gap-3;
+}
+
+.purchase-container {
+  @apply p-4 lg:p-8 space-y-6;
+}
+
+.purchase-table-card {
+  @apply bg-white rounded-2xl shadow-mat border border-slate-100 overflow-hidden;
+}
+
+.purchase-form-container {
+  @apply p-4 lg:p-8 max-w-5xl mx-auto space-y-6;
+}
+
+.purchase-header {
+  @apply flex flex-col sm:flex-row sm:items-center justify-between gap-4;
+}
+
+.purchase-title {
+  @apply text-2xl font-black text-slate-800 tracking-tight;
+}
+
+.purchase-subtitle {
+  @apply text-slate-500 text-sm;
+}
+
+.purchase-btn-primary {
+  @apply flex items-center justify-center gap-2 bg-primary text-white px-6 py-2.5 rounded-xl font-bold shadow-mat hover:brightness-105 active:scale-95 transition-all;
+}
+
+.purchase-table {
+  @apply w-full text-left border-collapse;
+}
+
+.purchase-th {
+  @apply px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider;
+}
+
+.purchase-td {
+  @apply px-6 py-4 text-sm text-slate-500;
+}
+
+.purchase-status-badge {
+  @apply px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border;
+}
+
+.purchase-type-badge {
+  @apply px-2 py-0.5 rounded bg-slate-100 text-[10px] font-bold uppercase tracking-wider text-slate-600 border border-slate-200;
+}
+
+.purchase-items-header {
+  @apply flex items-center justify-between mb-6 border-b border-slate-100 pb-4;
+}
+
+.purchase-add-btn {
+  @apply text-xs font-bold text-primary hover:underline flex items-center gap-1 cursor-pointer;
+}
+
+.purchase-item-label {
+  @apply text-[10px] font-bold text-slate-400 uppercase mb-1 block;
+}
+
+.purchase-item-total-display {
+  @apply h-10 flex items-center font-black text-primary text-lg;
+}
+
+.purchase-item-delete-btn {
+  @apply p-2 text-slate-300 hover:text-rose-500 transition-colors;
+}
+
+.purchase-empty-state-msg {
+  @apply text-center py-8 text-slate-400 italic text-sm;
+}
+
+.purchase-submit-btn {
+  @apply w-full mt-6 py-3 bg-primary text-white rounded-xl font-bold shadow-mat hover:brightness-105 active:scale-95 transition-all disabled:opacity-50 disabled:grayscale disabled:scale-100;
+}
+
+.purchase-cancel-btn {
+  @apply w-full mt-2 py-3 text-slate-500 font-bold hover:bg-slate-50 rounded-xl transition-all;
+}
+
+.purchase-back-btn {
+  @apply p-2 hover:bg-slate-100 rounded-full transition-colors;
+}
+
+.purchase-section-icon {
+  @apply text-primary;
+}
+
+.purchase-section-title {
+  @apply font-bold text-slate-800;
+}
+
+.purchase-item-col-product {
+  @apply md:col-span-7;
+}
+
+.purchase-item-col-cost-center {
+  @apply md:col-span-5;
+}
+
+.purchase-item-col-qty {
+  @apply md:col-span-2;
+}
+
+.purchase-item-col-cost {
+  @apply md:col-span-4;
+}
+
+.purchase-item-col-total {
+  @apply md:col-span-4 flex flex-col;
+}
+
+.purchase-item-col-actions {
+  @apply md:col-span-2 flex items-end justify-end;
+}
+
+/* Custom Dropdown Styles */
+.animate-in {
+  animation: animate-in 0.2s ease-out;
+}
+
+@keyframes animate-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom Scrollbar for Dropdown */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  @apply bg-slate-50 rounded-full;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  @apply bg-slate-200 rounded-full hover:bg-slate-300 transition-colors;
+}
+
+.purchase-summary-title {
+  @apply font-bold text-slate-800 mb-4;
+}
+
+.purchase-summary-row {
+  @apply flex justify-between text-sm text-slate-500;
+}
+
+.purchase-summary-total {
+  @apply flex justify-between text-xl font-black text-slate-800 pt-3 border-t border-slate-100;
+}
+
+.mat-input-field:focus {
+  @apply border-primary ring-2 ring-primary/20 outline-none transition-all;
+}
+
+.mat-input-field {
+  @apply transition-all duration-200;
+}
+
+@media print {
+  .purchase-back-btn,
+  .purchase-btn-primary,
+  a[routerLink*="edit"],
+  .bg-blue-50,
+  .purchase-summary-card + .mt-6 {
+    display: none !important;
+  }
+
+  .purchase-form-container {
+    padding: 0 !important;
+    max-width: 100% !important;
+  }
+
+  .purchase-card,
+  .purchase-summary-card {
+    box-shadow: none !important;
+    border: 1px solid #e2e8f0 !important;
+  }
+
+  body {
+    background: white !important;
+  }
+}

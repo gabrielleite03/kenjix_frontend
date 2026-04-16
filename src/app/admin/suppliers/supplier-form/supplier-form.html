@@ -1,0 +1,89 @@
+<div class="p-6 lg:p-8 max-w-3xl mx-auto">
+  <header class="admin-header flex items-center gap-4">
+    <button routerLink="/admin/suppliers"
+      class="p-2 text-slate-400 hover:text-primary hover:bg-slate-50 rounded-full transition-all">
+      <mat-icon>arrow_back</mat-icon>
+    </button>
+    <div>
+      <h1 class="admin-title">{{ isEditMode() ? 'Editar Fornecedor' : 'Novo Fornecedor' }}</h1>
+      <p class="admin-subtitle">Preencha os dados abaixo para {{ isEditMode() ? 'atualizar' : 'cadastrar' }} o
+        fornecedor.</p>
+    </div>
+  </header>
+
+  <div class="admin-card p-6">
+    <form [formGroup]="supplierForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="flex flex-col gap-2">
+          <label for="razaoSocial" class="admin-label">Razão Social</label>
+          <input id="razaoSocial" type="text" formControlName="razaoSocial" class="admin-input"
+            placeholder="Ex: PetFood Comercio de Alimentos LTDA">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="nomeFantasia" class="admin-label">Nome Fantasia</label>
+          <input id="nomeFantasia" type="text" formControlName="nomeFantasia" class="admin-input"
+            placeholder="Ex: PetFood Distribuidora">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="cnpj" class="admin-label">CNPJ</label>
+          <input id="cnpj" type="text" formControlName="cnpj" class="admin-input" placeholder="00.000.000/0000-00">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="ie" class="admin-label">Inscrição Estadual (IE)</label>
+          <input id="ie" type="text" formControlName="ie" class="admin-input" placeholder="000.000.000.000">
+        </div>
+        <div class="flex flex-col gap-2 md:col-span-2">
+          <label for="address" class="admin-label">Endereço Completo</label>
+          <input id="address" type="text" formControlName="address" class="admin-input"
+            placeholder="Rua, Número, Bairro, Cidade - UF">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="salesperson" class="admin-label">Nome do Vendedor</label>
+          <input id="salesperson" type="text" formControlName="salesperson" class="admin-input"
+            placeholder="Ex: Carlos Oliveira">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="category" class="admin-label">Categoria</label>
+          <select id="category" formControlName="categoryId" class="admin-input">
+            <option value="">Selecione uma categoria</option>
+            @for (cat of categories(); track cat.id) {
+            <option [ngValue]="cat.id">{{ cat.name }}</option>
+            }
+          </select>
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="email" class="admin-label">E-mail</label>
+          <input id="email" type="email" formControlName="email" class="admin-input" placeholder="contato@empresa.com">
+        </div>
+        <div class="flex flex-col gap-2">
+          <label for="phone" class="admin-label">Telefone</label>
+          <input id="phone" type="text" formControlName="phone" class="admin-input" placeholder="(11) 99999-9999">
+        </div>
+        <div class="flex flex-col gap-2">
+          <span class="admin-label">Status</span>
+          <div class="flex items-center gap-4 mt-2">
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" formControlName="active" [value]="true" class="w-4 h-4 accent-emerald-500">
+              <span class="text-sm text-slate-600 font-medium">Ativo</span>
+            </label>
+
+            <label class="flex items-center gap-2 cursor-pointer">
+              <input type="radio" formControlName="active" [value]="false" class="w-4 h-4 accent-rose-500">
+              <span class="text-sm text-slate-600 font-medium">Inativo</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="pt-6 border-t border-slate-100 flex justify-end gap-3">
+        <button type="button" routerLink="/admin/suppliers"
+          class="px-6 py-2 text-sm font-bold text-slate-500 hover:bg-slate-50 rounded-lg transition-colors">
+          Cancelar
+        </button>
+        <button type="submit" [disabled]="supplierForm.invalid" class="admin-button-primary disabled:opacity-50">
+          {{ isEditMode() ? 'Salvar Alterações' : 'Cadastrar Fornecedor' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
