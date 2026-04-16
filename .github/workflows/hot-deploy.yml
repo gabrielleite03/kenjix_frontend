@@ -1,0 +1,101 @@
+name: Deploy to ECS
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY_CORE: kenjix/core
+  ECR_REPOSITORY_SECURITY: kenjix/security
+  ECR_REPOSITORY_FRONTEND: kenjix/frontend
+  ECS_CLUSTER: kenjix-cluster
+  ECS_SERVICE: kenjix-service
+  ECS_TASK_DEFINITION: kenjix-task
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout código
+        uses: actions/checkout@v4
+
+      # 🔐 Configurar AWS
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+
+      # 🔐 Login no ECR
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      # 🐳 Build e push SECURITY
+      - name: Build, tag and push SECURITY
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY_SECURITY }}:latest ./security
+          docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY_SECURITY }}:latest
+
+      # 🐳 Build e push CORE
+      - name: Build, tag and push CORE
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY_CORE }}:latest ./core
+          docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY_CORE }}:latest
+
+      # 🐳 Build e push FRONTEND
+      - name: Build, tag and push FRONTEND
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/${{ env.ECR_REPOSITORY_FRONTEND }}:latest ./core
+          docker push $ECR_REGISTRY/${{ env.ECR_REPOSITORY_FRONTEND }}:latest
+
+      # 📄 Gerar nova task definition
+      - name: Download current task definition
+        run: |
+          aws ecs describe-task-definition \
+            --task-definition ${{ env.ECS_TASK_DEFINITION }} \
+            --query taskDefinition > task-definition.json
+
+      # 🔄 Atualizar imagens no JSON
+      - name: Update task definition images
+        run: |
+          ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+
+          jq --arg CORE_IMAGE "$ECR_REGISTRY/${{ env.ECR_REPOSITORY_CORE }}:latest" \
+             --arg SECURITY_IMAGE "$ECR_REGISTRY/${{ env.ECR_REPOSITORY_SECURITY }}:latest" \
+             --arg FRONTEND_IMAGE "$ECR_REGISTRY/${{ env.ECR_REPOSITORY_FRONTEND }}:latest" \
+          '.containerDefinitions |= map(
+            if .name == "kenjix-core" then
+              .image = $CORE_IMAGE
+            elif .name == "kenjix-security" then
+              .image = $SECURITY_IMAGE
+            elif .name == "kenjix-frontend" then
+              .image = $FRONTEND_IMAGE
+            else .
+            end
+          )' task-definition.json > new-task-definition.json
+
+      # 🚀 Registrar nova task
+      - name: Register new task definition
+        id: task-def
+        run: |
+          aws ecs register-task-definition \
+            --cli-input-json file://new-task-definition.json
+
+      # 🔄 Atualizar service
+      - name: Update ECS service
+        run: |
+          aws ecs update-service \
+            --cluster ${{ env.ECS_CLUSTER }} \
+            --service ${{ env.ECS_SERVICE }} \
+            --force-new-deployment
