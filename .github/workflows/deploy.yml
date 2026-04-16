@@ -54,18 +54,3 @@ jobs:
         run: |
           docker push $ECR_URI:$VERSION
           docker push $ECR_URI:latest
-
-      # 🔥 Criar arquivo .env (se ainda precisar)
-      - name: Criar .env
-        run: |
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}" >> .env
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> .env
-          echo "AWS_REGION=${{ secrets.AWS_REGION }}" >> .env
-
-          echo "MYSQL_USER=${{ secrets.MYSQL_USER }}" >> .env
-          echo "MYSQL_ROOT_PASSWORD=${{ secrets.MYSQL_ROOT_PASSWORD }}" >> .env
-          echo "MYSQL_PORT=${{ secrets.MYSQL_PORT }}" >> .env
-          echo "MYSQL_DATABASE_KENJIX=${{ secrets.MYSQL_DATABASE_KENJIX }}" >> .env
-
-          echo "SECURITY_JWT_TOKEN_SECRET_KEY=${{ secrets.SECURITY_JWT_TOKEN_SECRET_KEY }}" >> .env
-          echo "REAL_JWT_SECRET=${{ secrets.REAL_JWT_SECRET }}" >> .env
