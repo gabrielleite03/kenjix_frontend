@@ -42,6 +42,17 @@ jobs:
           aws ecs describe-task-definition \
             --task-definition ${{ env.ECS_TASK_DEFINITION }} \
             --query taskDefinition > task-definition.json
+      - name: Clean task definition
+        run: |
+          jq 'del(
+            .taskDefinitionArn,
+            .revision,
+            .status,
+            .requiresAttributes,
+            .compatibilities,
+            .registeredAt,
+            .registeredBy
+          )' task-definition.json > clean-task-definition.json
 
       # 🔄 Atualizar imagens no JSON
       - name: Update task definition images
@@ -61,6 +72,24 @@ jobs:
             else .
             end
           )' task-definition.json > new-task-definition.json
+
+      - name: Update task definition images
+        run: |
+          ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
+      
+          jq --arg CORE_IMAGE "$ECR_REGISTRY/${{ env.ECR_REPOSITORY_CORE }}:latest" \
+             --arg SECURITY_IMAGE "$ECR_REGISTRY/${{ env.ECR_REPOSITORY_SECURITY }}:latest" \
+             --arg FRONTEND_IMAGE "$ECR_REGISTRY/${{ env.ECR_REPOSITORY_FRONTEND }}:latest" \
+          '.containerDefinitions |= map(
+            if .name == "kenjix-core" then
+              .image = $CORE_IMAGE
+            elif .name == "kenjix-security" then
+              .image = $SECURITY_IMAGE
+            elif .name == "kenjix-frontend" then
+              .image = $FRONTEND_IMAGE
+            else .
+            end
+          )' clean-task-definition.json > new-task-definition.json
 
       # 🚀 Registrar nova task
       - name: Register new task definition
