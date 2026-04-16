@@ -19,7 +19,6 @@ jobs:
       ECS_TASK_DEFINITION: kenjix-frontend-task
 
     steps:
-      # 📥 Checkout (opcional, mas mantém padrão)
       - name: Checkout código
         uses: actions/checkout@v4
 
@@ -31,7 +30,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
 
-      # 🔐 Login no ECR
+      # 🔐 Login ECR
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v2
@@ -44,7 +43,7 @@ jobs:
             --query taskDefinition \
             --output json > task-definition.json
 
-      # 🧹 Limpar campos gerados pela AWS
+      # 🧹 Limpar campos AWS gerados automaticamente
       - name: Clean task definition
         run: |
           jq 'del(
@@ -57,21 +56,20 @@ jobs:
             .registeredBy
           )' task-definition.json > clean-task-definition.json
 
-      # 🔄 Atualizar imagem com VERSIONAMENTO (SEM latest)
-      - name: Update container image
+      # 🔄 Atualizar imagens dos containers
+      - name: Update container images
         run: |
           ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG=${{ github.sha }}
 
-          jq --arg FRONTEND_IMAGE "$ECR_REGISTRY/${{ env.ECR_REPOSITORY_FRONTEND }}:$IMAGE_TAG" '
-          .containerDefinitions |= map(
+          jq --arg FRONTEND_IMAGE "$ECR_REGISTRY/${{ env.ECR_REPOSITORY_FRONTEND }}:latest" \
+          '.containerDefinitions |= map(
             if .name == "kenjix-frontend" then
               .image = $FRONTEND_IMAGE
             else .
             end
           )' clean-task-definition.json > new-task-definition.json
 
-      # 🚀 Registrar nova task definition
+      # 🚀 Registrar nova task definition E CAPTURAR ARN
       - name: Register task definition
         id: task-def
         run: |
@@ -82,7 +80,7 @@ jobs:
 
           echo "TASK_ARN=$TASK_ARN" >> $GITHUB_ENV
 
-      # 🔄 Atualizar ECS service com task explícita
+      # 🔄 Atualizar ECS service com nova task EXPLICITAMENTE
       - name: Update ECS service
         run: |
           aws ecs update-service \
@@ -91,7 +89,7 @@ jobs:
             --task-definition $TASK_ARN \
             --force-new-deployment
 
-      # ⏳ Garantir estabilidade do serviço
+      # ⏳ Aguardar estabilização (evita falso "não iniciou")
       - name: Wait for service stability
         run: |
           aws ecs wait services-stable \
