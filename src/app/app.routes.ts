@@ -4,8 +4,10 @@ import { AboutPage } from './about/about';
 import { ContactPage } from './contact/contact';
 import { authGuard } from './auth/auth.guard';
 import { ProductDetailPage } from './product-detail/product.detail';
+import { HealthPage } from './health';
 
 export const routes: Routes = [
+  { path: 'health', component: HealthPage },
   { path: '', component: ProductPage },
   { path: 'sobre', component: AboutPage },
   { path: 'contato', component: ContactPage },
