@@ -11,18 +11,14 @@ jobs:
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
 
-env:
-  AWS_REGION: ${{ secrets.AWS_REGION }}
-  ECR_REPOSITORY_CORE: kenjix/core
-  ECR_REPOSITORY_SECURITY: kenjix/security
-  ECR_REPOSITORY_FRONTEND: kenjix/frontend
-  ECS_CLUSTER: kenjix-cluster
-  ECS_SERVICE: kenjix-service
-  ECS_TASK_DEFINITION: kenjix-task
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ${{ secrets.AWS_REGION }}
+      ECR_REPOSITORY_CORE: kenjix/core
+      ECR_REPOSITORY_SECURITY: kenjix/security
+      ECR_REPOSITORY_FRONTEND: kenjix/frontend
+      ECS_CLUSTER: kenjix-cluster
+      ECS_SERVICE: kenjix-service
+      ECS_TASK_DEFINITION: kenjix-task
 
     steps:
       - name: Checkout código
