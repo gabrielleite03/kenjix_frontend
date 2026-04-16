@@ -22,8 +22,8 @@ export class Login {
 
   constructor(private cdr: ChangeDetectorRef) {
     this.loginForm = this.fb.group({
-      email: ['gabriel', [Validators.required, Validators.minLength(5)]],
-      password: ['K0t0net#g4', [Validators.required, Validators.minLength(6)]]
+      email: ['xpto', [Validators.required, Validators.minLength(5)]],
+      password: ['decova xavnaai', [Validators.required, Validators.minLength(6)]]
     });
   }
 
