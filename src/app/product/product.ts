@@ -1,6 +1,7 @@
-import { ChangeDetectionStrategy, Component, signal, computed, inject, OnInit, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, inject, OnInit, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatIconModule } from '@angular/material/icon';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { WhatsAppButton } from '../whatsapp-button';
@@ -8,6 +9,7 @@ import { HeroSlider } from '../hero-slider/hero-slider';
 import { Header } from '../header/header';
 import { Footer } from '../footer/footer';
 import { ProductService, Product } from '../admin/product/product.service';
+import { MarketplacesService } from '../services/marketplaces.service';
 
 @Component({
   selector: 'app-product-page',
@@ -18,15 +20,17 @@ import { ProductService, Product } from '../admin/product/product.service';
   schemas: [CUSTOM_ELEMENTS_SCHEMA],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProductPage implements OnInit {
+export class ProductPage {
 
   Math = Math;
   private productService = inject(ProductService);
   private sanitizer = inject(DomSanitizer);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
+  private marketplaceService = inject(MarketplacesService);
 
   isSidebarOpen = signal(false);
-   isLoading = signal(true);
+  isLoading = signal(true);
 
   // Lista original (NÃO FILTRAR DIRETO)
   products = signal<Product[]>([]);
@@ -36,7 +40,11 @@ export class ProductPage implements OnInit {
   selectedCategories = signal<string[]>([]);
   priceRange = signal<{ min: number; max: number }>({ min: 0, max: 500 });
 
-  marketplace: string = "site";
+  marketplace = computed(() => {
+    const selected = this.marketplaceService.selectedMarketplace();
+
+    return selected?.name || 'site';
+  });
 
   // 🔥 brands dinâmicas (sem duplicidade)
   brands = computed(() => {
@@ -108,25 +116,34 @@ export class ProductPage implements OnInit {
     ];
   });
 
-  ngOnInit() {
+  constructor() {
+  effect(() => {
+    const marketplace = this.marketplaceService.selectedMarketplace();
+    const trigger = this.marketplaceService.reloadTrigger(); // 👈 chave
+
+    if (!marketplace) return;
+
     this.loadProducts();
-  }
+  });
+}
 
   async loadProducts() {
     this.isLoading.set(true);
-    // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+
     this.productService.getProductsByFilter({
-      marketplace: this.marketplace
-    }).subscribe({
-      next: (productsList) => {
-        this.products.set(productsList);
-        this.isLoading.set(false);
-      },
-      error: (err) => {
-        console.error('Erro ao carregar produtos', err);
-      }
-    });
+      marketplace: this.marketplace()
+    })
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe({
+        next: (productsList) => {
+          this.products.set(productsList);
+          this.isLoading.set(false);
+        },
+        error: (err) => {
+          console.error('Erro ao carregar produtos', err);
+          this.isLoading.set(false);
+        }
+      });
   }
 
   updatePriceFilter(event: any) {

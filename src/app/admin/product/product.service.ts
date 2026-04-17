@@ -97,9 +97,11 @@ export class ProductService {
 
     const key = JSON.stringify(filters);
     const now = Date.now();
+    const token = localStorage.getItem('kenji_token');
+    const isLoggedIn = !!token;
 
     // ✅ só tenta cache no browser
-    if (this.isBrowser) {
+    if (this.isBrowser && !isLoggedIn) {
       const cache = this.getCache();
       const cachedEntry = cache[key];
 

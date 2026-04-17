@@ -40,19 +40,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
           </nav>
         </div>
 
-        <!-- Search Bar -->
-        <div class="flex-1 max-w-xl">
-          <div class="relative group">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400 group-focus-within:text-accent">
-              <mat-icon class="text-[18px] lg:text-[20px]">search</mat-icon>
-            </div>
-            <input
-              class="block w-full pl-9 lg:pl-10 pr-3 py-1.5 lg:py-2 border border-slate-200 rounded-lg bg-slate-50 text-xs lg:text-sm focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent transition-all"
-              placeholder="Pesquisar..."
-              type="text"
-            />
-          </div>
-        </div>
+        
 
         <!-- Actions -->
         <div class="flex items-center gap-2 lg:gap-4 shrink-0">
