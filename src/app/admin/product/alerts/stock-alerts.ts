@@ -70,6 +70,8 @@ export class StockAlerts implements OnInit {
           id: s.productId,
           productName: s.productName,
           currentStock: s.quantity,
+          warehouseName: s.warehouseName,
+          warehousePlaceName: s.warehousePlaceName,
           minStock: 5,
           severity
         };
