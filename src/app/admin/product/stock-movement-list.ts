@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { StockMovementService } from './stock-movement.service';
@@ -14,7 +14,11 @@ import { StockMovementService } from './stock-movement.service';
   `],
   changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class StockMovementList {
+export class StockMovementList implements OnInit {
   private stockMovementService = inject(StockMovementService);
   movements = this.stockMovementService.movements;
+
+  ngOnInit() {
+    this.stockMovementService.loadMovements();
+  }
 }

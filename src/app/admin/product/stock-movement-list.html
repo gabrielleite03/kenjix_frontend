@@ -17,6 +17,7 @@
             <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">ID</th>
             <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Data</th>
             <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Produto</th>
+            <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Local</th>
             <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Tipo</th>
             <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider text-center">Quantidade</th>
             <th class="px-6 py-4 text-xs font-bold text-slate-500 uppercase tracking-wider">Motivo</th>
@@ -28,6 +29,7 @@
             <td class="px-6 py-4 text-sm font-bold text-slate-700">{{ movement.id }}</td>
             <td class="px-6 py-4 text-sm text-slate-500">{{ movement.createdAt | date:'dd/MM/yyyy HH:mm' }}</td>
             <td class="px-6 py-4 text-sm text-slate-600 font-medium">{{ movement.productName }}</td>
+              <td class="px-6 py-4 text-sm text-slate-600 font-medium">{{ movement.warehousePlace }}</td>
             <td class="px-6 py-4">
               <span [class.bg-emerald-50]="movement.type === 'Entrada'"
                 [class.text-emerald-600]="movement.type === 'Entrada'" [class.bg-rose-50]="movement.type === 'Saída'"

@@ -19,6 +19,8 @@ export interface ProductFormValue {
   sku: string;
   category: string;
   brand: string;
+  ean?: string | null;
+  ncm?: string | null;
   description: string;
   sellingPrice: number;
   volume?: number;
@@ -206,6 +208,8 @@ export class Settings implements OnInit {
       description: val?.description || 'Descrição do produto...',
       brand: val?.brand || 'Marca',
       sku: val?.sku || 'SKU-000',
+      ean: val?.ean,
+      ncm: val?.ncm,
       media,
       activeMedia,
       videoUrl: val?.videoUrl,
@@ -493,6 +497,8 @@ export class Settings implements OnInit {
       sku: ['', [Validators.required]],
       category: ['', [Validators.required]],
       brand: [''],
+      ean: [''],
+      ncm: [''],
       description: [''],
       active: [true],
       videoUrl: [''],
@@ -974,6 +980,8 @@ export class Settings implements OnInit {
       formData.append('stock', '0');
       formData.append('minStock', '5');
       formData.append('volume', formValue.volume ?? '');
+      formData.append('ean', formValue.ean ?? '');
+      formData.append('ncm', formValue.ncm ?? '');
 
 
       // propriedades (JSON string)
@@ -1012,6 +1020,8 @@ export class Settings implements OnInit {
       active: product.active,
       videoUrl: product.videos?.[0]?.url || '',
       volume: product.volume || '',
+      ean: product.ean || '',
+      ncm: product.ncm || '',
     });
 
     this.productProperties.clear();
@@ -1052,6 +1062,8 @@ export class Settings implements OnInit {
     formData.append('stock', '0');
     formData.append('minStock', '5');
     formData.append('volume', formValue.volume ?? '');
+    formData.append('ean', formValue.ean ?? '');
+    formData.append('ncm', formValue.ncm ?? '');
 
     // -------------------------
     // PROPRIEDADES
@@ -1517,7 +1529,7 @@ export class Settings implements OnInit {
         });
     }
   }
-  
+
 
   cancelEditCostCenter() {
     this.editingCostCenter.set(null);

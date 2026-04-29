@@ -22,6 +22,8 @@ export interface ProductItem {
   sku: string;
   category?: Category;
   brand: string;
+  ean?: string | null;
+  ncm?: string | null;
   weight: string;
   animalType: string;
   lifeStage: string;
