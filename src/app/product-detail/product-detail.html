@@ -78,7 +78,44 @@
                         Indisponível
                     </p>
                     }
-
+                    <!-- Marketplace Section -->
+                    @if (p.product_marketplaces && p.product_marketplaces.length > 0) {
+                    <div class="mt-6 pt-6 border-t border-slate-200">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Compre em outros
+                            Marketplaces</p>
+                        <div class="flex flex-wrap gap-4">
+                            @for (marketplace of p.product_marketplaces; track marketplace) {
+                            @if (marketplace.marketplaceId === 1) {
+                            <a [href]="marketplace.productUrl" target="_blank" rel="noopener"
+                                class="flex items-center gap-3 px-4 py-2 rounded-xl bg-[#FFE600] border border-transparent hover:border-slate-200 transition-all shadow-sm group">
+                                <img src="https://grandesnomesdapropaganda.com.br/wp-content/uploads/2021/04/Mercado-Livre.jpg" alt="Mercado Livre"
+                                    class="size-6 object-contain" title="Compra no Mercado Livre por {{ (marketplace.price |
+                  currency:'BRL':'symbol':'1.2-2')?.replace('R$', 'R$ ') }}">
+                                <span class="text-xs font-bold text-slate-800">Mercado Livre</span>
+                            </a>
+                            }
+                            @if (marketplace.marketplaceId === 2) {
+                            <a [href]="marketplace.productUrl" target="_blank" rel="noopener"
+                                class="flex items-center gap-3 px-4 py-2 rounded-xl bg-[#EE4D2D] border border-transparent hover:border-slate-200 transition-all shadow-sm group">
+                                <img src="https://img.icons8.com/color/48/000000/shopee.png" alt="Shopee"
+                                    class="size-6 object-contain" title="Compra na Shopee por {{ (marketplace.price |
+                  currency:'BRL':'symbol':'1.2-2')?.replace('R$', 'R$ ') }}">
+                                <span class="text-xs font-bold text-slate-800">Shopee</span>
+                            </a>
+                            }
+                            @if (marketplace.marketplaceId === 3) {
+                            <a [href]="marketplace.productUrl" target="_blank" rel="noopener"
+                                class="flex items-center gap-3 px-4 py-2 rounded-xl bg-white border border-slate-100 hover:border-slate-200 transition-all shadow-sm group">
+                                <img src="https://img.icons8.com/color/48/000000/amazon.png" alt="Amazon"
+                                    class="size-6 object-contain" title="Compra na Amazon por {{ (marketplace.price |
+                  currency:'BRL':'symbol':'1.2-2')?.replace('R$', 'R$ ') }}">
+                                <span class="text-xs font-bold text-slate-800">Amazon</span>
+                            </a>
+                            }
+                            }
+                        </div>
+                    </div>
+                    }
                 </div>
 
                 <div class="flex flex-col gap-4">

@@ -2,6 +2,13 @@ import { Injectable, signal, inject, PLATFORM_ID } from '@angular/core';
 import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
+
+export interface Marketplaces {
+  mercadolivre?: string;
+  amazon?: string;
+  shopee?: string;
+}
+
 export interface Product {
   id: number;
   sku: string;
@@ -15,6 +22,7 @@ export interface Product {
   reviews: number;
   images: string[];
   currentIndex: number;
+  marketplaces?: Marketplaces;
 }
 
 @Injectable({

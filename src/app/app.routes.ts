@@ -74,6 +74,10 @@ export const routes: Routes = [
         loadComponent: () => import('./admin/marketplaces/marketplaces').then(m => m.Marketplaces)
       },
       {
+        path: 'marketplaces/products',
+        loadComponent: () => import('./admin/marketplaces/product-marketplaces').then(m => m.ProductMarketplaces)
+      },
+      {
         path: 'suppliers/add',
         loadComponent: () => import('./admin/suppliers/supplier-form/supplier-form').then(m => m.SupplierForm)
       },

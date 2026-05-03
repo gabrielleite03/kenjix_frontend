@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, signal, computed, inject, OnInit, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, effect } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, computed, inject, CUSTOM_ELEMENTS_SCHEMA, DestroyRef, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
@@ -216,7 +216,7 @@ export class ProductPage {
     }
   }
 
-  goToDetail(id: number) {
+  goToDetail(id: string) {
     this.router.navigate(['/produto', id]);
   }
 

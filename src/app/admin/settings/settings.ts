@@ -19,6 +19,7 @@ export interface ProductFormValue {
   sku: string;
   category: string;
   brand: string;
+  weight?: string | null;
   ean?: string | null;
   ncm?: string | null;
   description: string;
@@ -207,6 +208,7 @@ export class Settings implements OnInit {
         .find(c => Number(c.id) === Number(val?.category))?.name || 'Categoria',
       description: val?.description || 'Descrição do produto...',
       brand: val?.brand || 'Marca',
+      weight: val?.weight,
       sku: val?.sku || 'SKU-000',
       ean: val?.ean,
       ncm: val?.ncm,
@@ -497,6 +499,7 @@ export class Settings implements OnInit {
       sku: ['', [Validators.required]],
       category: ['', [Validators.required]],
       brand: [''],
+      weight: [''], 
       ean: [''],
       ncm: [''],
       description: [''],
@@ -973,7 +976,7 @@ export class Settings implements OnInit {
       formData.append('active', String(formValue.active ?? true));
       formData.append('videoUrl', formValue.videoUrl ?? '');
 
-      formData.append('weight', '');
+      formData.append('weight', formValue.weight ?? '');
       formData.append('animalType', '');
       formData.append('lifeStage', '');
       formData.append('costPrice', '0');
@@ -1016,6 +1019,7 @@ export class Settings implements OnInit {
       sku: product.sku,
       category: product.category?.id,
       brand: product.brand,
+      weight: product.weight || '',
       description: product.description || '',
       active: product.active,
       videoUrl: product.videos?.[0]?.url || '',
@@ -1055,7 +1059,7 @@ export class Settings implements OnInit {
     formData.append('active', String(formValue.active ?? true));
     formData.append('videoUrl', formValue.videoUrl ?? '');
 
-    formData.append('weight', '');
+    formData.append('weight',formValue.weight ?? '');
     formData.append('animalType', '');
     formData.append('lifeStage', '');
     formData.append('costPrice', '0');

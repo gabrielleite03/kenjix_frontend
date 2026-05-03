@@ -4,6 +4,7 @@ import { Category } from '../../services/category.service';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, tap, of } from 'rxjs';
 import { environment } from '../../../../src/environment';
+import { ProductMarketplace } from '../marketplaces/product-marketplace.model';
 
 export interface ProductProperty {
   name: string;
@@ -40,6 +41,7 @@ export interface ProductItem {
   videos?: Video[];
   properties?: ProductProperty[];
   available: boolean;
+  product_marketplaces?: ProductMarketplace[];
 }
 
 export interface Product {
@@ -56,6 +58,7 @@ export interface Product {
   images: string[];
   currentIndex: number;
   available: boolean;
+  product_marketplaces?: ProductMarketplace[];
 }
 
 @Injectable({

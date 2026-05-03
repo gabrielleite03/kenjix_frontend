@@ -33,14 +33,14 @@
       <section>
         <div class="flex items-center justify-between mb-4">
           <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400">Faixa de Preço</h3>
-          <span class="text-xs font-bold text-accent">Até ${{maxPrice()}}</span>
+          <span class="text-xs font-bold text-accent">Até R$ {{maxPrice()}}</span>
         </div>
         <div class="px-2">
           <input class="w-full h-1 bg-slate-200 rounded-lg appearance-none cursor-pointer accent-accent" max="500"
             min="0" step="10" type="range" [value]="maxPrice()" (input)="updatePriceFilter($event)" />
           <div class="flex justify-between mt-3 text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
-            <span>$0</span>
-            <span>$500+</span>
+            <span>R$ 0</span>
+            <span>$ 500+</span>
           </div>
         </div>
       </section>
@@ -130,8 +130,8 @@
         }
         } @else {
         @for (product of paginatedProducts(); track product.id) {
-        <div class="mat-card group cursor-pointer" (click)="goToDetail(product.id)"
-          (keydown.enter)="goToDetail(product.id)" (keydown.space)="goToDetail(product.id)" tabindex="0" role="button"
+        <div class="mat-card group cursor-pointer" (click)="goToDetail(product.sku)"
+          (keydown.enter)="goToDetail(product.sku)" (keydown.space)="goToDetail(product.sku)" tabindex="0" role="button"
           [aria-label]="'Ver detalhes de ' + product.name">
           <div class="relative w-full aspect-square overflow-hidden bg-slate-100">
             <!-- Out of Stock Tag -->
@@ -182,14 +182,47 @@
                 {{product.description}}
               </p>
             </div>
-            <div class="flex items-center mt-4">
+            <div class="flex items-center justify-between mt-4">
               <div class="flex flex-col">
                 @if (product.oldPrice) {
                 <span class="text-[10px] text-red-500 line-through">R$ {{product.oldPrice}}</span>
                 }
                 <span class="text-xl font-bold text-slate-900"> {{ (product.price |
-                  currency:'BRL':'symbol':'1.2-2')?.replace('R$', 'R$ ') }}</span>
+                  currency:'BRL':'symbol':'1.2-2')?.replace('R$', 'R$ ') }} </span>
               </div>
+              <!-- Marketplace Links -->
+
+              @for (marketplace of product.product_marketplaces; track marketplace) {
+              <div class="flex items-center gap-2">
+                @if (marketplace.marketplaceId === 1) {
+                <a [href]="marketplace.productUrl" target="_blank" rel="noopener"
+                  class="size-8 flex items-center justify-center rounded-full bg-[#FFFFFF] p-1.5 hover:scale-110 transition-transform shadow-sm"
+                  (click)="$event.stopPropagation();" title="Mercado Livre">
+                  <img src="https://grandesnomesdapropaganda.com.br/wp-content/uploads/2021/04/Mercado-Livre.jpg" title="Compra no Mercado Livre por {{ (marketplace.price |
+                  currency:'BRL':'symbol':'1.2-2')?.replace('R$', 'R$ ') }}" alt="ML"
+                    class="w-full h-full object-contain">
+                </a>
+                }
+                @if (marketplace.marketplaceId === 3) {
+                <a [href]="marketplace.productUrl" target="_blank" rel="noopener"
+                  class="size-8 flex items-center justify-center rounded-full bg-white border border-slate-100 p-1 hover:scale-110 transition-transform shadow-sm"
+                  (click)="$event.stopPropagation();" title="Amazon">
+                  <img src="https://img.icons8.com/color/48/000000/amazon.png" title="Compra na Amazon por {{ (marketplace.price |
+                  currency:'BRL':'symbol':'1.2-2')?.replace('R$', 'R$ ') }}" alt="AZ"
+                    class="w-full h-full object-contain">
+                </a>
+                }
+                @if (marketplace.marketplaceId === 2) {
+                <a [href]="marketplace.productUrl" target="_blank" rel="noopener"
+                  class="size-8 flex items-center justify-center rounded-full bg-white border border-slate-100 p-1 hover:scale-110 transition-transform shadow-sm"
+                  (click)="$event.stopPropagation();" title="Shopee">
+                  <img src="https://img.icons8.com/color/48/000000/shopee.png" title="Compra no Shopee por {{ (marketplace.price |
+                  currency:'BRL':'symbol':'1.2-2')?.replace('R$', 'R$ ') }}" alt="SH"
+                    class="w-full h-full object-contain">
+                </a>
+                }
+              </div>
+              }
             </div>
           </div>
         </div>

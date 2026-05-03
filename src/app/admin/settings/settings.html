@@ -570,6 +570,10 @@
               <input id="pNcm" type="text" formControlName="ncm" class="admin-input h-10" placeholder="Ex: 2309.10.00">
             </div>
             <div class="flex flex-col gap-2">
+                <label for="pWeight" class="admin-label">Peso</label>
+                <input id="pWeight" type="number" formControlName="weight" class="admin-input h-10" placeholder="Ex: 15kg fardo">
+              </div>
+            <div class="flex flex-col gap-2">
               <label for="pVolume" class="admin-label">Volume (cm³)</label>
               <input id="pVolume" type="number" formControlName="volume" class="admin-input h-10" placeholder="0">
             </div>
@@ -777,18 +781,20 @@
                     <p class="text-sm text-slate-600 leading-relaxed whitespace-pre-wrap">{{
                       productPreview().description }}</p>
                   </div>
-                  <div class="grid grid-cols-2 gap-4">
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex flex-col">
-                      <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">EAN</p>
-                      <p class="text-xs font-medium text-slate-700 truncate" [title]="productPreview().ean || ''">{{
-                        productPreview().ean || 'Não informado' }}</p>
+                  <div class="grid grid-cols-3 gap-3">
+                      <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col">
+                        <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">Peso</p>
+                        <p class="text-xs font-medium text-slate-700 truncate" [title]="productPreview().weight || ''">{{ productPreview().weight || '-' }}</p>
+                      </div>
+                      <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col">
+                        <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">EAN</p>
+                        <p class="text-xs font-medium text-slate-700 truncate" [title]="productPreview().ean || ''">{{ productPreview().ean || '-' }}</p>
+                      </div>
+                      <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col">
+                        <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">NCM</p>
+                        <p class="text-xs font-medium text-slate-700 truncate" [title]="productPreview().ncm || ''">{{ productPreview().ncm || '-' }}</p>
+                      </div>
                     </div>
-                    <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 flex flex-col">
-                      <p class="text-[10px] font-bold text-slate-500 uppercase mb-1">NCM</p>
-                      <p class="text-xs font-medium text-slate-700 truncate" [title]="productPreview().ncm || ''">{{
-                        productPreview().ncm || 'Não informado' }}</p>
-                    </div>
-                  </div>
                   @if (productPreview().properties.length > 0) {
                   <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
                     <p class="text-xs font-bold text-slate-500 uppercase mb-3">Propriedades</p>
