@@ -28,6 +28,7 @@ export interface ProductFormValue {
   active: boolean;
   videoUrl: string;
   properties: { name: string; value: string }[];
+  isKit: boolean | null;
 }
 
 
@@ -215,7 +216,8 @@ export class Settings implements OnInit {
       media,
       activeMedia,
       videoUrl: val?.videoUrl,
-      properties: val?.properties || []
+      properties: val?.properties || [],
+      isKit: val?.isKit
     };
   });
 
@@ -234,8 +236,8 @@ export class Settings implements OnInit {
   // Categories Search and Pagination
   categorySearch = signal('');
   categoryPage = signal(1);
-  categoryItemsPerPage = signal(5);
-  categoryItemsPerPageOptions = [5, 10, 20, 50];
+  categoryItemsPerPage = signal(10);
+  categoryItemsPerPageOptions = [10, 20, 50];
 
   filteredCategories = computed(() => {
     const search = this.categorySearch().toLowerCase();
@@ -290,7 +292,7 @@ export class Settings implements OnInit {
   expenseCategoryFilter = signal('');
   expensePage = signal(1);
   expenseItemsPerPage = signal(10);
-  expenseItemsPerPageOptions = [5, 10, 20, 50];
+  expenseItemsPerPageOptions = [10, 20, 50];
 
   expenses = signal<ExpenseItem[]>([]);
 
@@ -390,8 +392,8 @@ export class Settings implements OnInit {
   productSearch = signal('');
   productCategoryFilter = signal('');
   productPage = signal(1);
-  productItemsPerPage = signal(5);
-  productItemsPerPageOptions = [5, 10, 20, 50];
+  productItemsPerPage = signal(10);
+  productItemsPerPageOptions = [10, 20, 50];
 
   filteredProducts = computed(() => {
     const search = this.productSearch().toLowerCase();
@@ -499,14 +501,16 @@ export class Settings implements OnInit {
       sku: ['', [Validators.required]],
       category: ['', [Validators.required]],
       brand: [''],
-      weight: [''], 
+      weight: [''],
       ean: [''],
       ncm: [''],
       description: [''],
       active: [true],
       videoUrl: [''],
       properties: this.fb.array([]),
-      volume: ['']
+      volume: [''],
+      isKit: [false],
+      kitItems: this.fb.array([])
     });
 
     this.productFormValue = toSignal(
@@ -995,6 +999,9 @@ export class Settings implements OnInit {
         formData.append('images', file);
       });
 
+      formData.append('isKit', String(formValue.isKit ?? false));
+      formData.append('kit_items', JSON.stringify(formValue.kitItems ?? []));
+
       this.productService.addProduct(formData).subscribe({
         next: (createdProduct: ProductItem) => {
           this.productForm.reset();
@@ -1006,6 +1013,9 @@ export class Settings implements OnInit {
   }
 
   async editProduct(product: ProductItem) {
+    console.log('produto selecionado:', product);
+    console.log('kit_items recebido:', product.kit_items);
+
     this.isProductFormCollapsed.set(false);
     this.editingProduct.set(product);
 
@@ -1026,6 +1036,7 @@ export class Settings implements OnInit {
       volume: product.volume || '',
       ean: product.ean || '',
       ncm: product.ncm || '',
+      isKit: product.is_kit || false
     });
 
     this.productProperties.clear();
@@ -1038,6 +1049,37 @@ export class Settings implements OnInit {
       );
     });
 
+    this.kitItems.clear();
+
+    const items = product.kit_items ?? [];
+
+    items.forEach((item: any) => {
+      const productId = this.getKitComponentProductId(item);
+
+      if (!productId) {
+        console.warn('Item do kit sem productId/componentProductId:', item);
+        return;
+      }
+
+      this.kitItems.push(
+        this.fb.group({
+          productId: [String(productId), Validators.required],
+          quantity: [item.quantity ?? 1, [Validators.required, Validators.min(1)]]
+        })
+      );
+    });
+
+    console.log('FormArray kitItems:', this.kitItems.value);
+  }
+
+  private getKitComponentProductId(item: any): string | number | null {
+    return item?.productId
+      ?? item?.product_id
+      ?? item?.componentProductId
+      ?? item?.component_product_id
+      ?? item?.component_product?.id
+      ?? item?.componentProduct?.id
+      ?? null;
   }
 
 
@@ -1059,7 +1101,7 @@ export class Settings implements OnInit {
     formData.append('active', String(formValue.active ?? true));
     formData.append('videoUrl', formValue.videoUrl ?? '');
 
-    formData.append('weight',formValue.weight ?? '');
+    formData.append('weight', formValue.weight ?? '');
     formData.append('animalType', '');
     formData.append('lifeStage', '');
     formData.append('costPrice', '0');
@@ -1068,6 +1110,8 @@ export class Settings implements OnInit {
     formData.append('volume', formValue.volume ?? '');
     formData.append('ean', formValue.ean ?? '');
     formData.append('ncm', formValue.ncm ?? '');
+    formData.append('isKit', String(formValue.isKit ?? false));
+    formData.append('kit_items', JSON.stringify(formValue.kitItems ?? []));
 
     // -------------------------
     // PROPRIEDADES
@@ -1146,7 +1190,7 @@ export class Settings implements OnInit {
     this.productProperties.clear();
 
     this.productForm.reset({
-      active: true
+      active: true, isKit: false
     });
   }
 
@@ -1582,7 +1626,26 @@ export class Settings implements OnInit {
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   }
+  get kitItems() {
+    return this.productForm.get('kitItems') as FormArray;
+  }
 
+  addKitItem() {
+    this.kitItems.push(this.fb.group({
+      productId: ['', Validators.required],
+      quantity: [1, [Validators.required, Validators.min(1)]]
+    }));
+  }
+
+  removeKitItem(index: number) {
+    this.kitItems.removeAt(index);
+  }
+
+  // Métodos auxiliares para exibição
+  getProductNameById(id: string): string {
+    const p = this.products().find(item => item.id === id);
+    return p ? p.name : 'Produto não encontrado';
+  }
 
 
 

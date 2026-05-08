@@ -17,6 +17,11 @@ export interface Video {
   url: string;
 }
 
+export interface ProductKitItem {
+  productId: string;
+  quantity: number;
+}
+
 export interface ProductItem {
   id: string;
   name: string;
@@ -42,6 +47,8 @@ export interface ProductItem {
   properties?: ProductProperty[];
   available: boolean;
   product_marketplaces?: ProductMarketplace[];
+  is_kit: boolean | null;
+  kit_items?: ProductKitItem[];
 }
 
 export interface Product {
@@ -59,6 +66,8 @@ export interface Product {
   currentIndex: number;
   available: boolean;
   product_marketplaces?: ProductMarketplace[];
+  is_kit: boolean | null;
+  kit_items?: ProductKitItem[];
 }
 
 @Injectable({

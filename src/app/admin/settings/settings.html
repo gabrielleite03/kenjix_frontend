@@ -570,13 +570,76 @@
               <input id="pNcm" type="text" formControlName="ncm" class="admin-input h-10" placeholder="Ex: 2309.10.00">
             </div>
             <div class="flex flex-col gap-2">
-                <label for="pWeight" class="admin-label">Peso</label>
-                <input id="pWeight" type="number" formControlName="weight" class="admin-input h-10" placeholder="Ex: 15kg fardo">
-              </div>
+              <label for="pWeight" class="admin-label">Peso</label>
+              <input id="pWeight" type="number" formControlName="weight" class="admin-input h-10"
+                placeholder="Ex: 15kg fardo">
+            </div>
             <div class="flex flex-col gap-2">
               <label for="pVolume" class="admin-label">Volume (cm³)</label>
               <input id="pVolume" type="number" formControlName="volume" class="admin-input h-10" placeholder="0">
             </div>
+            <div class="flex flex-col gap-2">
+              <p class="admin-label">Tipo de Produto</p>
+              <div class="flex items-center gap-4 h-10 px-4 bg-white border border-slate-200 rounded-lg">
+                <label class="flex items-center gap-2 cursor-pointer group">
+                  <input id="pIsKit" type="checkbox" formControlName="isKit"
+                    class="w-4 h-4 accent-primary cursor-pointer">
+                  <span class="text-xs font-bold text-slate-600 group-hover:text-primary transition-colors">Este produto
+                    é um KIT</span>
+                </label>
+              </div>
+            </div>
+            @if (productForm.get('isKit')?.value) {
+                <div class="md:col-span-2 lg:col-span-3 p-6 bg-indigo-50/30 border border-indigo-100 rounded-2xl animate-in slide-in-from-top-4 duration-300">
+                  <div class="flex items-center justify-between mb-4">
+                    <div>
+                      <h5 class="text-sm font-bold text-indigo-900 flex items-center gap-2">
+                        <mat-icon class="text-indigo-500">auto_fix_high</mat-icon>
+                        Composição do Kit
+                      </h5>
+                      <p class="text-[10px] text-indigo-600">Adicione os produtos que compõem este kit.</p>
+                    </div>
+                    <button type="button" (click)="addKitItem()" class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-500 text-white text-[10px] font-bold rounded-lg hover:bg-indigo-600 transition-all shadow-sm">
+                      <mat-icon class="text-xs shrink-0">add</mat-icon>
+                      Adicionar Item
+                    </button>
+                  </div>
+
+                  <div formArrayName="kitItems" class="space-y-3">
+                    @for (item of kitItems.controls; track item; let i = $index) {
+                      <div [formGroupName]="i" class="grid grid-cols-12 gap-3 items-end bg-white/50 p-3 rounded-xl border border-indigo-100/50">
+                        <div class="col-span-12 md:col-span-7 flex flex-col gap-1.5">
+                          <label [for]="'pKitId_' + i" class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Produto</label>
+                          <select [id]="'pKitId_' + i" formControlName="productId" class="admin-input h-9 text-xs">
+                            <option value="">Selecione um produto</option>
+                            @for (p of products(); track p.id) {
+                              @if (p.id !== editingProduct()?.id) {
+                                <option [value]="p.id">{{ p.name }} ({{ p.sku }})</option>
+                              }
+                            }
+                          </select>
+                        </div>
+                        <div class="col-span-8 md:col-span-4 flex flex-col gap-1.5">
+                          <label [for]="'pKitQty_' + i" class="text-[10px] font-bold text-slate-500 uppercase tracking-wider">Quantidade</label>
+                          <input [id]="'pKitQty_' + i" type="number" formControlName="quantity" class="admin-input h-9 text-xs" min="1">
+                        </div>
+                        <div class="col-span-4 md:col-span-1">
+                          <button type="button" (click)="removeKitItem(i)" class="w-full h-9 flex items-center justify-center text-rose-300 hover:text-rose-500 hover:bg-rose-50 rounded-lg transition-all">
+                            <mat-icon class="text-sm">delete</mat-icon>
+                          </button>
+                        </div>
+                      </div>
+                    } @empty {
+                      <div class="py-6 border-2 border-dashed border-indigo-100 rounded-xl flex flex-col items-center justify-center text-center">
+                        <div class="w-8 h-8 bg-indigo-50 rounded-full flex items-center justify-center text-indigo-300 mb-2">
+                          <mat-icon class="text-sm">inventory_2</mat-icon>
+                        </div>
+                        <p class="text-[10px] font-medium text-slate-400">Nenhum item adicionado ao kit.</p>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
             <div class="flex items-center gap-3 h-[42px] px-2">
               <input id="pActive" type="checkbox" formControlName="active" class="w-5 h-5 accent-primary">
               <label for="pActive" class="text-sm font-bold text-slate-700 cursor-pointer">Ativo</label>
@@ -772,7 +835,16 @@
                     }}</span>
                   <span class="text-xs font-medium text-slate-400">SKU: {{ productPreview().sku }}</span>
                 </div>
-                <h4 class="text-2xl font-black text-slate-800 mb-4 leading-tight">{{ productPreview().name }}</h4>
+                <h4 class="text-2xl font-black text-slate-800 mb-4 leading-tight">
+                  {{ productPreview().name }}
+                  @if (productPreview().isKit) {
+                  <span
+                    class="inline-flex items-center gap-1 ml-2 px-2 py-1 bg-indigo-100 text-indigo-700 text-[10px] font-bold uppercase rounded-md tracking-wider align-middle">
+                    <mat-icon class="text-[10px] w-3 h-3 flex items-center justify-center">auto_fix_high</mat-icon>
+                    Kit
+                  </span>
+                  }
+                </h4>
 
 
                 <div class="space-y-4">
@@ -782,19 +854,22 @@
                       productPreview().description }}</p>
                   </div>
                   <div class="grid grid-cols-3 gap-3">
-                      <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col">
-                        <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">Peso</p>
-                        <p class="text-xs font-medium text-slate-700 truncate" [title]="productPreview().weight || ''">{{ productPreview().weight || '-' }}</p>
-                      </div>
-                      <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col">
-                        <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">EAN</p>
-                        <p class="text-xs font-medium text-slate-700 truncate" [title]="productPreview().ean || ''">{{ productPreview().ean || '-' }}</p>
-                      </div>
-                      <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col">
-                        <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">NCM</p>
-                        <p class="text-xs font-medium text-slate-700 truncate" [title]="productPreview().ncm || ''">{{ productPreview().ncm || '-' }}</p>
-                      </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col">
+                      <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">Peso</p>
+                      <p class="text-xs font-medium text-slate-700 truncate" [title]="productPreview().weight || ''">{{
+                        productPreview().weight || '-' }}</p>
                     </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col">
+                      <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">EAN</p>
+                      <p class="text-xs font-medium text-slate-700 truncate" [title]="productPreview().ean || ''">{{
+                        productPreview().ean || '-' }}</p>
+                    </div>
+                    <div class="p-3 bg-slate-50 rounded-xl border border-slate-100 flex flex-col">
+                      <p class="text-[9px] font-bold text-slate-500 uppercase mb-1">NCM</p>
+                      <p class="text-xs font-medium text-slate-700 truncate" [title]="productPreview().ncm || ''">{{
+                        productPreview().ncm || '-' }}</p>
+                    </div>
+                  </div>
                   @if (productPreview().properties.length > 0) {
                   <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
                     <p class="text-xs font-bold text-slate-500 uppercase mb-3">Propriedades</p>
@@ -897,7 +972,13 @@
                       }
                     </div>
                     <div>
-                      <p class="text-sm font-bold text-slate-700">{{ p.name }}</p>
+                      <div class="flex items-center gap-2">
+                        <p class="text-sm font-bold text-slate-700">{{ p.name }}</p>
+                        @if (p.is_kit) {
+                        <span
+                          class="bg-indigo-50 text-indigo-600 px-1.5 py-0.5 rounded text-[8px] font-bold uppercase tracking-wider">Kit</span>
+                        }
+                      </div>
                       <p class="text-[10px] text-slate-400 uppercase">{{ p.sku }}</p>
                     </div>
                   </div>

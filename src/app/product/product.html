@@ -40,7 +40,7 @@
             min="0" step="10" type="range" [value]="maxPrice()" (input)="updatePriceFilter($event)" />
           <div class="flex justify-between mt-3 text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
             <span>R$ 0</span>
-            <span>$ 500+</span>
+            <span>R$ 500+</span>
           </div>
         </div>
       </section>
@@ -157,9 +157,9 @@
                     allowfullscreen></iframe>
                 </div>
                 } @else {
-                <div class="w-full h-full flex-shrink-0 border-none p-0 block relative">
+                <div class="w-full h-full flex items-center justify-center bg-white p-2">
                   <img [src]="img" [alt]="product.name" referrerpolicy="no-referrer"
-                    class="w-full h-full object-cover" />
+                    class="max-w-full max-h-full w-auto h-auto object-contain" />
                 </div>
                 }
               </swiper-slide>
