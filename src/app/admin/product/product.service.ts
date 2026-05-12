@@ -68,6 +68,7 @@ export interface Product {
   product_marketplaces?: ProductMarketplace[];
   is_kit: boolean | null;
   kit_items?: ProductKitItem[];
+  stockQuantity?: number;
 }
 
 @Injectable({
@@ -84,12 +85,19 @@ export class ProductService {
   private productsSignal = signal<ProductItem[]>([]);
   products = this.productsSignal;
 
+  private productsToHomeSignal = signal<Product[]>([]);
+  productsToHome = this.productsToHomeSignal;
+
   private TTL = 5 * 60 * 1000; // 5 min
   private CACHE_KEY = 'products_cache';
 
 
   getProductById(id: string) {
     return this.productsSignal().find(p => p.id === id);
+  }
+
+  getProductToHome(id: string) {
+    return this.productsToHomeSignal().find(p => p.id.toString() === id);
   }
 
   getProductToHomeById(id: string, marketplace?: string) {
@@ -175,6 +183,12 @@ export class ProductService {
   loadProducts() {
     this.getProducts().subscribe(products => {
       this.productsSignal.set(products);
+    });
+  }
+
+  loadProductsByFilter(marketplace: string) {
+    this.getProductsByFilter({ marketplace }).subscribe(products => {
+      this.productsToHomeSignal.set(products);
     });
   }
 
